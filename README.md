@@ -1,5 +1,9 @@
 # Hydra
-Hydra is a [BepInEx](https://github.com/BepInEx/BepInEx) Among Us built with the intention of enhancing the Among Us playing experience. Hydra adds quality of life features, fun trolling features, and an anticheat to detect players hacking in your lobbies.
+<div align="center">
+  <img src="https://github.com/MrDiamond64/Hydra/blob/main/img/main.png?raw=true" alt="Hydra UI"/>
+</div>
+
+Hydra is a [BepInEx](https://github.com/BepInEx/BepInEx) Among Us mod built with the intention of enhancing the Among Us playing experience. Hydra adds quality of life features, fun trolling features, and an anticheat to detect players hacking in your lobbies.
 
 # Features
 > [!NOTE]
@@ -14,7 +18,7 @@ Hydra is a [BepInEx](https://github.com/BepInEx/BepInEx) Among Us built with the
 - Sabotage and close doors as crewmate
 - Device and version spoofer
 - See other player's roles
-- Configurable anticheat to detect common hacks and exploits
+- [Configurable anticheat to detect common hacks and exploits](https://github.com/MrDiamond64/Hydra?tab=readme-ov-file#hydra-anticheat)
 - And more!
 
 # Hydra Anticheat
@@ -24,7 +28,7 @@ Hydra Anticheat comes with a basic baseline: the backend server must be able to 
 
 # Installation and Usage
 > [!WARNING]
-> Before using Hydra, please make sure to understand and fully consent to the warnings provided in the Disclaimer section.
+> Before using Hydra, please make sure to understand and fully consent to the warnings provided in the [Disclaimer](https://github.com/MrDiamond64/Hydra?tab=readme-ov-file#disclaimer) section.
 
 As Hydra is a BepInEx mod, you will need to download BepInEx. BepInEx binaries are included in the Releases tab, however you can download the required build yourself at https://builds.bepinex.dev/projects/bepinex_be, and find version 735 (commit `5fef357`). As Among Us uses Il2cpp, you will need to download the IL2CPP variant of BepInEx for your operating system. The specific architecture of BepInEx will depend on where you downloaded Among Us from. If Among Us was installed from the Microsoft Store or Epic Games Store, then you will need the x64 variant, otherwise you will need the x86 variant.
 
@@ -33,11 +37,11 @@ Once you downloaded BepInEx, you can open the installation directory of Among Us
 Hydra UI has multiple parts: the sections pane, and the features panes. The sections pane will have a list of buttons such as `Self`, `Host`, and `Anticheat`. Pressing any of these section buttons will show the features for this section in the Features Pane. The Features Pane will have sliders, buttons, and checkboxes which can be used to configure Hydra.
 
 # TODO
-[ ] Improve anticheat with more checks (such as sabotaging as crewmate)
-[ ] Add scrollbars to UI sections
-[ ] Show player role and colors in Players UI section
-[ ] Explore the modded vanilla protocol which seems to have a much more lenient anticheat
-[ ] Saveable configs
+- [ ] Improve anticheat with more checks (such as sabotaging as crewmate)
+- [ ] Add scrollbars to UI sections
+- [ ] Show player role and colors in Players UI section
+- [ ] Explore the modded vanilla protocol which seems to have a much more lenient anticheat
+- [ ] Saveable configs
 
 # Disclaimer
 > [!CAUTION]
