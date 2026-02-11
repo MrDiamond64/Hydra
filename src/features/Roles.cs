@@ -28,7 +28,7 @@ namespace HydraMenu.features
         }
 
         // PlayerControl::CmdCheckRevertShapeshift just runs the PlayerControl::CmdCheckShapeshift function which we patch above, however for some reason we are not able to set shouldAnimate to false
-        // My guess to why this happens is that the CmdCheckRevertShapeshift function is getting inlined so it doesn't actually get ran
+        // My guess to why this happens is that the CmdCheckShapeshift function is getting inlined here so it doesn't actually get ran
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdCheckRevertShapeshift))]
         class ShapeshiftEnd
         {
@@ -136,4 +136,5 @@ namespace HydraMenu.features
             RoleManager.Instance.SetRole(PlayerControl.LocalPlayer, role);
         }
     }
+
 }
