@@ -23,22 +23,6 @@
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} when visual tasks are off.");
 				Anticheat.Punish(player);
 			}
-
-			bool hasTask = false;
-			foreach(NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
-			{
-				if(task.TypeId != (byte)animation) continue;
-
-				hasTask = true;
-				break;
-			}
-
-			// SetScanner RPC is sent upon player death, so we have to make sure the scanning value is set to true to avoid false positives
-			if(!hasTask)
-			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} when they do not currently have that task.");
-				Anticheat.Punish(player);
-			}
 		}
 	}
 }
