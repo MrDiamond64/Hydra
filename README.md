@@ -7,7 +7,9 @@ Hydra is a [BepInEx](https://github.com/BepInEx/BepInEx) Among Us mod built with
 
 # Features
 > [!NOTE]
-> This repo is a heavily stripped-down version with features I deem too powerful removed to prevent abuse, such as [being able to ban players from lobbies without being host](https://streamable.com/wtb7jl) and [becoming immortal without being host](https://streamable.com/k1b0m0). Being able to ban players from lobbies without being host is a great way to deal with annoying players who call meetings as soon as the game starts, or ban hackers from lobbies I am inside without having to reach a unanimous votekick, however this opens the door for abuse where someone could ban all the imposters from the lobby to insta-win or banning players who suspect you being an imposter.
+> This repo is a heavily stripped-down version with features I deem too powerful removed to prevent abuse, such as [being able to ban players from lobbies without being host](https://streamable.com/wtb7jl) and [becoming immortal without being host](https://streamable.com/k1b0m0).
+>
+> Being able to ban players from lobbies without being host is a great way to deal with annoying players who call meetings as soon as the game starts, or ban hackers from lobbies I am inside without having to reach a unanimous votekick, however this opens the door for abuse where someone could ban all the imposters from the lobby to insta-win or banning players who suspect you being an imposter.
 
 - In-game notifications
 - Show chat messages by ghosts (Useful for moderation to determine if players are acting fair)
@@ -45,7 +47,7 @@ Hydra UI has multiple parts: the sections pane, and the features panes. The sect
 
 # Disclaimer
 > [!CAUTION]
-> **Hydra should NEVER, under any circumstances, be used for impair the experiences of other players. If you use some of the trolling features, please make sure you are doing so in a private lobby with consenting players. You are free to join public lobbies with Hydra enabled as long as you use it with the intention of improving your Among Us game. With great power comes great responsibility!**
+> **Hydra should NEVER, under any circumstances, be used to impair the experiences of other players. If you use some of the trolling features, please make sure you are doing so in a private lobby with consenting players. You are free to join public lobbies with Hydra enabled as long as you use it with the intention of improving your Among Us game. With great power comes great responsibility!**
 
 Something I recognize with utility mods like Hydra is that it opens the door for malicious users to cause destruction in lobbies. I have tried to limit the potential of abuse by removing powerful and abuse-prone features from the public version and adding safeguards to limit abuse. Even with these protections, there is always a chance for abuse and malicious activities. All I can do is to ask you, the person using Hydra, to please do not use Hydra for malicious purposes and follow the [Innersloth Code of Conduct](https://www.innersloth.com/code-of-conduct/) and rules set by the lobby you are playing on. Only use it to detect cheaters in public lobbies, or in use where everyone else consents to the usage of the Hydra's more advanced features.
 
