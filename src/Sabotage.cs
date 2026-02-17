@@ -194,13 +194,30 @@ namespace HydraMenu
 					ShipStatus.Instance.RpcUpdateSystem(system, 16);
 					break;
 
-				/*
 				case SystemTypes.Electrical:
-					SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+					SwitchSystem switches = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
 
-					ShipStatus.Instance.RpcUpdateSystem(system, (byte)(switchSystem.ExpectedSwitches | switchSystem.ActualSwitches));
+					// Hydra.Log.LogMessage($"Actual: {switches.ActualSwitches}, expected: {switches.ExpectedSwitches}");
+					int amount = switches.ActualSwitches ^ switches.ExpectedSwitches;
+
+					if(amount == 0)
+					{
+						Hydra.Log.LogInfo($"Attempted to fix lights, XOR operation is 0 so that means we have nothing to fix.");
+						return;
+					}
+
+					// Loop over each light switch
+					for(byte i = 0; i < 5; i++)
+					{
+						if((amount >> i) == 0) amount += amount >> i;
+					}
+
+					// If the 8th bit is off, then the amount value is the index of the light switch (so 0, 1, 2, 3, or 4, and potentially 5 or 6 if those were to ever get added) that should get toggled
+					// If it is on, then the amount value is a binary representation of what switches should be toggled
+					// So if we had an amount value of 172 (which in binary is 1000 1101), that would mean light switches 0, 2, and 3 would be toggled
+					// I don't think the 8th bit is actually ever used outside of SabotageSystemType, so anticheats can detect this
+					ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Electrical, (byte)(amount | 128));
 					break;
-				*/
 
 				// Mushroom Mixup cannot be fixed, we have to wait for its duration to end
 				case SystemTypes.MushroomMixupSabotage:
