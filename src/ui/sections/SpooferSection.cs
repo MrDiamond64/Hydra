@@ -19,7 +19,8 @@ namespace HydraMenu.ui.sections
 			{ $"{Constants.AddressablesVersion} (Current)", Constants.GetBroadcastVersion() },
 			{ "16.1.0", 50632950 },
 			{ "17.1", 50643450 },
-			{ "17.1.2", 50647000 }
+			{ "17.1.2", 50647000 },
+			{ "17.2", 50645050 }
 		};
 
 		private int versionSelection = 0;
