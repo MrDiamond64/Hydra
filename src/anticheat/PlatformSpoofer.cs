@@ -62,6 +62,11 @@ namespace HydraMenu.anticheat
 				case Platforms.Switch:
 					if(!IsGenericPlatformName(platformName) && xuid == 0 && psid == 0) return true;
 					break;
+
+				// On Local lobbies, all players have a platform ID of 255
+				case (Platforms)255:
+					if(AmongUsClient.Instance.NetworkMode == NetworkModes.LocalGame) return true;
+					break;
 			}
 
 			// If the Platform ID is invalid, or the platform specific data for each platform is invalid, then we know that the player's device is spoofed
@@ -70,9 +75,7 @@ namespace HydraMenu.anticheat
 
 		public static bool IsGenericPlatformName(string platformName)
 		{
-			// On local lobbies a player's platform name is an empty string instead of the usual TESTNAME
-			// It might also be an empty string for devices that have a custom PlatformName, but I do not have any to test with
-			return platformName == "TESTNAME" || platformName == "";
+			return platformName == "TESTNAME";
 		}
 	}
 }
