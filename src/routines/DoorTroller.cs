@@ -31,7 +31,7 @@ namespace HydraMenu.routines
 				return;
 			}
 
-			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
+			if(!Sabotage.CanUnlockDoors())
 			{
 				Hydra.notifications.Send("Door Troller", "Door troller can only work if you are the host, or if the current map supports unlocking doors.", 5);
 
