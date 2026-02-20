@@ -138,7 +138,7 @@ namespace HydraMenu
 		public static bool CanUnlockDoors()
 		{
 			MapNames map = Utilities.GetCurrentMap();
-			return map == MapNames.Polus || map == MapNames.Airship || map == MapNames.Fungle;
+			return AmongUsClient.Instance.AmHost || map == MapNames.Polus || map == MapNames.Airship || map == MapNames.Fungle;
 		}
 
 		public static void SabotageSystem(SystemTypes system)
@@ -232,6 +232,31 @@ namespace HydraMenu
 
 		public static void UnlockDoor(byte id)
 		{
+			if(AmongUsClient.Instance.AmHost)
+			{
+				MapNames currentMap = Utilities.GetCurrentMap();
+
+				// On Skeld, all doors have an id of 0, so unfourtunately getting a door by its ID by using ShipStatus.Instance.AllDoors[id] wont work
+				for(byte i = 0; i < ShipStatus.Instance.AllDoors.Count; i++)
+				{
+					OpenableDoor door = ShipStatus.Instance.AllDoors[i];
+					if(door.Id != id) continue;
+					door.SetDoorway(true);
+
+					if(currentMap == MapNames.Skeld)
+					{
+						AutoDoorsSystemType doorSystem = ShipStatus.Instance.Systems[SystemTypes.Doors].Cast<AutoDoorsSystemType>();
+						doorSystem.dirtyBits |= 1U << i;
+					}
+					else
+					{
+						DoorsSystemType doorSystem = ShipStatus.Instance.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
+						doorSystem.IsDirty = true;
+					}
+				}
+				return;
+			}
+
 			ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Doors, (byte)(id | 64));
 		}
 

@@ -25,9 +25,8 @@ namespace HydraMenu.anticheat
 		{
 			static void Prefix(PlayerControl __instance, byte callId, MessageReader reader)
 			{
-				RpcCalls RpcId = (RpcCalls)callId;
-
 				int oldReadPosition = reader.Position;
+				RpcCalls RpcId = (RpcCalls)callId;
 
 				switch(RpcId)
 				{
@@ -74,10 +73,9 @@ namespace HydraMenu.anticheat
 		{
 			static void Prefix(PlayerPhysics __instance, byte callId, MessageReader reader)
 			{
+				int oldReadPosition = reader.Position;
 				RpcCalls RpcId = (RpcCalls)callId;
 				PlayerControl player = __instance.myPlayer;
-
-				int oldReadPosition = reader.Position;
 
 				switch(RpcId)
 				{
@@ -100,11 +98,9 @@ namespace HydraMenu.anticheat
 		{
 			static void Prefix(CustomNetworkTransform __instance, byte callId, MessageReader reader)
 			{
+				int oldReadPosition = reader.Position;
 				RpcCalls RpcId = (RpcCalls)callId;
 				PlayerControl player = __instance.myPlayer;
-
-				int oldReadPosition = reader.Position;
-
 
 				switch(RpcId)
 				{
@@ -126,9 +122,8 @@ namespace HydraMenu.anticheat
 		{
 			static void Prefix(ShipStatus __instance, byte callId, MessageReader reader)
 			{
-				RpcCalls RpcId = (RpcCalls)callId;
-
 				int oldReadPosition = reader.Position;
+				RpcCalls RpcId = (RpcCalls)callId;
 
 				// It would be nice if we could also add checks for CloseDoorOfType RPCs, however we are not able to determine who is sending that RPC
 				/*

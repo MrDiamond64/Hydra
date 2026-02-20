@@ -15,11 +15,27 @@ namespace HydraMenu.routines
 
 		public override void Run()
 		{
-			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null || !Sabotage.CanUnlockDoors())
+			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
-				this.Enabled = false;
 				Hydra.notifications.Send("Door Troller", "Door troller has been disabled as you either left the game or the current map does not support unlocking doors.", 5);
 
+				this.Enabled = false;
+				return;
+			}
+
+			if(ShipStatus.Instance.AllDoors.Count == 0)
+			{
+				Hydra.notifications.Send("Door Troller", "Door troller was disabled as this map does not have any doors.", 5);
+
+				this.Enabled = false;
+				return;
+			}
+
+			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
+			{
+				Hydra.notifications.Send("Door Troller", "Door troller can only work if you are the host, or if the current map supports unlocking doors.", 5);
+
+				this.Enabled = false;
 				return;
 			}
 
@@ -29,7 +45,8 @@ namespace HydraMenu.routines
 			if(doorsLocked)
 			{
 				Sabotage.UnlockAll();
-			} else
+			}
+			else
 			{
 				Sabotage.LockAll();
 			}

@@ -29,7 +29,7 @@ namespace HydraMenu.features
         {
 			static bool Prefix(ref bool __result)
 			{
-				if(useModdedProtocol)
+				if(shouldSpoofVersion && useModdedProtocol)
                 {
                     __result = true;
                     return false;
