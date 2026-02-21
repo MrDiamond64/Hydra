@@ -2,7 +2,7 @@
 {
 	internal class InvalidVent
 	{
-		public static void OnPlayerEnterVent(PlayerControl player)
+		public static void OnPlayerEnterVent(PlayerControl player, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidVent) return;
 
@@ -10,6 +10,7 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to vent when there is no instance of ShipStatus.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 
 			// Check if the player vents if their role does not support venting (if they are not engineer or non-ghost imposter)
@@ -19,11 +20,12 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to vent when their role ({player.Data.RoleType}) does not support venting.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 		}
 
 		// Sending ExitVent RPCs can be used to make the player teleport to areas without having to send SnapTo RPCs
-		public static void OnPlayerExitVent(PlayerControl player)
+		public static void OnPlayerExitVent(PlayerControl player, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidVent) return;
 
@@ -31,12 +33,14 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to exit a vent when there is no instance of ShipStatus.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 
 			if(!player.Data.IsDead && !player.Data.Role.CanVent)
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to exit a vent when their role ({player.Data.RoleType}) does not support venting.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 		}
 	}

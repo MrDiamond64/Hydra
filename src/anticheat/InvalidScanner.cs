@@ -2,7 +2,7 @@
 {
 	internal class InvalidScanner : ICheck
 	{
-		public static void OnSetScanner(PlayerControl player, bool scanning, byte seqId)
+		public static void OnSetScanner(PlayerControl player, bool scanning, byte seqId, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidScan) return;
 
@@ -13,6 +13,7 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SetScanner RPC while the map has not spawned in yet.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 
 			// When a player gets killed, a SetScanner RPC with the scanning value sent to false is sent
@@ -21,12 +22,14 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SetScanner RPC when they are an imposter {scanning}.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 
 			if(!GameManager.Instance.LogicOptions.GetVisualTasks())
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SetScanner RPC while visual tasks were disabled.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 
 			bool hasMedbayScanTask = false;
@@ -43,6 +46,7 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SetScanner RPC without being assigned the medbay scan task.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 {
 	internal class InvalidCompleteTask : ICheck
 	{
-		public static void OnCompleteTask(PlayerControl player, uint taskIndex)
+		public static void OnCompleteTask(PlayerControl player, uint taskIndex, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidCompleteTask) return;
 
@@ -12,12 +12,14 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried completing task {taskIndex} when there was no valid instance of ShipStatus.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 
 			if(RoleManager.IsImpostorRole(player.Data.RoleType))
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried completing task {taskIndex} while being an imposter.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 
 			// Task IDs are zero-indexed
@@ -25,6 +27,7 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried completing task {taskIndex} when they only have {player.Data.Tasks.Count} tasks.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 		}
 	}

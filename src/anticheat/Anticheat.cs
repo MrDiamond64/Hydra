@@ -23,119 +23,153 @@ namespace HydraMenu.anticheat
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
 		class OnPlayerControlRPC
 		{
-			static void Prefix(PlayerControl __instance, byte callId, MessageReader reader)
+			static bool Prefix(PlayerControl __instance, byte callId, MessageReader reader)
 			{
 				int oldReadPosition = reader.Position;
 				RpcCalls RpcId = (RpcCalls)callId;
 
+				bool blockRpc = false;
 				switch(RpcId)
 				{
 					case RpcCalls.PlayAnimation:
 						TaskTypes task = (TaskTypes)reader.ReadByte();
 
-						InvalidPlayAnimation.OnPlayAnimation(__instance, task);
+						InvalidPlayAnimation.OnPlayAnimation(__instance, task, ref blockRpc);
 						break;
 
 					case RpcCalls.CompleteTask:
 						uint taskIndex = reader.ReadUInt32();
 
-						InvalidCompleteTask.OnCompleteTask(__instance, taskIndex);
+						InvalidCompleteTask.OnCompleteTask(__instance, taskIndex, ref blockRpc);
 						break;
 
 					case RpcCalls.SetLevel:
 						uint level = reader.ReadPackedUInt32();
 
-						InvalidSetLevel.OnSetLevel(__instance, level);
+						InvalidSetLevel.OnSetLevel(__instance, level, ref blockRpc);
 						break;
 
 					case RpcCalls.SetScanner:
 						bool scanning = reader.ReadBoolean();
 						byte seqId = reader.ReadByte();
 
-						InvalidScanner.OnSetScanner(__instance, scanning, seqId);
+						InvalidScanner.OnSetScanner(__instance, scanning, seqId, ref blockRpc);
 						break;
 
 					case RpcCalls.SetStartCounter:
 						int seqId2 = reader.ReadPackedInt32();
 						sbyte counter = reader.ReadSByte();
 
-						InvalidStartCounter.OnSetStartCounter(__instance, counter, seqId2);
+						InvalidStartCounter.OnSetStartCounter(__instance, counter, seqId2, ref blockRpc);
 						break;
 				}
 
-				// Put the read position back to its previous spot to not mess up the HandleRpc function
-				reader.Position = oldReadPosition;
+				if(!blockRpc)
+				{
+					// Put the read position back to its previous spot to not mess up the HandleRpc function
+					reader.Position = oldReadPosition;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
 		[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleRpc))]
 		class OnPlayerPhysicsRPC
 		{
-			static void Prefix(PlayerPhysics __instance, byte callId, MessageReader reader)
+			static bool Prefix(PlayerPhysics __instance, byte callId, MessageReader reader)
 			{
 				int oldReadPosition = reader.Position;
 				RpcCalls RpcId = (RpcCalls)callId;
 				PlayerControl player = __instance.myPlayer;
 
+				bool blockRpc = false;
 				switch(RpcId)
 				{
 					case RpcCalls.EnterVent:
-						InvalidVent.OnPlayerEnterVent(player);
+						InvalidVent.OnPlayerEnterVent(player, ref blockRpc);
 						break;
 
 					case RpcCalls.ExitVent:
-						InvalidVent.OnPlayerExitVent(player);
+						InvalidVent.OnPlayerExitVent(player, ref blockRpc);
 						break;
 				}
 
-				// Put the read position back to its previous spot to not mess up the HandleRpc function
-				reader.Position = oldReadPosition;
+				if(!blockRpc)
+				{
+					// Put the read position back to its previous spot to not mess up the HandleRpc function
+					reader.Position = oldReadPosition;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
 		[HarmonyPatch(typeof(CustomNetworkTransform), nameof(CustomNetworkTransform.HandleRpc))]
 		class OnNetTransformRPC
 		{
-			static void Prefix(CustomNetworkTransform __instance, byte callId, MessageReader reader)
+			static bool Prefix(CustomNetworkTransform __instance, byte callId, MessageReader reader)
 			{
 				int oldReadPosition = reader.Position;
 				RpcCalls RpcId = (RpcCalls)callId;
 				PlayerControl player = __instance.myPlayer;
 
+				bool blockRpc = false;
 				switch(RpcId)
 				{
 					case RpcCalls.SnapTo:
 						Vector2 position = NetHelpers.ReadVector2(reader);
 						ushort seqId = reader.ReadUInt16();
 
-						InvalidSnapTo.OnSnapTo(player, position, seqId);
+						InvalidSnapTo.OnSnapTo(player, position, seqId, ref blockRpc);
 						break;
 				}
 
-				// Put the read position back to its previous spot to not mess up the HandleRpc function
-				reader.Position = oldReadPosition;
+				if(!blockRpc)
+				{
+					// Put the read position back to its previous spot to not mess up the HandleRpc function
+					reader.Position = oldReadPosition;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
 		[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.HandleRpc))]
 		class OnShipStatusRPC
 		{
-			static void Prefix(ShipStatus __instance, byte callId, MessageReader reader)
+			static bool Prefix(ShipStatus __instance, byte callId, MessageReader reader)
 			{
 				int oldReadPosition = reader.Position;
 				RpcCalls RpcId = (RpcCalls)callId;
 
-				// It would be nice if we could also add checks for CloseDoorOfType RPCs, however we are not able to determine who is sending that RPC
-				/*
+				bool blockRpc = false;
 				switch(RpcId)
 				{
-					case RpcCalls.CloseDoorOfType:
+					case RpcCalls.CloseDoorsOfType:
+						// It would be nice if we could also add checks for CloseDoorOfType RPCs, however we are not able to determine who is sending that RPC
 						break;
 				}
-				*/
 
-				// Put the read position back to its previous spot to not mess up the HandleRpc function
-				reader.Position = oldReadPosition;
+				if(!blockRpc)
+				{
+					// Put the read position back to its previous spot to not mess up the HandleRpc function
+					reader.Position = oldReadPosition;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 

@@ -2,7 +2,7 @@
 {
 	internal class InvalidStartCounter : ICheck
 	{
-		public static void OnSetStartCounter(PlayerControl player, sbyte counter, int seqId)
+		public static void OnSetStartCounter(PlayerControl player, sbyte counter, int seqId, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidStartCounter) return;
 
@@ -12,6 +12,7 @@
 			{
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent a SetStartCounter RPC with an invalid value: {counter}.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 
 				// Revert the invalid start counter
 				if(AmongUsClient.Instance.AmHost)
@@ -26,6 +27,7 @@
 				// The vanilla game already ignores SetStartCounter RPCs when the game has started, so we do not need to revert it
 				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent a SetStartCounter RPC when the lobby has despawned.");
 				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 			*/
 		}

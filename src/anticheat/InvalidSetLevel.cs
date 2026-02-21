@@ -3,7 +3,8 @@
 	internal class InvalidSetLevel : ICheck
 	{
 		public static readonly uint MAX_PLAYER_LEVEL = 10000;
-		public static void OnSetLevel(PlayerControl player, uint level)
+		// We should not block SetLevel RPCs
+		public static void OnSetLevel(PlayerControl player, uint level, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckSpoofedLevels) return;
 
