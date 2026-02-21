@@ -5,26 +5,6 @@ namespace HydraMenu
 {
     internal class Network
     {
-		public static void SendCheckColor(byte color)
-        {
-            if(AmongUsClient.Instance.AmHost)
-            {
-                PlayerControl.LocalPlayer.RpcSetColor(color);
-                return;
-            }
-
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(
-                PlayerControl.LocalPlayer.NetId,
-                (byte)RpcCalls.CheckColor,
-                SendOption.None,
-                AmongUsClient.Instance.HostId
-            );
-
-            writer.Write(color);
-
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-        }
-
         // PlayerControl.LocalPlayer.CmdCheckSporeTrigger expects an instance of Mushroom to be passed
         // It isn't very easy to get an instance of Mushroom so we just reimplement that function and accept a mushroom ID
         public static void SendCheckSporeTrigger(int mushroomId)
@@ -32,7 +12,7 @@ namespace HydraMenu
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(
                 PlayerControl.LocalPlayer.NetId,
                 (byte)RpcCalls.CheckSpore,
-                SendOption.None,
+                SendOption.Reliable,
                 AmongUsClient.Instance.HostId
             );
 
@@ -48,7 +28,7 @@ namespace HydraMenu
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(
                 PlayerControl.LocalPlayer.NetId,
                 (byte)RpcCalls.SetScanner,
-                SendOption.None,
+                SendOption.Reliable,
                 -1
             );
 
@@ -61,25 +41,6 @@ namespace HydraMenu
 
             // Render the medbay animation for ourselves
             PlayerControl.LocalPlayer.SetScanner(scanning, scanCount);
-        }
-
-        public static void SendSnapTo(CustomNetworkTransform transform, Vector2 position)
-        {
-			transform.SnapTo(position);
-
-			ushort seqNum = (ushort)(transform.lastSequenceId + 2);
-
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(
-                transform.NetId,
-                (byte)RpcCalls.SnapTo,
-                SendOption.None,
-                -1
-            );
-
-            NetHelpers.WriteVector2(position, writer);
-            writer.Write(seqNum);
-
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
     }
 }

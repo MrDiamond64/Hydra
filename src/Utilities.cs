@@ -16,7 +16,7 @@ namespace HydraMenu
 
             if(ingame)
             {
-                Network.SendCheckColor((byte)rnd.Next(0, 15));
+                PlayerControl.LocalPlayer.CmdCheckColor((byte)rnd.Next(0, 15));
 
                 // string randomName = AccountManager.Instance.GetRandomName();
                 // PlayerControl.LocalPlayer.CmdCheckName(randomName);
@@ -65,12 +65,12 @@ namespace HydraMenu
 
             if(AmongUsClient.Instance.AmHost)
             {
+                // Changing names, even when not host, is not possible on Vanilla servers
                 PlayerControl.LocalPlayer.RpcSetName(outfit.PlayerName);
                 PlayerControl.LocalPlayer.RpcSetColor((byte)outfit.ColorId);
             } else
             {
-                // Changing player names mid-game through the CheckName RPC was patched in December 2025
-                Network.SendCheckColor((byte)outfit.ColorId);
+                PlayerControl.LocalPlayer.CmdCheckColor((byte)outfit.ColorId);
             }
 
             PlayerControl.LocalPlayer.RpcSetNamePlate(outfit.NamePlateId);

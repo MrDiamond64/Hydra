@@ -60,15 +60,16 @@ namespace HydraMenu
             }
         }
 
-        public static void TeleportTo(Vector2 position)
-        {
-            if(UseSnapToRPC)
-            {
-                Network.SendSnapTo(PlayerControl.LocalPlayer.NetTransform, position);
-            } else
-            {
-                PlayerControl.LocalPlayer.NetTransform.SnapTo(position);
-            }
-        }
-    }
+		public static void TeleportTo(Vector2 position)
+		{
+			if(UseSnapToRPC)
+			{
+				PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(position);
+			}
+			else
+			{
+				PlayerControl.LocalPlayer.NetTransform.SnapTo(position);
+			}
+		}
+	}
 }
