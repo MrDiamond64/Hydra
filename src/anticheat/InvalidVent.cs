@@ -1,8 +1,10 @@
-﻿namespace HydraMenu.anticheat
+﻿using Hazel;
+
+namespace HydraMenu.anticheat
 {
 	internal class InvalidVent
 	{
-		public static void OnPlayerEnterVent(PlayerControl player, ref bool blockRpc)
+		public static void OnPlayerEnterVent(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidVent) return;
 
@@ -25,7 +27,7 @@
 		}
 
 		// Sending ExitVent RPCs can be used to make the player teleport to areas without having to send SnapTo RPCs
-		public static void OnPlayerExitVent(PlayerControl player, ref bool blockRpc)
+		public static void OnPlayerExitVent(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidVent) return;
 

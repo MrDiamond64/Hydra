@@ -1,10 +1,15 @@
-﻿namespace HydraMenu.anticheat
+﻿using Hazel;
+
+namespace HydraMenu.anticheat
 {
 	internal class InvalidStartCounter : ICheck
 	{
-		public static void OnSetStartCounter(PlayerControl player, sbyte counter, int seqId, ref bool blockRpc)
+		public static void OnSetStartCounter(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidStartCounter) return;
+
+			reader.ReadPackedInt32();
+			sbyte counter = reader.ReadSByte();
 
 			// When a non-host player sends the SetStartCounter RPC, the counter value must always be -1
 			// I'm not sure why non-host players even need to send this RPC, it's more something only the host should be sending

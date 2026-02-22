@@ -1,10 +1,15 @@
-﻿namespace HydraMenu.anticheat
+﻿using Hazel;
+
+namespace HydraMenu.anticheat
 {
 	internal class InvalidScanner : ICheck
 	{
-		public static void OnSetScanner(PlayerControl player, bool scanning, byte seqId, ref bool blockRpc)
+		public static void OnSetScanner(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidScan) return;
+
+			bool scanning = reader.ReadBoolean();
+			// byte seqId = reader.ReadByte();
 
 			// The medbay scan task can only be done if the map itself exists
 			// If the game has not started yet (which the vanilla anticheat should already check), or if we're in the lobby to actual game transition, or the map was despawned,

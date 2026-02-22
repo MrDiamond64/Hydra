@@ -1,12 +1,17 @@
-﻿namespace HydraMenu.anticheat
+﻿using Hazel;
+
+namespace HydraMenu.anticheat
 {
 	internal class InvalidSetLevel : ICheck
 	{
 		public static readonly uint MAX_PLAYER_LEVEL = 10000;
+
 		// We should not block SetLevel RPCs
-		public static void OnSetLevel(PlayerControl player, uint level, ref bool blockRpc)
+		public static void OnSetLevel(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckSpoofedLevels) return;
+
+			uint level = reader.ReadPackedUInt32();
 
 			// The vanilla Among Us anticheat bans players if they send a SetLevel RPC with a lever greater than 100k
 			// This is rather generous, we just check if the requested player level is greater than 10k

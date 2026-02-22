@@ -1,10 +1,14 @@
-﻿namespace HydraMenu.anticheat
+﻿using Hazel;
+
+namespace HydraMenu.anticheat
 {
 	internal class InvalidPlayAnimation : ICheck
 	{
-		public static void OnPlayAnimation(PlayerControl player, TaskTypes animation, ref bool blockRpc)
+		public static void OnPlayAnimation(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			if(!Anticheat.Enabled || !Anticheat.CheckInvalidPlayAnimation) return;
+
+			TaskTypes animation = (TaskTypes)reader.ReadByte();
 
 			if(LobbyBehaviour.Instance)
 			{

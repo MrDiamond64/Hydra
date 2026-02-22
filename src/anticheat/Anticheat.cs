@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using Hazel;
-using UnityEngine;
 
 namespace HydraMenu.anticheat
 {
@@ -19,7 +18,6 @@ namespace HydraMenu.anticheat
 		public static bool CheckInvalidSystemUpdates { get; set; } = true;
 		public static bool CheckInvalidVent { get; set; } = true;
 
-
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
 		class OnPlayerControlRPC
 		{
@@ -32,35 +30,23 @@ namespace HydraMenu.anticheat
 				switch(RpcId)
 				{
 					case RpcCalls.PlayAnimation:
-						TaskTypes task = (TaskTypes)reader.ReadByte();
-
-						InvalidPlayAnimation.OnPlayAnimation(__instance, task, ref blockRpc);
+						InvalidPlayAnimation.OnPlayAnimation(__instance, reader, ref blockRpc);
 						break;
 
 					case RpcCalls.CompleteTask:
-						uint taskIndex = reader.ReadUInt32();
-
-						InvalidCompleteTask.OnCompleteTask(__instance, taskIndex, ref blockRpc);
+						InvalidCompleteTask.OnCompleteTask(__instance, reader, ref blockRpc);
 						break;
 
 					case RpcCalls.SetLevel:
-						uint level = reader.ReadPackedUInt32();
-
-						InvalidSetLevel.OnSetLevel(__instance, level, ref blockRpc);
+						InvalidSetLevel.OnSetLevel(__instance, reader, ref blockRpc);
 						break;
 
 					case RpcCalls.SetScanner:
-						bool scanning = reader.ReadBoolean();
-						byte seqId = reader.ReadByte();
-
-						InvalidScanner.OnSetScanner(__instance, scanning, seqId, ref blockRpc);
+						InvalidScanner.OnSetScanner(__instance, reader, ref blockRpc);
 						break;
 
 					case RpcCalls.SetStartCounter:
-						int seqId2 = reader.ReadPackedInt32();
-						sbyte counter = reader.ReadSByte();
-
-						InvalidStartCounter.OnSetStartCounter(__instance, counter, seqId2, ref blockRpc);
+						InvalidStartCounter.OnSetStartCounter(__instance, reader, ref blockRpc);
 						break;
 				}
 
@@ -90,11 +76,11 @@ namespace HydraMenu.anticheat
 				switch(RpcId)
 				{
 					case RpcCalls.EnterVent:
-						InvalidVent.OnPlayerEnterVent(player, ref blockRpc);
+						InvalidVent.OnPlayerEnterVent(player, reader, ref blockRpc);
 						break;
 
 					case RpcCalls.ExitVent:
-						InvalidVent.OnPlayerExitVent(player, ref blockRpc);
+						InvalidVent.OnPlayerExitVent(player, reader, ref blockRpc);
 						break;
 				}
 
@@ -124,10 +110,7 @@ namespace HydraMenu.anticheat
 				switch(RpcId)
 				{
 					case RpcCalls.SnapTo:
-						Vector2 position = NetHelpers.ReadVector2(reader);
-						ushort seqId = reader.ReadUInt16();
-
-						InvalidSnapTo.OnSnapTo(player, position, seqId, ref blockRpc);
+						InvalidSnapTo.OnSnapTo(player, reader, ref blockRpc);
 						break;
 				}
 
