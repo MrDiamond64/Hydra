@@ -141,6 +141,10 @@ namespace HydraMenu.anticheat
 					case RpcCalls.CloseDoorsOfType:
 						// It would be nice if we could also add checks for CloseDoorOfType RPCs, however we are not able to determine who is sending that RPC
 						break;
+
+					case RpcCalls.UpdateSystem:
+						InvalidSystemUpdate.OnSystemUpdate(reader, ref blockRpc);
+						break;
 				}
 
 				if(!blockRpc)

@@ -24,6 +24,7 @@ namespace HydraMenu.ui.sections
 			Anticheat.CheckInvalidScan = GUILayout.Toggle(Anticheat.CheckInvalidScan, "Flag Invalid SetScanner RPCs");
 			Anticheat.CheckInvalidSnapTo = GUILayout.Toggle(Anticheat.CheckInvalidSnapTo, "Flag Invalid SnapTo RPCs");
 			Anticheat.CheckInvalidStartCounter = GUILayout.Toggle(Anticheat.CheckInvalidStartCounter, "Flag Invalid SetStartCounter RPCs");
+			Anticheat.CheckInvalidSystemUpdates = GUILayout.Toggle(Anticheat.CheckInvalidSystemUpdates, "Flag Invalid UpdateSystem RPCs");
 		}
 	}
 }
