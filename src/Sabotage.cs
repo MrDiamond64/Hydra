@@ -203,7 +203,7 @@ namespace HydraMenu
 					if(amount == 0)
 					{
 						Hydra.Log.LogInfo($"Attempted to fix lights, XOR operation is 0 so that means we have nothing to fix.");
-						return;
+						break;
 					}
 
 					// Loop over each light switch
@@ -219,8 +219,18 @@ namespace HydraMenu
 					ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Electrical, (byte)(amount | 128));
 					break;
 
-				// Mushroom Mixup cannot be fixed, we have to wait for its duration to end
 				case SystemTypes.MushroomMixupSabotage:
+					if(!AmongUsClient.Instance.AmHost)
+					{
+						Hydra.Log.LogInfo("Attempted to fix Mushroom Mixup, we are not the host so nothing can be done");
+						break;
+					}
+
+					Hydra.Log.LogInfo("Attempted to fix Mushroom Mixup, we are the host so it can be fixed");
+
+					MushroomMixupSabotageSystem mixupSystem = ShipStatus.Instance.Systems[SystemTypes.MushroomMixupSabotage].Cast<MushroomMixupSabotageSystem>();
+					mixupSystem.currentSecondsUntilHeal = 0.1f;
+					mixupSystem.IsDirty = true;
 					break;
 			}
 		}
