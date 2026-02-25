@@ -5,8 +5,7 @@ namespace HydraMenu.anticheat
 {
 	internal class PlatformSpoofer : ICheck
 	{
-		// Refer to HydraMenu.features.PlayerLogger to know why we hook PlayerControl::SetName for player joins
-		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetName))]
+		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Start))]
 		class PlatformSpoof
 		{
 			static void Postfix(PlayerControl __instance)
@@ -20,7 +19,7 @@ namespace HydraMenu.anticheat
 
 				if(!IsValidPlatform(platformData))
 				{
-					Hydra.notifications.Send("Anticheat", $"{__instance.Data.PlayerName} was detected with spoofed platform information. Platform: {platformData.Platform}, Platform name: {platformData.PlatformName}, XUID: {platformData.XboxPlatformId}, PSID: {platformData.PsnPlatformId}.");
+					Hydra.notifications.Send("Anticheat", $"{clientData.PlayerName} was detected with spoofed platform information. Platform: {platformData.Platform}, Platform name: {platformData.PlatformName}, XUID: {platformData.XboxPlatformId}, PSID: {platformData.PsnPlatformId}.");
 					Anticheat.Punish(__instance);
 				}
 			}
