@@ -1,5 +1,6 @@
 ﻿using Hazel;
 using InnerNet;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HydraMenu.anticheat
@@ -37,6 +38,30 @@ namespace HydraMenu.anticheat
 				case SystemTypes.Electrical:
 					ValidateSwitchSystem(player, reader, ref blockRpc);
 					break;
+
+				case SystemTypes.Sabotage:
+					ValidateSabotageSystem(player, reader, ref blockRpc);
+					break;
+			}
+		}
+
+		private static void ValidateSabotageSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		{
+			SystemTypes system = (SystemTypes)reader.ReadByte();
+
+			Dictionary<string, SystemTypes> validSabotages = Sabotage.GetSabotages();
+			if(!validSabotages.ContainsValue(system))
+			{
+				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} attempted to sabotage an invalid system: {system}.");
+				Anticheat.Punish(player);
+				blockRpc = true;
+			}
+
+			if(!RoleManager.IsImpostorRole(player.Data.RoleType))
+			{
+				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} attempted to sabotage {system} when they are not an imposter.");
+				Anticheat.Punish(player);
+				blockRpc = true;
 			}
 		}
 
