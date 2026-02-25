@@ -2,7 +2,7 @@
 {
     internal abstract class ISection
     {
-        public string sectionName = "";
+        public string name = "";
 
         public virtual void Render() { }
     }

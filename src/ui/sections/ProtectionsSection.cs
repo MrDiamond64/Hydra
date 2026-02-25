@@ -7,7 +7,7 @@ namespace HydraMenu.ui.sections
     {
         public ProtectionsSection()
         {
-            sectionName = "Protections";
+			name = "Protections";
         }
 
         public override void Render()

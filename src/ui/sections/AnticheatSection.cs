@@ -7,7 +7,7 @@ namespace HydraMenu.ui.sections
 	{
 		public AnticheatSection()
 		{
-			sectionName = "Anticheat";
+			name = "Anticheat";
 		}
 
 		public override void Render()

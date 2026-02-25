@@ -11,7 +11,7 @@ namespace HydraMenu.ui.sections
     {
         public PlayersSection()
         {
-            sectionName = "Players";
+			name = "Players";
         }
 
         public static Vector2 PlayerPaneSize

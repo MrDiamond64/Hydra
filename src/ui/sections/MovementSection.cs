@@ -8,7 +8,7 @@ namespace HydraMenu.ui.sections
     {
         public MovementSection()
         {
-            sectionName = "Movement";
+			name = "Movement";
         }
 
         public override void Render()

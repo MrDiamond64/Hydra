@@ -7,7 +7,7 @@ namespace HydraMenu.ui.sections
     {
         public VisualSection()
         {
-            sectionName = "Visual";
+			name = "Visual";
         }
 
         public override void Render()

@@ -9,7 +9,7 @@ namespace HydraMenu.ui.sections
 	{
 		public SpooferSection()
 		{
-			sectionName = "Spoofer";
+			name = "Spoofer";
 		}
 
 		public readonly Dictionary<string, int> versions = new Dictionary<string, int>()

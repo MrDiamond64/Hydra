@@ -7,7 +7,7 @@ namespace HydraMenu.ui.sections
     {
         public GeneralSection()
         {
-            sectionName = "General";
+			name = "General";
         }
 
         public override void Render() {

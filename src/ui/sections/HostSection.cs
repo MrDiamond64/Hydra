@@ -8,7 +8,7 @@ namespace HydraMenu.ui.sections
     {
         public HostSection()
         {
-            sectionName = "Host";
+			name = "Host";
         }
 
         public override void Render()

@@ -7,7 +7,7 @@ namespace HydraMenu.ui.sections
     {
         public TrollSection()
         {
-            sectionName = "Troll";
+			name = "Troll";
         }
 
         public override void Render()

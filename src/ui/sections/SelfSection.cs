@@ -7,7 +7,7 @@ namespace HydraMenu.ui.sections
     {
         public SelfSection()
         {
-            sectionName = "Self";
+			name = "Self";
         }
 
         private uint level = 199;

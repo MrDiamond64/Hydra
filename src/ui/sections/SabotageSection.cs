@@ -7,7 +7,7 @@ namespace HydraMenu.ui.sections
     {
         public SabotageSection()
         {
-            sectionName = "Sabotage";
+			name = "Sabotage";
         }
 
         public override void Render()

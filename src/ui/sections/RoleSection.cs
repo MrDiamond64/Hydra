@@ -9,7 +9,7 @@ namespace HydraMenu.ui.sections
     {
         public RolesSection()
         {
-            sectionName = "Roles";
+			name = "Roles";
         }
 
         private byte selectedRole = 0;

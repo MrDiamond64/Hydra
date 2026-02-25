@@ -56,7 +56,7 @@ namespace HydraMenu.ui
 
         public void Awake()
         {
-            activeTab = sections[0].sectionName;
+            activeTab = sections[0].name;
         }
 
         public void Update()
@@ -94,7 +94,7 @@ namespace HydraMenu.ui
                 ISection section = sections[i];
 
                 // If we are currently on this section then render it
-                if(activeTab == section.sectionName)
+                if(activeTab == section.name)
                 {
                     GUILayout.BeginArea(new Rect(FeaturePanePosition.x, FeaturePanePosition.y, FeaturePaneSize.x, FeaturePaneSize.y));
 
@@ -160,8 +160,8 @@ namespace HydraMenu.ui
                 SectionButtonSizes.y
             );
 
-            if(GUI.Button(rect, section.sectionName)) {
-                activeTab = section.sectionName;
+            if(GUI.Button(rect, section.name)) {
+                activeTab = section.name;
             }
         }
     }
