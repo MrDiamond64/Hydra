@@ -71,15 +71,11 @@ namespace HydraMenu.ui
 			// Allow changing the selected section by using the up and down arrow keys
 			if(Input.GetKeyDown(KeyCode.UpArrow))
 			{
-				Hydra.Log.LogMessage($"{activeTab}");
 				activeTab = (byte)Math.Max(activeTab - 1, 0);
-				Hydra.Log.LogMessage($"{activeTab}");
 			}
 			else if(Input.GetKeyDown(KeyCode.DownArrow))
 			{
-				Hydra.Log.LogMessage($"{activeTab}");
 				activeTab = (byte)Math.Min(activeTab + 1, sections.Length - 1);
-				Hydra.Log.LogMessage($"{activeTab}");
 			}
 
 			HandleBoxMovement();
