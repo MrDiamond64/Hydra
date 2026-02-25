@@ -26,7 +26,7 @@ namespace HydraMenu.ui
 
         // UI Section Pane
         private readonly ISection[] sections = { new GeneralSection(), new SelfSection(), new TrollSection(), new SabotageSection(), new HostSection(), new RolesSection(), new PlayersSection(), new MovementSection(), new VisualSection(), new ProtectionsSection(), new AnticheatSection(), new SpooferSection() };
-        public string activeTab = "";
+        public byte activeTab = 0;
 
         public static Vector2 SectionListSize
         {
@@ -52,11 +52,6 @@ namespace HydraMenu.ui
         public static Vector2 FeaturePanePosition
         {
             get { return new Vector2(SectionListPosition.x + SectionListSize.x, HeaderPosition.y + HeaderSize.y); }
-        }
-
-        public void Awake()
-        {
-            activeTab = sections[0].name;
         }
 
         public void Update()
@@ -94,7 +89,7 @@ namespace HydraMenu.ui
                 ISection section = sections[i];
 
                 // If we are currently on this section then render it
-                if(activeTab == section.name)
+                if(i == activeTab)
                 {
                     GUILayout.BeginArea(new Rect(FeaturePanePosition.x, FeaturePanePosition.y, FeaturePaneSize.x, FeaturePaneSize.y));
 
@@ -161,7 +156,7 @@ namespace HydraMenu.ui
             );
 
             if(GUI.Button(rect, section.name)) {
-                activeTab = section.name;
+                activeTab = position;
             }
         }
     }
