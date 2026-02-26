@@ -220,9 +220,16 @@ namespace HydraMenu
 						break;
 					}
 
+					MushroomMixupSabotageSystem mixupSystem = ShipStatus.Instance.Systems[SystemTypes.MushroomMixupSabotage].Cast<MushroomMixupSabotageSystem>();
+
+					if(!mixupSystem.IsActive)
+					{
+						Hydra.Log.LogInfo("Attempted to fix Mushroom Mixup, the sabotage is not enabled so we have nothing to fix");
+						break;
+					}
+
 					Hydra.Log.LogInfo("Attempted to fix Mushroom Mixup, we are the host so it can be fixed");
 
-					MushroomMixupSabotageSystem mixupSystem = ShipStatus.Instance.Systems[SystemTypes.MushroomMixupSabotage].Cast<MushroomMixupSabotageSystem>();
 					mixupSystem.currentSecondsUntilHeal = 0.1f;
 					mixupSystem.IsDirty = true;
 					break;
