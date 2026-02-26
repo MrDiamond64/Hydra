@@ -50,7 +50,7 @@ namespace HydraMenu.ui.sections
                 return;
             }
 
-            GUI.Box(new Rect(0, 0, PlayerPaneSize.x, PlayerPaneSize.y), "");
+            GUI.Box(new Rect(0, 0, PlayerPaneSize.x, PlayerPaneSize.y), "", Styles.MainBox);
 
             for(byte i = 0; i < PlayerControl.AllPlayerControls.Count; i++)
             {
