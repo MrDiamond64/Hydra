@@ -29,11 +29,22 @@ namespace HydraMenu.ui.sections
 
             if(GUILayout.Button("Trigger All Spores"))
             {
-                for(int i = 0; i < 8; i++)
-                {
-                    Network.SendCheckSporeTrigger(i);
-                }
-            }
+				if(Utilities.GetCurrentMap() != MapNames.Fungle)
+				{
+					Hydra.notifications.Send("Trigger Spores", "This option only works on the Fungle map.");
+				}
+				else
+				{
+					FungleShipStatus shipStatus = ShipStatus.Instance.Cast<FungleShipStatus>();
+
+					foreach(Mushroom mushroom in shipStatus.sporeMushrooms.Values)
+					{
+						PlayerControl.LocalPlayer.RpcTriggerSpores(mushroom);
+					}
+
+					Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
+				}
+			}
 
             if(GUILayout.Button("Copy Random Player"))
             {

@@ -40,6 +40,7 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Fix All Sabotages"))
 			{
 				Sabotage.FixAllSabotages();
+				Hydra.notifications.Send("Sabotage", "All sabotages have been repaired.", 5);
 			}
 
 			if(GUILayout.Button("Unlock All Doors"))
@@ -49,7 +50,7 @@ namespace HydraMenu.ui.sections
 					Sabotage.UnlockAll();
 					Hydra.notifications.Send("Sabotage", "All doors have been unlocked.", 5);
 				} else {
-					Hydra.notifications.Send("Sabotage", "The map you are currently on does not support unlocking doors.", 5);
+					Hydra.notifications.Send("Sabotage", "The map you are currently on does not support unlocking doors.", 10);
 				}
 			}
 			GUILayout.EndHorizontal();

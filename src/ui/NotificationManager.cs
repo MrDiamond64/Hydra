@@ -58,6 +58,7 @@ namespace HydraMenu.ui
             return (Screen.height / 2) / (int)boxSize.y;
         }
 
+        // The time to live value for a notification should be five seconds if it is a success message, and ten seconds if it is a failure message
         public void Send(string title, string message, float ttl = 10)
         {
 			Hydra.Log.LogMessage($"[Notification] [{title}] {message}");

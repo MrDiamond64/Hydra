@@ -49,13 +49,13 @@ namespace HydraMenu.ui.sections
                 {
                     Utilities.RandomizePlayer(true);
 
-                    Hydra.notifications.Send("Player Randomizer", "Your avatar has been randomized for this game.");
+                    Hydra.notifications.Send("Player Randomizer", "Your avatar has been randomized for this game.", 5);
                 } else
                 {
                     AccountManager.Instance.RandomizeName();
                     Utilities.RandomizePlayer();
 
-                    Hydra.notifications.Send("Player Randomizer", "Your name and avatar has been randomized.");
+                    Hydra.notifications.Send("Player Randomizer", "Your name and avatar has been randomized.", 5);
                 }
             }
 
@@ -65,7 +65,7 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Send Level Update"))
 			{
 				PlayerControl.LocalPlayer.RpcSetLevel(level);
-                Hydra.notifications.Send("Level Updater", $"Your level has been changed to {level + 1}");
+                Hydra.notifications.Send("Level Updater", $"Your level has been changed to {level + 1}", 5);
 			}
 		}
     }
