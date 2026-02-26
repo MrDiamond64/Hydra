@@ -39,7 +39,7 @@ namespace HydraMenu.ui.sections
             get { return new Vector2(PlayerPanePosition.x + PlayerPaneSize.x, MainUI.HeaderPosition.y + MainUI.HeaderSize.y); }
         }
 
-        public PlayerControl selectedPlayer;
+        public static PlayerControl selectedPlayer;
 		private Vector2 subsectionScrollVector;
 
 		public override void Render()
@@ -122,7 +122,9 @@ namespace HydraMenu.ui.sections
                 );
             }
 
-            if(GUILayout.Button("Teleport"))
+			Hydra.routines.playerFollower.Enabled = GUILayout.Toggle(Hydra.routines.playerFollower.Enabled, "Follow");
+
+			if(GUILayout.Button("Teleport"))
             {
                 // We do not want to use PlayerControl::GetTruePosition() here as it would teleport us to the player's feet
                 Teleporter.TeleportTo(target.transform.position);
