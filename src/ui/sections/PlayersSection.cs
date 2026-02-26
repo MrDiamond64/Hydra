@@ -40,8 +40,9 @@ namespace HydraMenu.ui.sections
         }
 
         public PlayerControl selectedPlayer;
+		private Vector2 subsectionScrollVector;
 
-        public override void Render()
+		public override void Render()
         {
             if(PlayerControl.AllPlayerControls.Count == 0)
             {
@@ -60,12 +61,15 @@ namespace HydraMenu.ui.sections
                 if(player.PlayerId == selectedPlayer?.PlayerId)
                 {
                     GUILayout.BeginArea(new Rect(PlayerPaneSize.x, 0, PlayerOptionsSize.x, PlayerOptionsSize.y));
+                    subsectionScrollVector = GUILayout.BeginScrollView(subsectionScrollVector);
 
                     GUILayout.BeginVertical();
                     GUILayout.Space(5);
                     GUILayout.EndVertical();
 
                     RenderPlayerControls(player);
+
+                    GUILayout.EndScrollView();
                     GUILayout.EndArea();
                 }
             }

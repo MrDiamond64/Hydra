@@ -202,7 +202,7 @@ namespace HydraMenu
 
 					if(amount == 0)
 					{
-						Hydra.Log.LogInfo($"Attempted to fix lights, XOR operation is 0 so that means we have nothing to fix.");
+						Hydra.Log.LogInfo($"Attempted to fix lights, XOR operation is 0 so that means we have nothing to fix");
 						break;
 					}
 

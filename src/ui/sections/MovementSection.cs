@@ -19,7 +19,8 @@ namespace HydraMenu.ui.sections
 
                 // Having all possible options shown at once (even if the player isn't in a game) is nice user experience
                 GUILayout.Toggle(false, "Noclip");
-            } else
+            }
+            else
             {
                 // We don't want the position that includes the player's collider from PlayerControl::GetTruePosition()
                 Vector2 position = PlayerControl.LocalPlayer.transform.position;

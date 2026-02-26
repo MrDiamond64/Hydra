@@ -95,26 +95,28 @@ namespace HydraMenu.ui
             // Render Section List
             GUI.Box(new Rect(SectionListPosition.x, SectionListPosition.y, SectionListSize.x, SectionListSize.y), "");
 
-            for(byte i = 0; i < sections.Length; i++)
-            {
-                ISection section = sections[i];
+			for(byte i = 0; i < sections.Length; i++)
+			{
+				ISection section = sections[i];
 
-                // If we are currently on this section then render it
-                if(i == activeTab)
-                {
-                    GUILayout.BeginArea(new Rect(FeaturePanePosition.x, FeaturePanePosition.y, FeaturePaneSize.x, FeaturePaneSize.y));
+				if(i == activeTab)
+				{
+					GUILayout.BeginArea(new Rect(FeaturePanePosition.x, FeaturePanePosition.y, FeaturePaneSize.x, FeaturePaneSize.y));
+					section.scrollVector = GUILayout.BeginScrollView(section.scrollVector);
 
-                    // Add a little buffer between the end of the section pane and the start of the feature pane to prevent text from overlapping
-                    GUILayout.BeginVertical();
-                    GUILayout.Space(5);
-                    GUILayout.EndVertical();
+					// Add a little buffer between the end of the section pane and the start of the feature pane to prevent text from overlapping
+					GUILayout.BeginVertical();
+					GUILayout.Space(5);
+					GUILayout.EndVertical();
 
-                    section.Render();
-                    GUILayout.EndArea();
-                }
+					section.Render();
 
-                // Add the tab to the left-pane
-                RenderTabs(i, section);
+					GUILayout.EndScrollView();
+					GUILayout.EndArea();
+				}
+
+				// Add the tab to the left-pane
+				RenderTabs(i, section);
             }
         }
 
