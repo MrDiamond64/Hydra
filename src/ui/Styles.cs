@@ -5,6 +5,13 @@ namespace HydraMenu.ui
 {
 	internal class Styles
 	{
+		private enum UIComponents
+		{
+			MainBox,
+			SectionBox,
+			SectionBoxActive
+		}
+
 		public enum UIColors
 		{
 			Azure,
@@ -30,13 +37,15 @@ namespace HydraMenu.ui
 		public static float menuOpacity = 0.85f;
 		public static UIColors primaryColor = UIColors.Azure;
 
+		private static Dictionary<UIComponents, Texture2D> CachedTextures = new Dictionary<UIComponents, Texture2D>();
+
 		public static GUIStyle MainBox
 		{
 			get
 			{
 				GUIStyle style = new GUIStyle();
 
-				Texture2D background = CreateColoredTexture(UIColors.Carbon, menuOpacity);
+				Texture2D background = CreateColoredTexture(UIComponents.MainBox, UIColors.Carbon, menuOpacity);
 				style.normal.background = background;
 
 				style.normal.textColor = Color.white;
@@ -69,7 +78,7 @@ namespace HydraMenu.ui
 			{
 				GUIStyle style = new GUIStyle();
 
-				Texture2D background = CreateColoredTexture(primaryColor);
+				Texture2D background = CreateColoredTexture(UIComponents.SectionBoxActive, primaryColor);
 				style.normal.background = background;
 
 				style.normal.textColor = ColorValues[UIColors.White];
@@ -82,13 +91,32 @@ namespace HydraMenu.ui
 			}
 		}
 
-		private static Texture2D CreateColoredTexture(UIColors color, float opacity = 1.0f)
+		private static Texture2D CreateColoredTexture(UIComponents textureName, UIColors color, float opacity = 1.0f)
 		{
-			Texture2D background = new Texture2D(1, 1);
+			Texture2D background;
+			// Check if the cached background we have is null, as the garbage collector could delete our cached Texture2D and we would be returning a null Texture
+			if(CachedTextures.TryGetValue(textureName, out background) && background != null)
+			{
+				return background;
+			}
+
+			Hydra.Log.LogInfo($"Cache lookup for texture {textureName} failed, creating the required texture...");
+
+			background = new Texture2D(1, 1);
 			background.SetPixel(0, 0, ColorValues[color].SetAlpha(opacity));
 			background.Apply();
 
+			CachedTextures[textureName] = background;
 			return background;
+		}
+
+		public static void ClearCache()
+		{
+			foreach(Texture2D texture in CachedTextures.Values)
+			{
+				Texture2D.Destroy(texture);
+			}
+			CachedTextures.Clear();
 		}
 	}
 }
