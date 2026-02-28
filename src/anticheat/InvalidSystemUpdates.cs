@@ -39,10 +39,24 @@ namespace HydraMenu.anticheat
 					ValidateSwitchSystem(player, reader, ref blockRpc);
 					break;
 
+				case SystemTypes.MushroomMixupSabotage:
+					ValidateMushroomMixupSystem(player, reader, ref blockRpc);
+					break;
+
 				case SystemTypes.Sabotage:
 					ValidateSabotageSystem(player, reader, ref blockRpc);
 					break;
 			}
+		}
+
+		// The Mushroom Mixup system is only be updated in the SabotageSystemType::Update function by the host. It should never be sent by a player
+		private static void ValidateMushroomMixupSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		{
+			MushroomMixupSabotageSystem.Operation operation = (MushroomMixupSabotageSystem.Operation)reader.ReadByte();
+
+			Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} attempted to update Mushroom Mixup system with operation {operation}.");
+			Anticheat.Punish(player);
+			blockRpc = true;
 		}
 
 		private static void ValidateSabotageSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
