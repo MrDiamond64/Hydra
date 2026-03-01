@@ -65,7 +65,7 @@ namespace HydraMenu
 
 			if(AmongUsClient.Instance.AmHost)
 			{
-				// Changing names, even when not host, is not possible on Vanilla servers
+				// Changing names, even when host, is not possible on Vanilla servers
 				PlayerControl.LocalPlayer.RpcSetName(outfit.PlayerName);
 				PlayerControl.LocalPlayer.RpcSetColor((byte)outfit.ColorId);
 			} else
