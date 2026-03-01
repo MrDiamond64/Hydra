@@ -2,11 +2,11 @@
 
 namespace HydraMenu.ui.sections
 {
-    internal abstract class ISection
-    {
-        public string name = "";
-        public Vector2 scrollVector;
+	internal abstract class ISection
+	{
+		public string name = "";
+		public Vector2 scrollVector;
 
-        public virtual void Render() { }
-    }
+		public virtual void Render() { }
+	}
 }

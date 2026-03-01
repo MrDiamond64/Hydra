@@ -3,23 +3,23 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-    internal class SabotageSection : ISection
-    {
-        public SabotageSection()
-        {
+	internal class SabotageSection : ISection
+	{
+		public SabotageSection()
+		{
 			name = "Sabotage";
-        }
+		}
 
-        public override void Render()
-        {
+		public override void Render()
+		{
 			if(ShipStatus.Instance == null)
 			{
 				GUILayout.Label("You are not currently in a game, or the game has not started yet. These options will not work.");
 			}
 
-            Sabotage.UpdateSystemsDirectly = GUILayout.Toggle(Sabotage.UpdateSystemsDirectly, "Update Sabotage Systems Directly");
+			Sabotage.UpdateSystemsDirectly = GUILayout.Toggle(Sabotage.UpdateSystemsDirectly, "Update Sabotage Systems Directly");
 
-            Dictionary<string, SystemTypes> sabotages = Sabotage.GetSabotages();
+			Dictionary<string, SystemTypes> sabotages = Sabotage.GetSabotages();
 			Dictionary<string, SystemTypes> doors = Sabotage.GetDoors();
 
 			GUILayout.BeginHorizontal();
@@ -58,13 +58,13 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label("Sabotages:");
 			foreach(var (key, value) in sabotages)
-            {
-                if(GUILayout.Button(key))
-                {
-                    Sabotage.SabotageSystem(value);
-                    Hydra.notifications.Send("Sabotage", $"{key} has been sabotaged.", 5);
-                }
-            }
+			{
+				if(GUILayout.Button(key))
+				{
+					Sabotage.SabotageSystem(value);
+					Hydra.notifications.Send("Sabotage", $"{key} has been sabotaged.", 5);
+				}
+			}
 
 			GUILayout.Label("Close Doors:");
 			if(doors.Count == 0)
@@ -100,5 +100,5 @@ namespace HydraMenu.ui.sections
 				GUILayout.EndHorizontal();
 			}
 		}
-    }
+	}
 }

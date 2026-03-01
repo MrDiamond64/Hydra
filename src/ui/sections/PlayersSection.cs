@@ -63,7 +63,7 @@ namespace HydraMenu.ui.sections
 
                 RenderPlayerSelection(i, player);
 
-                if(player.PlayerId == selectedPlayer?.PlayerId)
+                if(player == selectedPlayer)
                 {
                     GUILayout.BeginArea(new Rect(PlayerPaneSize.x, 0, PlayerOptionsSize.x, PlayerOptionsSize.y));
                     subsectionScrollVector = GUILayout.BeginScrollView(subsectionScrollVector);
