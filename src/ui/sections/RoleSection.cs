@@ -67,21 +67,6 @@ namespace HydraMenu.ui.sections
 				Hydra.notifications.Send("Update Role", $"Your role has been updated to {role}.");
 			}
 			GUILayout.EndHorizontal();
-
-			// Going to each player section in the Players section just to see their role isn't very worthwhile, so we make an easy overview here
-			string rolesList = "Player Roles List:";
-
-			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
-			{
-				rolesList += $"\n{player.Data.PlayerName} {player.Data.ColorName} - {player.Data.RoleType}";
-
-				if(RoleManager.IsImpostorRole(player.Data.RoleType))
-				{
-					rolesList += "(Imp)";
-				}
-			}
-
-			GUILayout.Label(rolesList);
 		}
 	}
 }
