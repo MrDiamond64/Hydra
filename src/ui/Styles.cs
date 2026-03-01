@@ -5,13 +5,6 @@ namespace HydraMenu.ui
 {
 	internal class Styles
 	{
-		private enum UIComponents
-		{
-			MainBox,
-			SectionBox,
-			SectionBoxActive
-		}
-
 		public enum UIColors
 		{
 			Azure,
@@ -37,7 +30,7 @@ namespace HydraMenu.ui
 		public static float menuOpacity = 0.85f;
 		public static UIColors primaryColor = UIColors.Azure;
 
-		private static Dictionary<UIComponents, Texture2D> CachedTextures = new Dictionary<UIComponents, Texture2D>();
+		private static Dictionary<string, Texture2D> CachedTextures = new Dictionary<string, Texture2D>();
 
 		public static GUIStyle MainBox
 		{
@@ -45,7 +38,7 @@ namespace HydraMenu.ui
 			{
 				GUIStyle style = new GUIStyle();
 
-				Texture2D background = CreateColoredTexture(UIComponents.MainBox, UIColors.Carbon, menuOpacity);
+				Texture2D background = CreateColoredTexture("MainBox", ColorValues[UIColors.Carbon], menuOpacity);
 				style.normal.background = background;
 
 				style.normal.textColor = Color.white;
@@ -78,7 +71,7 @@ namespace HydraMenu.ui
 			{
 				GUIStyle style = new GUIStyle();
 
-				Texture2D background = CreateColoredTexture(UIComponents.SectionBoxActive, primaryColor);
+				Texture2D background = CreateColoredTexture("SectionBoxActive", ColorValues[primaryColor]);
 				style.normal.background = background;
 
 				style.normal.textColor = ColorValues[UIColors.White];
@@ -91,7 +84,50 @@ namespace HydraMenu.ui
 			}
 		}
 
-		private static Texture2D CreateColoredTexture(UIComponents textureName, UIColors color, float opacity = 1.0f)
+		public static GUIStyle PlayerBox
+		{
+			get
+			{
+				GUIStyle style = new GUIStyle();
+
+				style.normal.textColor = ColorValues[UIColors.White];
+				style.alignment = TextAnchor.MiddleLeft;
+				style.padding.left = 10;
+				style.richText = true;
+
+				return style;
+			}
+		}
+
+		public static GUIStyle PlayerBoxActive
+		{
+			get
+			{
+				GUIStyle style = new GUIStyle();
+
+				Texture2D background = CreateColoredTexture("SectionBoxActive", ColorValues[primaryColor]);
+				style.normal.background = background;
+
+				style.normal.textColor = ColorValues[UIColors.White];
+				style.alignment = TextAnchor.MiddleLeft;
+				style.padding.left = 10;
+				style.richText = true;
+
+				return style;
+			}
+		}
+
+		public static GUIStyle CreateCrewmateColorBox(string colorName, Color color)
+		{
+			GUIStyle style = new GUIStyle();
+
+			Texture2D background = CreateColoredTexture(colorName, color);
+			style.normal.background = background;
+
+			return style;
+		}
+
+		private static Texture2D CreateColoredTexture(string textureName, Color color, float opacity = 1.0f)
 		{
 			Texture2D background;
 			// Check if the cached background we have is null, as the garbage collector could delete our cached Texture2D and we would be returning a null Texture
@@ -100,10 +136,10 @@ namespace HydraMenu.ui
 				return background;
 			}
 
-			Hydra.Log.LogInfo($"Cache lookup for texture {textureName} failed, creating the required texture...");
+			Hydra.Log.LogInfo($"Cache lookup for texture {textureName} returned a miss, creating the required texture...");
 
 			background = new Texture2D(1, 1);
-			background.SetPixel(0, 0, ColorValues[color].SetAlpha(opacity));
+			background.SetPixel(0, 0, color.SetAlpha(opacity));
 			background.Apply();
 
 			CachedTextures[textureName] = background;

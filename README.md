@@ -41,7 +41,7 @@ Hydra UI has multiple parts: the sections pane, and the features panes. The sect
 # TODO
 - [ ] Improve anticheat with more checks (such as sabotaging as crewmate)
 - [x] Add scrollbars to UI sections
-- [ ] Show player role and colors in Players UI section
+- [x] Show player role and colors in Players UI section
 - [ ] Explore the modded vanilla protocol which seems to have a much more lenient anticheat
 - [ ] Saveable configs
 

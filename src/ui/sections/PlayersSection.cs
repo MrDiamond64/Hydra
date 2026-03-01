@@ -39,7 +39,12 @@ namespace HydraMenu.ui.sections
             get { return new Vector2(PlayerPanePosition.x + PlayerPaneSize.x, MainUI.HeaderPosition.y + MainUI.HeaderSize.y); }
         }
 
-        public static PlayerControl selectedPlayer;
+		public static Vector2 PlayerColorBoxSize
+		{
+			get { return new Vector2(5, PlayerButtonSize.y); }
+		}
+
+		public static PlayerControl selectedPlayer;
 		private Vector2 subsectionScrollVector;
 
 		public override void Render()
@@ -75,17 +80,30 @@ namespace HydraMenu.ui.sections
             }
         }
 
-        private void RenderPlayerSelection(byte position, PlayerControl player)
-        {
-            Rect rect = new Rect(0, position * PlayerButtonSize.y, PlayerButtonSize.x, PlayerButtonSize.y);
+		private void RenderPlayerSelection(byte position, PlayerControl player)
+		{
+			Rect playerInfo = new Rect(0, position * PlayerButtonSize.y, PlayerButtonSize.x, PlayerButtonSize.y);
 
-            if(GUI.Button(rect, player.Data.PlayerName))
-            {
-                selectedPlayer = player;
-            }
-        }
+			string playerName = player.Data.PlayerName;
+			playerName += $"\n<color=\"{GetRoleColor(player.Data.RoleType)}\">{player.Data.RoleType}</color>";
 
-        private static void RenderPlayerControls(PlayerControl target)
+			GUIStyle style = player == selectedPlayer ? Styles.PlayerBoxActive : Styles.PlayerBox;
+
+			if(GUI.Button(playerInfo, playerName, style))
+			{
+				selectedPlayer = player;
+			}
+
+			Rect playerColor = new Rect(0, position * PlayerButtonSize.y, PlayerColorBoxSize.x, PlayerColorBoxSize.y);
+			GUI.Box(playerColor, "", Styles.CreateCrewmateColorBox(player.Data.ColorName, player.Data.Color));
+		}
+
+		private string GetRoleColor(RoleTypes role)
+		{
+			return RoleManager.IsImpostorRole(role) ? "red" : "#8afcfc";
+		}
+
+		private static void RenderPlayerControls(PlayerControl target)
         {
             if(target == null)
             {
