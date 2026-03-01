@@ -68,10 +68,6 @@ namespace HydraMenu.ui.sections
                     GUILayout.BeginArea(new Rect(PlayerPaneSize.x, 0, PlayerOptionsSize.x, PlayerOptionsSize.y));
                     subsectionScrollVector = GUILayout.BeginScrollView(subsectionScrollVector);
 
-                    GUILayout.BeginVertical();
-                    GUILayout.Space(5);
-                    GUILayout.EndVertical();
-
                     RenderPlayerControls(player);
 
                     GUILayout.EndScrollView();
