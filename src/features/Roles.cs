@@ -136,5 +136,4 @@ namespace HydraMenu.features
 			RoleManager.Instance.SetRole(PlayerControl.LocalPlayer, role);
 		}
 	}
-
 }

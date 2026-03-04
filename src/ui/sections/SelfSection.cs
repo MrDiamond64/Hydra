@@ -29,7 +29,15 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Call Meeting"))
 			{
-				PlayerControl.LocalPlayer.CmdReportDeadBody(null);
+				if(AmongUsClient.Instance.AmHost)
+				{
+					Hydra.Log.LogInfo("We are the host, we can force a meeting");
+					Utilities.OpenMeeting(PlayerControl.LocalPlayer, null);
+				}
+				else
+				{
+					PlayerControl.LocalPlayer.CmdReportDeadBody(null);
+				}
 			}
 
 			GUILayout.BeginHorizontal();

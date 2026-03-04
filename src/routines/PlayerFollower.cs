@@ -30,8 +30,8 @@ namespace HydraMenu.routines
 					PlayerControl.LocalPlayer.moveable = false;
 
 					Hydra.notifications.Send("Player Follower", $"You are now attached to {following.Data.PlayerName}", 5);
-					// If we are attempting to disable Follow Player, and the Player UI shows the player we are currently following, then disable the routine
 				}
+				// If we are attempting to disable Follow Player, and the Player UI shows the player we are currently following, then disable the routine
 				else if(!value && AmAttachedTo(PlayersSection.selectedPlayer))
 				{
 					Disable();
