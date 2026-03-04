@@ -87,6 +87,11 @@ namespace HydraMenu.ui.sections
 
 			GUIStyle style = player == selectedPlayer ? Styles.PlayerBoxActive : Styles.PlayerBox;
 
+			if(player.OwnerId == AmongUsClient.Instance.HostId)
+			{
+				style.normal.textColor = new Color(1.0f, 0.84f, 0.0f); // #FFD700
+			}
+
 			if(GUI.Button(playerInfo, playerName, style))
 			{
 				selectedPlayer = player;
