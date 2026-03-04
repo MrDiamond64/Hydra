@@ -150,7 +150,8 @@ namespace HydraMenu.ui.sections
 				{
 					Hydra.Log.LogInfo($"Attempting to kill {target.Data.PlayerName}, we are host so we are using the MurderPlayer RPC");
 					PlayerControl.LocalPlayer.RpcMurderPlayer(target, true);
-				} else
+				}
+				else
 				{
 					Hydra.Log.LogInfo($"Attempting to kill {target.Data.PlayerName}, we are not the host so we have to use the CheckMurder RPC");
 					PlayerControl.LocalPlayer.CmdCheckMurder(target);
@@ -169,7 +170,8 @@ namespace HydraMenu.ui.sections
 				{
 					Hydra.Log.LogInfo($"Attempting to report {target.Data.PlayerName}'s body, we are the host so we directly use the StartMeeting RPC");
 					Utilities.OpenMeeting(PlayerControl.LocalPlayer, target.Data);
-				} else
+				}
+				else
 				{
 					Hydra.Log.LogInfo($"Attempting to report {target.Data.PlayerName}'s body, we are not the host so we have to use the ReportDeadBody RPC");
 					PlayerControl.LocalPlayer.CmdReportDeadBody(target.Data);
