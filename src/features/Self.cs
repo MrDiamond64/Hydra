@@ -64,5 +64,24 @@ namespace HydraMenu.features
 				__result *= Multiplier;
 			}
 		}
+
+		[HarmonyPatch(typeof(Ladder), nameof(Ladder.CoolDown), MethodType.Getter)]
+		public static class NoLadderCooldown
+		{
+			public static bool enabled = true;
+			static bool Prefix(Ladder __instance, ref float __result)
+			{
+				if(enabled)
+				{
+					__instance.CoolDown = 0.0f;
+					__result = 0.0f;
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
 	}
 }
