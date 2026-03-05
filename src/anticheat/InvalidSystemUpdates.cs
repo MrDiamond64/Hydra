@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HydraMenu.anticheat
 {
-	internal class InvalidSystemUpdate : ICheck
+	internal class InvalidSystemUpdates : ICheck
 	{
 		// TODO: Maybe change the variable name to something shorter lol?
 		private static readonly SystemTypes[] SystemsThatCanBeUpdatedWhenDead = {

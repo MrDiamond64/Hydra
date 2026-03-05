@@ -145,7 +145,7 @@ namespace HydraMenu.anticheat
 						break;
 
 					case RpcCalls.UpdateSystem:
-						InvalidSystemUpdate.OnSystemUpdate(reader, ref blockRpc);
+						InvalidSystemUpdates.OnSystemUpdate(reader, ref blockRpc);
 						break;
 				}
 

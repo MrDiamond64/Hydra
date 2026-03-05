@@ -188,10 +188,32 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label("Host Only Features:" + (AmongUsClient.Instance.AmHost ? "" : "\n(Using these will get you banned!)"));
 
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Force Meeting As"))
 			{
 				Utilities.OpenMeeting(target, null);
 			}
+
+			if(GUILayout.Button("Force All Votes To"))
+			{
+				if(MeetingHud.Instance == null)
+				{
+					Hydra.notifications.Send("Vote Forcer", "This option can only be used when there is an active meeting.");
+				}
+				else
+				{
+					foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+					{
+						PlayerVoteArea votingArea = MeetingHud.Instance.playerStates[player.PlayerId];
+
+						votingArea.SetVote(target.PlayerId);
+					}
+
+					MeetingHud.Instance.SetDirtyBit(1);
+					MeetingHud.Instance.CheckForEndVoting();
+				}
+			}
+			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Frame Shapeshift"))
 			{
