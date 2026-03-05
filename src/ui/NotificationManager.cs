@@ -8,6 +8,7 @@ namespace HydraMenu.ui
 	{
 		public Vector2 boxSize = new Vector2(325, 90);
 		public List<Notification> notifications = new List<Notification>();
+		public bool DisableNotifications = false;
 
 		public void Update()
 		{
@@ -33,6 +34,8 @@ namespace HydraMenu.ui
 
 		public void OnGUI()
 		{
+			if(DisableNotifications) return;
+
 			int notificaions = Math.Min(GetMaxNotifications(), notifications.Count);
 
 			for(byte i = 0; i < notificaions; i++)
@@ -62,6 +65,8 @@ namespace HydraMenu.ui
 		public void Send(string title, string message, float ttl = 10)
 		{
 			Hydra.Log.LogMessage($"[Notification] [{title}] {message}");
+
+			if(DisableNotifications) return;
 
 			Notification notification = new Notification(title, message, ttl);
 			notifications.Add(notification);
