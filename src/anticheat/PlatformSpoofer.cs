@@ -19,8 +19,7 @@ namespace HydraMenu.anticheat
 
 				if(!IsValidPlatform(platformData))
 				{
-					Hydra.notifications.Send("Anticheat", $"{clientData.PlayerName} was detected with spoofed platform information. Platform: {platformData.Platform}, Platform name: {platformData.PlatformName}, XUID: {platformData.XboxPlatformId}, PSID: {platformData.PsnPlatformId}.");
-					Anticheat.Punish(__instance);
+					Anticheat.Flag(__instance, $"{clientData.PlayerName} was detected with spoofed platform information. Platform: {platformData.Platform}, Platform name: {platformData.PlatformName}, XUID: {platformData.XboxPlatformId}, PSID: {platformData.PsnPlatformId}.");
 				}
 			}
 		}

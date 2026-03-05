@@ -14,8 +14,7 @@ namespace HydraMenu.anticheat
 
 			if(LobbyBehaviour.Instance != null)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SnapTo RPC while inside the lobby.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SnapTo RPC while inside the lobby.");
 				blockRpc = true;
 			}
 		}

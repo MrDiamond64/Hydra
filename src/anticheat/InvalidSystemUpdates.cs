@@ -8,7 +8,12 @@ namespace HydraMenu.anticheat
 	internal class InvalidSystemUpdate : ICheck
 	{
 		// TODO: Maybe change the variable name to something shorter lol?
-		private static readonly SystemTypes[] SystemsThatCanBeUpdatedWhenDead = { SystemTypes.MedBay, SystemTypes.Sabotage };
+		private static readonly SystemTypes[] SystemsThatCanBeUpdatedWhenDead = {
+			SystemTypes.MedBay,
+			SystemTypes.Sabotage,
+			// Ghosts update the Security system when closing cameras, but not opening them
+			SystemTypes.Security
+		};
 
 		public static void OnSystemUpdate(MessageReader reader, ref bool blockRpc)
 		{
@@ -19,16 +24,14 @@ namespace HydraMenu.anticheat
 
 			if(!ShipStatus.Instance.Systems.ContainsKey(system))
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to update system {system} when the current map has no such system.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to update system {system} when the current map has no such system.");
 				blockRpc = true;
 				return;
 			}
 
 			if(player.Data.IsDead && !SystemsThatCanBeUpdatedWhenDead.Contains(system))
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to update system {system} while dead.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to update system {system} while dead.");
 				blockRpc = true;
 				return;
 			}
@@ -54,8 +57,7 @@ namespace HydraMenu.anticheat
 		{
 			MushroomMixupSabotageSystem.Operation operation = (MushroomMixupSabotageSystem.Operation)reader.ReadByte();
 
-			Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} attempted to update Mushroom Mixup system with operation {operation}.");
-			Anticheat.Punish(player);
+			Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to update Mushroom Mixup system with operation {operation}.");
 			blockRpc = true;
 		}
 
@@ -66,33 +68,29 @@ namespace HydraMenu.anticheat
 			Dictionary<string, SystemTypes> validSabotages = Sabotage.GetSabotages();
 			if(!validSabotages.ContainsValue(system))
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} attempted to sabotage an invalid system: {system}.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to sabotage an invalid system: {system}.");
 				blockRpc = true;
 			}
 
 			if(!RoleManager.IsImpostorRole(player.Data.RoleType))
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} attempted to sabotage {system} when they are not an imposter.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to sabotage {system} when they are not an imposter.");
 				blockRpc = true;
 			}
 		}
 
-		public static void ValidateSwitchSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		private static void ValidateSwitchSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			byte switches = reader.ReadByte();
 
 			if(switches.HasBit(128))
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} attempted to bulk-update switches: {switches}.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to bulk-update switches: {switches}.");
 				blockRpc = true;
 			}
 			else if(switches > 5)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} attempted to toggle an invalid switch: {switches}.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to toggle an invalid switch: {switches}.");
 				blockRpc = true;
 			}
 		}

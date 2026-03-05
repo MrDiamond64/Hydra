@@ -17,15 +17,13 @@ namespace HydraMenu.anticheat
 			// This is rather generous, we just check if the requested player level is greater than 10k
 			if(level > MAX_PLAYER_LEVEL)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent SetLevel RPC with a level that is too high ({level}).");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent SetLevel RPC with a level that is too high ({level}).");
 			}
 
 			// The SetLevel RPC should only be sent when a player joins the game in the lobby
 			if(ShipStatus.Instance)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent SetLevel RPC when the game has started.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent SetLevel RPC when the game has started.");
 			}
 		}
 	}

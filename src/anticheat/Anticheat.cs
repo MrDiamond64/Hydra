@@ -18,6 +18,8 @@ namespace HydraMenu.anticheat
 		public static bool CheckInvalidSystemUpdates { get; set; } = true;
 		public static bool CheckInvalidVent { get; set; } = true;
 
+		public static float NotificationDuration = 10.0f;
+
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
 		class OnPlayerControlRPC
 		{
@@ -160,9 +162,11 @@ namespace HydraMenu.anticheat
 			}
 		}
 
-		public static void Punish(PlayerControl player)
+		public static void Flag(PlayerControl player, string reason, bool shouldPunish = true)
 		{
-			if(!Autoban || !AmongUsClient.Instance.AmHost) return;
+			Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
+
+			if(!shouldPunish || !Autoban || !AmongUsClient.Instance.AmHost) return;
 
 			AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
 			Hydra.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Hydra Anticheat for hacking.");

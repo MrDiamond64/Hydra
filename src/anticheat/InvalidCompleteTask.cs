@@ -14,23 +14,20 @@ namespace HydraMenu.anticheat
 			// Technically we don't need this to detect if someone completes a task in the lobby, as the task ID being greater than the total amount of tasks check should detect it
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried completing task {taskIndex} when there was no valid instance of ShipStatus.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried completing task {taskIndex} when there was no valid instance of ShipStatus.");
 				blockRpc = true;
 			}
 
 			if(RoleManager.IsImpostorRole(player.Data.RoleType))
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried completing task {taskIndex} while being an imposter.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried completing task {taskIndex} while being an imposter.");
 				blockRpc = true;
 			}
 
 			// Task IDs are zero-indexed
 			if((taskIndex + 1) > player.Data.Tasks.Count)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried completing task {taskIndex} when they only have {player.Data.Tasks.Count} tasks.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried completing task {taskIndex} when they only have {player.Data.Tasks.Count} tasks.");
 				blockRpc = true;
 			}
 		}

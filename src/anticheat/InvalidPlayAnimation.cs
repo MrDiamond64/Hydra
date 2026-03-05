@@ -12,22 +12,19 @@ namespace HydraMenu.anticheat
 
 			if(LobbyBehaviour.Instance)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} inside the lobby.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} inside the lobby.");
 				blockRpc = true;
 			}
 
 			if(RoleManager.IsImpostorRole(player.Data.RoleType))
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} when they are an imposter.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} when they are an imposter.");
 				blockRpc = true;
 			}
 
 			if(!GameManager.Instance.LogicOptions.GetVisualTasks())
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} when visual tasks are off.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} when visual tasks are off.");
 				blockRpc = true;
 			}
 		}

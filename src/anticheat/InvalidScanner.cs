@@ -16,8 +16,7 @@ namespace HydraMenu.anticheat
 			// then we know that SetScanner RPC was sent illegitimately
 			if(ShipStatus.Instance == null && scanning)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SetScanner RPC while the map has not spawned in yet.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC while the map has not spawned in yet.");
 				blockRpc = true;
 			}
 
@@ -25,15 +24,13 @@ namespace HydraMenu.anticheat
 			// This applies to Imposters too if they were to somehow die, so we need to account for this false flag
 			if(RoleManager.IsImpostorRole(player.Data.RoleType) && scanning)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SetScanner RPC when they are an imposter {scanning}.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC when they are an imposter {scanning}.");
 				blockRpc = true;
 			}
 
 			if(!GameManager.Instance.LogicOptions.GetVisualTasks())
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SetScanner RPC while visual tasks were disabled.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC while visual tasks were disabled.");
 				blockRpc = true;
 			}
 
@@ -49,8 +46,7 @@ namespace HydraMenu.anticheat
 			// SetScanner RPC is sent upon player death, so we have to make sure the scanning value is set to true to avoid false positives
 			if(!hasMedbayScanTask && scanning)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} sent the SetScanner RPC without being assigned the medbay scan task.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC without being assigned the medbay scan task.");
 				blockRpc = true;
 			}
 		}

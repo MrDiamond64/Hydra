@@ -10,8 +10,7 @@ namespace HydraMenu.anticheat
 
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to vent when there is no instance of ShipStatus.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to vent when there is no instance of ShipStatus.");
 				blockRpc = true;
 			}
 
@@ -20,8 +19,7 @@ namespace HydraMenu.anticheat
 			// (Maybe we can store the time at which a player died and skip this check if an EnterVent RPC was sent within 500ms of dying?)
 			if(!player.Data.IsDead && !player.Data.Role.CanVent)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to vent when their role ({player.Data.RoleType}) does not support venting.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to vent when their role ({player.Data.RoleType}) does not support venting.");
 				blockRpc = true;
 			}
 		}
@@ -33,15 +31,13 @@ namespace HydraMenu.anticheat
 
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to exit a vent when there is no instance of ShipStatus.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to exit a vent when there is no instance of ShipStatus.");
 				blockRpc = true;
 			}
 
 			if(!player.Data.IsDead && !player.Data.Role.CanVent)
 			{
-				Hydra.notifications.Send("Anticheat", $"{player.Data.PlayerName} tried to exit a vent when their role ({player.Data.RoleType}) does not support venting.");
-				Anticheat.Punish(player);
+				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to exit a vent when their role ({player.Data.RoleType}) does not support venting.");
 				blockRpc = true;
 			}
 		}
