@@ -18,6 +18,9 @@ namespace HydraMenu.anticheat
 			if(level > MAX_PLAYER_LEVEL)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent SetLevel RPC with a level that is too high ({level}).");
+				blockRpc = true;
+
+				player.SetLevel(MAX_PLAYER_LEVEL);
 			}
 
 			// The SetLevel RPC should only be sent when a player joins the game in the lobby

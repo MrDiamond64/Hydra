@@ -34,25 +34,10 @@ namespace HydraMenu.ui.sections
 			Host.BlockLowLevels.MinLevel = (uint)GUILayout.HorizontalSlider(Host.BlockLowLevels.MinLevel, 0, 100);
 			GUILayout.EndHorizontal();
 
-			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Force Crewmate Victory") && PlayerControl.LocalPlayer)
+			if(GUILayout.Button("Force Start Game"))
 			{
-				// Just incase the user has this enabled
-				Host.DisableGameEnd.Enabled = false;
-
-				GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByTask, false);
-				Hydra.notifications.Send("Game Finished", "You ended the game with a crewmate victory.", 5);
+				AmongUsClient.Instance.StartGame();
 			}
-
-			if(GUILayout.Button("Force Imposter Victory") && PlayerControl.LocalPlayer)
-			{
-				// Just incase the user has this enabled
-				Host.DisableGameEnd.Enabled = false;
-
-				GameManager.Instance.RpcEndGame(GameOverReason.ImpostorsByKill, false);
-				Hydra.notifications.Send("Game Finished", "You ended the game with an imposter victory.", 5);
-			}
-			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Kill Everyone") && PlayerControl.LocalPlayer)
 			{
@@ -76,6 +61,26 @@ namespace HydraMenu.ui.sections
 				Hydra.notifications.Send("Teleporter", "Everyone has been teleported to you!", 5);
 			}
 			*/
+
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Force Crewmate Victory") && PlayerControl.LocalPlayer)
+			{
+				// Just incase the user has this enabled
+				Host.DisableGameEnd.Enabled = false;
+
+				GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByTask, false);
+				Hydra.notifications.Send("Game Finished", "You ended the game with a crewmate victory.", 5);
+			}
+
+			if(GUILayout.Button("Force Imposter Victory") && PlayerControl.LocalPlayer)
+			{
+				// Just incase the user has this enabled
+				Host.DisableGameEnd.Enabled = false;
+
+				GameManager.Instance.RpcEndGame(GameOverReason.ImpostorsByKill, false);
+				Hydra.notifications.Send("Game Finished", "You ended the game with an imposter victory.", 5);
+			}
+			GUILayout.EndHorizontal();
 
 			GUILayout.Label("Map Spawner/Despawner:");
 			GUILayout.BeginHorizontal();
@@ -113,11 +118,6 @@ namespace HydraMenu.ui.sections
 				{
 					Hydra.notifications.Send("Game Map", "The game map has already been despawned.", 5);
 				}
-			}
-
-			if(GUILayout.Button("Start"))
-			{
-				AmongUsClient.Instance.StartGame();
 			}
 
 			GUILayout.Label("Disco Party:");

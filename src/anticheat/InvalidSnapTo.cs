@@ -17,6 +17,12 @@ namespace HydraMenu.anticheat
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SnapTo RPC while inside the lobby.");
 				blockRpc = true;
 			}
+
+			// If we are the host, and we are using the Modded Vanilla Protocol, teleport the player back to their old position
+			if(blockRpc && AmongUsClient.Instance.AmModdedHost)
+			{
+				player.NetTransform.RpcSnapTo(player.transform.position);
+			}
 		}
 	}
 }
