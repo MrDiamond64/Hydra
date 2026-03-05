@@ -77,6 +77,12 @@ namespace HydraMenu.anticheat
 				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to sabotage {system} when they are not an imposter.");
 				blockRpc = true;
 			}
+
+			if(GameManager.Instance.IsHideAndSeek())
+			{
+				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to sabotage {system} while in Hide and Seek.");
+				blockRpc = true;
+			}
 		}
 
 		private static void ValidateSwitchSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
