@@ -272,6 +272,76 @@ namespace HydraMenu.ui.sections
 			}
 			GUILayout.EndHorizontal();
 
+			GUILayout.Space(5);
+			GUILayout.Label("Game Options Modifier:");
+
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Blind"))
+			{
+				IGameOptions gameOptions = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				gameOptions.SetFloat(FloatOptionNames.CrewLightMod, -1.0f);
+				gameOptions.SetFloat(FloatOptionNames.ImpostorLightMod, -1.0f);
+
+				GameOptions.SendGameOptionsToClient(gameOptions, target.OwnerId);
+			}
+
+			if(GUILayout.Button("Fullbright"))
+			{
+				IGameOptions gameOptions = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				gameOptions.SetFloat(FloatOptionNames.CrewLightMod, 1000f);
+				gameOptions.SetFloat(FloatOptionNames.ImpostorLightMod, 1000f);
+
+				GameOptions.SendGameOptionsToClient(gameOptions, target.OwnerId);
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Slow Speed"))
+			{
+				IGameOptions gameOptions = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				gameOptions.SetFloat(FloatOptionNames.PlayerSpeedMod, 0.1f);
+
+				GameOptions.SendGameOptionsToClient(gameOptions, target.OwnerId);
+			}
+
+			if(GUILayout.Button("Super Speed"))
+			{
+				IGameOptions gameOptions = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				// We can't exceed 3.0x speed on Vanilla servers without getting banned
+				gameOptions.SetFloat(FloatOptionNames.PlayerSpeedMod, 3.0f);
+
+				GameOptions.SendGameOptionsToClient(gameOptions, target.OwnerId);
+			}
+			GUILayout.EndHorizontal();
+
+			/*
+			// The problem with changing the TaskBarMode is that if we remove the task bar, we are not able to bring it back
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Hide Task Bar"))
+			{
+				IGameOptions gameOptions = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				gameOptions.SetInt(Int32OptionNames.TaskBarMode, (int)TaskBarMode.Invisible);
+
+				GameOptions.SendGameOptionsToClient(gameOptions, target.OwnerId);
+			}
+
+			if(GUILayout.Button("Show Task Bar"))
+			{
+				IGameOptions gameOptions = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				gameOptions.SetInt(Int32OptionNames.TaskBarMode, (int)TaskBarMode.Normal);
+
+				GameOptions.SendGameOptionsToClient(gameOptions, target.OwnerId);
+			}
+			GUILayout.EndHorizontal();
+			*/
+
+			if(GUILayout.Button("Reset to Defaults"))
+			{
+				IGameOptions gameOptions = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				GameOptions.SendGameOptionsToClient(gameOptions, target.OwnerId);
+			}
+
+			GUILayout.Space(5);
 			GUILayout.Label($"Change color to: {selectedColor}");
 			selectedColor = (CrewmateColor)GUILayout.HorizontalSlider((float)selectedColor, 0, 17);
 

@@ -39,7 +39,7 @@ namespace HydraMenu.ui.sections
 				AmongUsClient.Instance.StartGame();
 			}
 
-			if(GUILayout.Button("Kill Everyone") && PlayerControl.LocalPlayer)
+			if(GUILayout.Button("Kill Everyone"))
 			{
 				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
 				{
@@ -48,7 +48,7 @@ namespace HydraMenu.ui.sections
 			}
 
 			/*
-			if(GUILayout.Button("Teleport Everyone to Me") && PlayerControl.LocalPlayer)
+			if(GUILayout.Button("Teleport Everyone to Me"))
 			{
 				Vector2 pos = PlayerControl.LocalPlayer.transform.position;
 				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
@@ -63,7 +63,7 @@ namespace HydraMenu.ui.sections
 			*/
 
 			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Force Crewmate Victory") && PlayerControl.LocalPlayer)
+			if(GUILayout.Button("Force Crewmate Victory") )
 			{
 				// Just incase the user has this enabled
 				Host.DisableGameEnd.Enabled = false;
@@ -72,7 +72,7 @@ namespace HydraMenu.ui.sections
 				Hydra.notifications.Send("Game Finished", "You ended the game with a crewmate victory.", 5);
 			}
 
-			if(GUILayout.Button("Force Imposter Victory") && PlayerControl.LocalPlayer)
+			if(GUILayout.Button("Force Imposter Victory"))
 			{
 				// Just incase the user has this enabled
 				Host.DisableGameEnd.Enabled = false;
