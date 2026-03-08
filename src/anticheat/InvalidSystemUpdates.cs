@@ -99,6 +99,17 @@ namespace HydraMenu.anticheat
 				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to toggle an invalid switch: {switches}.");
 				blockRpc = true;
 			}
+
+			// Block light switch updates when lights are currently not sabotaged
+			// It is possible for this check to false flag if a player is attempting to fix lights when they have not received the message about the sabotage being fixed
+			// This is also why you may experience the bug where lights get unfixed right after they get fixed
+			// So to avoid wrongly banning players, we just silent flag and block the RPC to prevent hackers from being able to force sabotage lights
+			SwitchSystem system = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+			if(system.ExpectedSwitches == system.ActualSwitches)
+			{
+				Hydra.Log.LogInfo($"Blocked switch update from {player.Data.PlayerName} as lights are not currently sabotaged");
+				blockRpc = true;
+			}
 		}
 	}
 }
