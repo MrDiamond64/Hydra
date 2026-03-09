@@ -26,6 +26,7 @@ namespace HydraMenu.ui.sections
 			Self.UpdateStatsFreeplay.Enabled = GUILayout.Toggle(Self.UpdateStatsFreeplay.Enabled, "Update Stats in Freeplay");
 			Self.AlwaysDoScanAnimation.Enabled = GUILayout.Toggle(Self.AlwaysDoScanAnimation.Enabled, "Always Show Medbay Scan");
 			Self.NoLadderCooldown.enabled = GUILayout.Toggle(Self.NoLadderCooldown.enabled, "No Ladder Cooldown");
+			Self.UnlimitedMeetings.enabled = GUILayout.Toggle(Self.UnlimitedMeetings.enabled, "Unlimited Meetings");
 
 			if(GUILayout.Button("Call Meeting"))
 			{

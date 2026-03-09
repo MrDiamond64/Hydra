@@ -83,5 +83,16 @@ namespace HydraMenu.features
 				}
 			}
 		}
+
+		[HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Begin))]
+		public static class UnlimitedMeetings
+		{
+			public static bool enabled = true;
+
+			static void Prefix()
+			{
+				if(enabled) PlayerControl.LocalPlayer.RemainingEmergencies = 999999;
+			}
+		}
 	}
 }
