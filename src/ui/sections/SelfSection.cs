@@ -41,18 +41,6 @@ namespace HydraMenu.ui.sections
 				}
 			}
 
-			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Start Medbay Scan"))
-			{
-				Network.SendSetScanner(true);
-			}
-
-			if(GUILayout.Button("Finish Medbay Scan"))
-			{
-				Network.SendSetScanner(false);
-			}
-			GUILayout.EndHorizontal();
-
 			if(GUILayout.Button("Randomize Avatar"))
 			{
 				if(AmongUsClient.Instance.AmConnected)
@@ -69,6 +57,37 @@ namespace HydraMenu.ui.sections
 				}
 			}
 
+			GUILayout.Label("Task Animations:");
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Start Medbay Scan"))
+			{
+				Network.SendSetScanner(true);
+			}
+
+			if(GUILayout.Button("Finish Medbay Scan"))
+			{
+				Network.SendSetScanner(false);
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Clear Asteroids"))
+			{
+				PlayerControl.LocalPlayer.RpcPlayAnimation((byte)TaskTypes.ClearAsteroids);
+			}
+
+			if(GUILayout.Button("Empty Garbage"))
+			{
+				PlayerControl.LocalPlayer.RpcPlayAnimation((byte)TaskTypes.EmptyGarbage);
+			}
+			GUILayout.EndHorizontal();
+
+			if(GUILayout.Button("Prime Shields"))
+			{
+				PlayerControl.LocalPlayer.RpcPlayAnimation((byte)TaskTypes.PrimeShields);
+			}
+
+			GUILayout.Space(5);
 			GUILayout.Label($"Update level to: {level + 1}");
 			level = (uint)GUILayout.HorizontalSlider(level, 0, 199);
 
