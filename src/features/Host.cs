@@ -29,6 +29,17 @@ namespace HydraMenu.features
 			}
 		}
 
+		[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CloseDoorsOfType))]
+		public static class DisableCloseDoors
+		{
+			public static bool Enabled { get; set; } = false;
+
+			static bool Prefix()
+			{
+				return !Enabled;
+			}
+		}
+
 		[HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldFlipSkeld))]
 		public static class FlippedSkeld
 		{
