@@ -24,7 +24,7 @@ namespace HydraMenu.ui.sections
 
 			// Self.BypassIntentionalDisconnectionBlocks.Enabled = GUILayout.Toggle(Self.BypassIntentionalDisconnectionBlocks.Enabled, "Bypass intentional disconnection temp bans");
 			Self.UpdateStatsFreeplay.Enabled = GUILayout.Toggle(Self.UpdateStatsFreeplay.Enabled, "Update Stats in Freeplay");
-			Self.AlwaysDoScanAnimation.Enabled = GUILayout.Toggle(Self.AlwaysDoScanAnimation.Enabled, "Always Show Medbay Scan");
+			Self.AlwaysShowTaskAnimations = GUILayout.Toggle(Self.AlwaysShowTaskAnimations, "Always Show Task Animations");
 			Self.NoLadderCooldown.enabled = GUILayout.Toggle(Self.NoLadderCooldown.enabled, "No Ladder Cooldown");
 			Self.UnlimitedMeetings.enabled = GUILayout.Toggle(Self.UnlimitedMeetings.enabled, "Unlimited Meetings");
 
@@ -73,18 +73,18 @@ namespace HydraMenu.ui.sections
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Clear Asteroids"))
 			{
-				PlayerControl.LocalPlayer.RpcPlayAnimation((byte)TaskTypes.ClearAsteroids);
+				Network.SendPlayAnimation((byte)TaskTypes.ClearAsteroids);
 			}
 
 			if(GUILayout.Button("Empty Garbage"))
 			{
-				PlayerControl.LocalPlayer.RpcPlayAnimation((byte)TaskTypes.EmptyGarbage);
+				Network.SendPlayAnimation((byte)TaskTypes.EmptyGarbage);
 			}
 			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Prime Shields"))
 			{
-				PlayerControl.LocalPlayer.RpcPlayAnimation((byte)TaskTypes.PrimeShields);
+				Network.SendPlayAnimation((byte)TaskTypes.PrimeShields);
 			}
 
 			GUILayout.Space(5);

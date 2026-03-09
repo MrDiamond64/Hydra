@@ -5,6 +5,12 @@ namespace HydraMenu.features
 {
 	internal class Self
 	{
+		// When PlayerControl::RpcPlayAnimation or PlayerControl::RpcSetScanner is called, they check if visual tasks are on before sending the RPC
+		// If we want to be able to send those RPCs even with visual tasks are off, then we will need to reimplement those functions
+		// We could just patch LogicOptionsNormal::GetVisualTasks and LogicOptionsHnS::GetVisualTasks, however the latter is inlined so our patch won't actually get applied
+		// meaning this will only show task animations on normal games and not hide and seek aswell
+		public static bool AlwaysShowTaskAnimations { get; set; } = true;
+
 		/*
 		[HarmonyPatch(typeof(DataManager), nameof(DataManager.Player.Ban.IsBanned), MethodType.Getter)]
 		public static class BypassIntentionalDisconnectionBlocks
@@ -18,22 +24,38 @@ namespace HydraMenu.features
 		}
 		*/
 
-		// The PlayerControl::RpcSetScanner function has a check to see if visual tasks are disabled before sending the SetScanner RPCs
-		// If we want to be able to do the medbay scan animation while visual tasks are off, we can instead run our own RpcSetScanner function which does not have that check
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetScanner))]
-		public static class AlwaysDoScanAnimation
+		class AlwaysDoScanAnimation
 		{
-			public static bool Enabled { get; set; } = true;
-
 			static bool Prefix(PlayerControl __instance, bool value)
 			{
 				if(__instance.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
 
-				if(Enabled)
+				if(AlwaysShowTaskAnimations)
 				{
 					Network.SendSetScanner(value);
 					return false;
-				} else
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcPlayAnimation))]
+		class AlwaysDoTaskAnimaton
+		{
+			static bool Prefix(PlayerControl __instance, byte animType)
+			{
+				if(__instance.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+
+				if(AlwaysShowTaskAnimations)
+				{
+					Network.SendPlayAnimation(animType);
+					return false;
+				}
+				else
 				{
 					return true;
 				}
