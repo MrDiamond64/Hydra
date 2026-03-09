@@ -62,6 +62,8 @@ namespace HydraMenu.ui.sections
 			for(byte i = 0; i < PlayerControl.AllPlayerControls.Count; i++)
 			{
 				PlayerControl player = PlayerControl.AllPlayerControls[i];
+				// Wait for player data to fully load
+				if(player.Data == null) continue;
 
 				RenderPlayerSelection(i, player);
 
