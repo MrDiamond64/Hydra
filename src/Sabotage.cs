@@ -190,8 +190,14 @@ namespace HydraMenu
 				case SystemTypes.Reactor:
 				case SystemTypes.Laboratory:
 				case SystemTypes.LifeSupp:
-				case SystemTypes.Comms:
 					ShipStatus.Instance.RpcUpdateSystem(system, 16);
+					break;
+
+				// Comms in Mira HQ and HeliSabotage require two different updates in order to complete
+				case SystemTypes.Comms:
+				case SystemTypes.HeliSabotage:
+					ShipStatus.Instance.RpcUpdateSystem(system, 16);
+					ShipStatus.Instance.RpcUpdateSystem(system, 17);
 					break;
 
 				case SystemTypes.Electrical:
