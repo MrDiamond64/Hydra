@@ -10,6 +10,7 @@ namespace HydraMenu.anticheat
 
 		public static bool CheckSpoofedPlatforms { get; set; } = true;
 		public static bool CheckSpoofedLevels { get; set; } = true;
+		public static bool CheckInvalidCloseDoors { get; set; } = true;
 		public static bool CheckInvalidCompleteTask { get; set; } = true;
 		public static bool CheckInvalidPlayAnimation { get; set; } = true;
 		public static bool CheckInvalidScan { get; set; } = true;
@@ -141,7 +142,7 @@ namespace HydraMenu.anticheat
 				switch(RpcId)
 				{
 					case RpcCalls.CloseDoorsOfType:
-						// It would be nice if we could also add checks for CloseDoorOfType RPCs, however we are not able to determine who is sending that RPC
+						InvalidCloseDoors.OnDoorClose(reader, ref blockRpc);
 						break;
 
 					case RpcCalls.UpdateSystem:

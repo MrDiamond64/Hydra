@@ -17,6 +17,7 @@ namespace HydraMenu.ui.sections
 
 			Anticheat.CheckSpoofedPlatforms = GUILayout.Toggle(Anticheat.CheckSpoofedPlatforms, "Flag Spoofed Platform Data");
 
+			Anticheat.CheckInvalidCloseDoors = GUILayout.Toggle(Anticheat.CheckInvalidCloseDoors, "Block Invlaid CloseDoors RPCs");
 			Anticheat.CheckInvalidCompleteTask = GUILayout.Toggle(Anticheat.CheckInvalidCompleteTask, "Flag Invalid CompleteTask RPCs");
 			Anticheat.CheckInvalidPlayAnimation = GUILayout.Toggle(Anticheat.CheckInvalidPlayAnimation, "Flag Invalid PlayAnimation RPCs");
 			Anticheat.CheckSpoofedLevels = GUILayout.Toggle(Anticheat.CheckSpoofedLevels, "Flag Invalid SetLevel RPCs");
