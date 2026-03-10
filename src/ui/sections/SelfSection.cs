@@ -14,7 +14,7 @@ namespace HydraMenu.ui.sections
 
 		public override void Render()
 		{
-			if(PlayerControl.LocalPlayer == null)
+			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null)
 			{
 				GUILayout.Label("You are not currently in a game, these options will not work.");
 			} else
