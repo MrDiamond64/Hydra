@@ -52,10 +52,10 @@ namespace HydraMenu
 			int logicIndex = -1;
 			for(int i = 0; i < GameManager.Instance.LogicComponents.Count; i++)
 			{
-				GameLogicComponent compontent = GameManager.Instance.LogicComponents[i];
+				GameLogicComponent component = GameManager.Instance.LogicComponents[i];
 
-				Hydra.Log.LogMessage($"Found compontent {compontent.GetType()} at index {i}");
-				if(compontent.GetType() != typeof(LogicOptions)) continue;
+				Hydra.Log.LogMessage($"Found component {component.GetType()} at index {i}");
+				if(component.GetType() != typeof(LogicOptions)) continue;
 
 				logicIndex = i;
 				break;
