@@ -92,6 +92,7 @@ namespace HydraMenu.ui
 
 				style.normal.textColor = ColorValues[UIColors.White];
 				style.alignment = TextAnchor.MiddleLeft;
+				style.clipping = TextClipping.Clip;
 				style.padding.left = 10;
 				style.richText = true;
 
@@ -110,6 +111,7 @@ namespace HydraMenu.ui
 
 				style.normal.textColor = ColorValues[UIColors.White];
 				style.alignment = TextAnchor.MiddleLeft;
+				style.clipping = TextClipping.Clip;
 				style.padding.left = 10;
 				style.richText = true;
 
