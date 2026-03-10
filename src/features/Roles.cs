@@ -12,7 +12,8 @@ namespace HydraMenu.features
 
 		public void Update()
 		{
-			if(AmongUsClient.Instance == null || !AmongUsClient.Instance.AmConnected|| HudManager.Instance == null || ShipStatus.Instance == null) return;
+			// If PlayerControl::Data isn't null, then we know the player has fully loaded into the game
+			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
 
 			if(SkipSabotageChecks.SabotageAsCrewmate) HudManager.Instance.SabotageButton.gameObject.SetActive(true);
 			if(AllowVentingForCrewmates) HudManager.Instance.ImpostorVentButton.gameObject.SetActive(true);
