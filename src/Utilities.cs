@@ -38,7 +38,7 @@ namespace HydraMenu
 			}
 		}
 
-		public static PlayerControl GetRandomPlayer(bool excludeHost = false, bool excludeDead = false, bool excludeImposters = false)
+		public static PlayerControl GetRandomPlayer(bool excludeHost = false, bool excludeDead = false, bool excludeImposters = false, bool excludeSelf = true)
 		{
 			Il2CppSystem.Collections.Generic.List<PlayerControl> allPlayers = PlayerControl.AllPlayerControls;
 			List<PlayerControl> validPlayers = new List<PlayerControl>();
@@ -46,7 +46,7 @@ namespace HydraMenu
 			foreach(PlayerControl player in allPlayers)
 			{
 				if(
-					(player.PlayerId == PlayerControl.LocalPlayer.PlayerId) ||
+					(excludeSelf && player.PlayerId == PlayerControl.LocalPlayer.PlayerId) ||
 					(excludeHost && AmongUsClient.Instance.HostId == player.OwnerId) ||
 					(excludeDead && player.Data.IsDead) ||
 					(excludeImposters && player.Data.Role.CanUseKillButton)

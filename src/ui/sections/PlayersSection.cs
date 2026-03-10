@@ -219,17 +219,7 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Frame Shapeshift"))
 			{
-				if(ShipStatus.Instance == null && !Constants.IsVersionModded())
-				{
-					Hydra.notifications.Send("Framer", "The game must have started for this option to work.");
-				}
-				else if(target.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-				{
-					Hydra.notifications.Send("Framer", "This option would've resulted in your game crashing.");
-				} else
-				{
-					AttemptShapeshiftFrame(target);
-				}
+				AttemptShapeshiftFrame(target);
 			}
 
 			/*
@@ -355,11 +345,26 @@ namespace HydraMenu.ui.sections
 
 		private static async void AttemptShapeshiftFrame(PlayerControl target)
 		{
-			PlayerControl randomPl = Utilities.GetRandomPlayer() ?? PlayerControl.LocalPlayer;
+			bool hasAnticheat = AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && !Constants.IsVersionModded();
+
+			if(ShipStatus.Instance == null && hasAnticheat)
+			{
+				Hydra.notifications.Send("Framer", "The game must have started for this option to work.");
+				return;
+			}
+
+			// Setting our role to Shapeshifter and then setting it back causes our game to crash for some odd reason
+			if(PlayerControl.LocalPlayer == target && hasAnticheat)
+			{
+				Hydra.notifications.Send("Framer", "This option would've resulted in your game crashing.");
+				return;
+			}
+
+			PlayerControl randomPl = Utilities.GetRandomPlayer(false, false, false, false);
 
 			// The vanilla anticheat will ban the host if they attempt to send the Shapeshift RPC for a player whose role is not Shapeshifter
 			// To get around this, we temporarily change the player's role to Shapeshifter, make them shapeshift, and revert them back to their previous role
-			if(target.Data.RoleType != RoleTypes.Shapeshifter && !Constants.IsVersionModded())
+			if(target.Data.RoleType != RoleTypes.Shapeshifter && hasAnticheat)
 			{
 				RoleTypes currentRole = target.Data.RoleType;
 
