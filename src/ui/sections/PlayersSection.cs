@@ -190,12 +190,12 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label("Host Only Features:" + (AmongUsClient.Instance.AmHost ? "" : "\n(Using these will get you banned!)"));
 
-			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Force Meeting As"))
 			{
 				Utilities.OpenMeeting(target, null);
 			}
 
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Force All Votes To"))
 			{
 				if(MeetingHud.Instance == null)
@@ -214,6 +214,21 @@ namespace HydraMenu.ui.sections
 					MeetingHud.Instance.SetDirtyBit(1);
 					MeetingHud.Instance.CheckForEndVoting();
 				}
+			}
+
+			if(GUILayout.Button("Eject"))
+			{
+				if(MeetingHud.Instance == null)
+				{
+					MeetingHud.Instance = UnityEngine.Object.Instantiate<MeetingHud>(HudManager.Instance.MeetingPrefab);
+					AmongUsClient.Instance.Spawn(MeetingHud.Instance, -2, SpawnFlags.None);
+				}
+
+				// Show the Exile screen with the player being ejected
+				MeetingHud.VoterState[] votes = Array.Empty<MeetingHud.VoterState>();
+				MeetingHud.Instance.RpcVotingComplete(votes, target.Data, false);
+				// If we created a MeetingHud object then it will be destroyed by the RpcClose function
+				MeetingHud.Instance.RpcClose();
 			}
 			GUILayout.EndHorizontal();
 

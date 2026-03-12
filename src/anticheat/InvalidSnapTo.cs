@@ -18,8 +18,8 @@ namespace HydraMenu.anticheat
 				blockRpc = true;
 			}
 
-			// If we are the host, and we are using the Modded Vanilla Protocol, teleport the player back to their old position
-			if(blockRpc && AmongUsClient.Instance.AmModdedHost)
+			// We are not able to send SnapTo RPCs with other player's NetTransform net ids on Vanilla servers
+			if(blockRpc && (AmongUsClient.Instance.AmLocalHost || AmongUsClient.Instance.AmModdedHost))
 			{
 				player.NetTransform.RpcSnapTo(player.transform.position);
 			}
