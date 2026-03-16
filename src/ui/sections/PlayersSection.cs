@@ -1,7 +1,9 @@
 ﻿using AmongUs.Data;
 using AmongUs.GameOptions;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using InnerNet;
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -234,7 +236,7 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Frame Shapeshift"))
 			{
-				AttemptShapeshiftFrame(target);
+				target.StartCoroutine(AttemptShapeshiftFrame(target).WrapToIl2Cpp());
 			}
 
 			/*
@@ -358,21 +360,14 @@ namespace HydraMenu.ui.sections
 			}
 		}
 
-		private static async void AttemptShapeshiftFrame(PlayerControl target)
+		private static IEnumerator AttemptShapeshiftFrame(PlayerControl target)
 		{
 			bool hasAnticheat = AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && !Constants.IsVersionModded();
 
 			if(ShipStatus.Instance == null && hasAnticheat)
 			{
 				Hydra.notifications.Send("Framer", "The game must have started for this option to work.");
-				return;
-			}
-
-			// Setting our role to Shapeshifter and then setting it back causes our game to crash for some odd reason
-			if(PlayerControl.LocalPlayer == target && hasAnticheat)
-			{
-				Hydra.notifications.Send("Framer", "This option would've resulted in your game crashing.");
-				return;
+				yield break;
 			}
 
 			PlayerControl randomPl = Utilities.GetRandomPlayer(false, false, false, false);
@@ -388,7 +383,7 @@ namespace HydraMenu.ui.sections
 				// Just in case this ever gets changed in the future, we could broadcast the SetRole RPC to a junk client ID instead of everyone to avoid the client knowing they became a Shapeshifter
 				target.RpcSetRole(RoleTypes.Shapeshifter, true);
 				// Wait 500ms to make sure the server received the role update request
-				await Task.Delay(500);
+				yield return Effects.Wait(0.5f);
 				target.RpcShapeshift(randomPl, true);
 				target.RpcSetRole(currentRole, true);
 			}
