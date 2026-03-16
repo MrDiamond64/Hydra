@@ -4,7 +4,6 @@ using BepInEx.Unity.IL2CPP.Utils.Collections;
 using InnerNet;
 using System;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
