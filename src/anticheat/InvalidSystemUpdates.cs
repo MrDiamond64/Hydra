@@ -52,7 +52,7 @@ namespace HydraMenu.anticheat
 			}
 		}
 
-		// The Mushroom Mixup system is only be updated in the SabotageSystemType::Update function by the host. It should never be sent by a player
+		// The Mushroom Mixup system is only updated in the SabotageSystemType::Update function by the host. It should never be sent by a player
 		private static void ValidateMushroomMixupSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			MushroomMixupSabotageSystem.Operation operation = (MushroomMixupSabotageSystem.Operation)reader.ReadByte();
