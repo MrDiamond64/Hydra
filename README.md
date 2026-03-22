@@ -5,7 +5,7 @@
 
 Hydra is a [BepInEx](https://github.com/BepInEx/BepInEx) Among Us mod built with the intention of enhancing the Among Us playing experience. Hydra adds quality of life features, fun trolling features, and an anticheat to detect players hacking in your lobbies.
 
-We have a Discord server, feel free to join and talk, ask for help, or offer suggestions: https://discord.gg/naAykRQc
+We have a Discord server, feel free to join and talk, ask for help, or offer suggestions: https://discord.gg/N7azGPHm5F
 
 # Features
 > [!NOTE]
