@@ -87,6 +87,7 @@ namespace HydraMenu.features
 			}
 		}
 
+		/*
 		[HarmonyPatch(typeof(Ladder), nameof(Ladder.CoolDown), MethodType.Getter)]
 		public static class NoLadderCooldown
 		{
@@ -105,6 +106,7 @@ namespace HydraMenu.features
 				}
 			}
 		}
+		*/
 
 		[HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Begin))]
 		public static class UnlimitedMeetings

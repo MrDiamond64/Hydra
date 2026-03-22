@@ -94,6 +94,7 @@ namespace HydraMenu.features
 		// PlayerControl::FixedUpdate sets PlayerControl::set_Visable to false if the player is dead, or true if the player is alive
 		// The set_Visible function runs CosmeticsLayer::set_Visible in order to hide or show the player's cosmetics
 		// If we want to show ghosts even if we are alive, then we can reimplement CosmeticsLayer::set_Visible and make it so player cosmetics are always visible
+		/*
 		[HarmonyPatch(typeof(CosmeticsLayer), nameof(CosmeticsLayer.Visible), MethodType.Setter)]
 		public static class ShowGhosts
 		{
@@ -113,5 +114,6 @@ namespace HydraMenu.features
 				}
 			}
 		}
+		*/
 	}
 }

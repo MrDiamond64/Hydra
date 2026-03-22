@@ -25,7 +25,7 @@ namespace HydraMenu.ui.sections
 			// Self.BypassIntentionalDisconnectionBlocks.Enabled = GUILayout.Toggle(Self.BypassIntentionalDisconnectionBlocks.Enabled, "Bypass intentional disconnection temp bans");
 			Self.UpdateStatsFreeplay.Enabled = GUILayout.Toggle(Self.UpdateStatsFreeplay.Enabled, "Update Stats in Freeplay");
 			Self.AlwaysShowTaskAnimations = GUILayout.Toggle(Self.AlwaysShowTaskAnimations, "Always Show Task Animations");
-			Self.NoLadderCooldown.enabled = GUILayout.Toggle(Self.NoLadderCooldown.enabled, "No Ladder Cooldown");
+			// Self.NoLadderCooldown.enabled = GUILayout.Toggle(Self.NoLadderCooldown.enabled, "No Ladder Cooldown");
 			Self.UnlimitedMeetings.enabled = GUILayout.Toggle(Self.UnlimitedMeetings.enabled, "Unlimited Meetings");
 
 			if(GUILayout.Button("Call Meeting"))
