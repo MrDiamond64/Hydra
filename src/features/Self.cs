@@ -87,26 +87,20 @@ namespace HydraMenu.features
 			}
 		}
 
-		/*
-		[HarmonyPatch(typeof(Ladder), nameof(Ladder.CoolDown), MethodType.Getter)]
+		[HarmonyPatch(typeof(Ladder), nameof(Ladder.SetDestinationCooldown))]
 		public static class NoLadderCooldown
 		{
-			public static bool enabled = true;
-			static bool Prefix(Ladder __instance, ref float __result)
+			public static bool Enabled { get; set; } = true;
+			static void Postfix(Ladder __instance)
 			{
-				if(enabled)
+				if(Enabled)
 				{
+					Hydra.Log.LogMessage($"Used ladder");
 					__instance.CoolDown = 0.0f;
-					__result = 0.0f;
-					return false;
-				}
-				else
-				{
-					return true;
+					__instance.Destination.CoolDown = 0.0f;
 				}
 			}
 		}
-		*/
 
 		[HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Begin))]
 		public static class UnlimitedMeetings
