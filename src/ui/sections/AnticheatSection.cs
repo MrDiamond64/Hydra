@@ -13,7 +13,6 @@ namespace HydraMenu.ui.sections
 		public override void Render()
 		{
 			Anticheat.Enabled = GUILayout.Toggle(Anticheat.Enabled, "Enable Hydra Anticheat");
-			Anticheat.Autoban = GUILayout.Toggle(Anticheat.Autoban, "Automatically Ban Cheating Players");
 
 			Anticheat.CheckSpoofedPlatforms = GUILayout.Toggle(Anticheat.CheckSpoofedPlatforms, "Flag Spoofed Platform Data");
 
@@ -26,6 +25,15 @@ namespace HydraMenu.ui.sections
 			Anticheat.CheckInvalidSnapTo = GUILayout.Toggle(Anticheat.CheckInvalidSnapTo, "Flag Invalid SnapTo RPCs");
 			Anticheat.CheckInvalidStartCounter = GUILayout.Toggle(Anticheat.CheckInvalidStartCounter, "Flag Invalid SetStartCounter RPCs");
 			Anticheat.CheckInvalidSystemUpdates = GUILayout.Toggle(Anticheat.CheckInvalidSystemUpdates, "Flag Invalid UpdateSystem RPCs");
+
+			GUILayout.Space(5);
+			GUILayout.Label("When a cheating is detected:");
+			Anticheat.DiscardRPC = GUILayout.Toggle(Anticheat.DiscardRPC, "Discard RPC");
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label($"Punish the player with: {Anticheat.punishment}");
+			Anticheat.punishment = (Anticheat.Punishments)GUILayout.HorizontalSlider((float)Anticheat.punishment, 0, 3);
+			GUILayout.EndHorizontal();
 		}
 	}
 }

@@ -5,8 +5,15 @@ namespace HydraMenu.anticheat
 {
 	internal class Anticheat
 	{
+		public enum Punishments
+		{
+			None,
+			Kick,
+			ErrorKick,
+			Ban
+		}
+
 		public static bool Enabled { get; set; } = true;
-		public static bool Autoban { get; set; } = false;
 
 		public static bool CheckSpoofedPlatforms { get; set; } = true;
 		public static bool CheckSpoofedLevels { get; set; } = true;
@@ -20,6 +27,9 @@ namespace HydraMenu.anticheat
 		public static bool CheckInvalidVent { get; set; } = true;
 
 		public static float NotificationDuration = 10.0f;
+
+		public static Punishments punishment = Punishments.None;
+		public static bool DiscardRPC = true;
 
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
 		class OnPlayerControlRPC
@@ -53,7 +63,7 @@ namespace HydraMenu.anticheat
 						break;
 				}
 
-				if(!blockRpc)
+				if(DiscardRPC && !blockRpc)
 				{
 					// Put the read position back to its previous spot to not mess up the HandleRpc function
 					reader.Position = oldReadPosition;
@@ -87,7 +97,7 @@ namespace HydraMenu.anticheat
 						break;
 				}
 
-				if(!blockRpc)
+				if(DiscardRPC && !blockRpc)
 				{
 					// Put the read position back to its previous spot to not mess up the HandleRpc function
 					reader.Position = oldReadPosition;
@@ -117,7 +127,7 @@ namespace HydraMenu.anticheat
 						break;
 				}
 
-				if(!blockRpc)
+				if(DiscardRPC && !blockRpc)
 				{
 					// Put the read position back to its previous spot to not mess up the HandleRpc function
 					reader.Position = oldReadPosition;
@@ -150,7 +160,7 @@ namespace HydraMenu.anticheat
 						break;
 				}
 
-				if(!blockRpc)
+				if(DiscardRPC && !blockRpc)
 				{
 					// Put the read position back to its previous spot to not mess up the HandleRpc function
 					reader.Position = oldReadPosition;
@@ -167,10 +177,38 @@ namespace HydraMenu.anticheat
 		{
 			Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
 
-			if(!shouldPunish || !Autoban || !AmongUsClient.Instance.AmHost) return;
+			if(!AmongUsClient.Instance.AmHost || !shouldPunish) return;
 
-			AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
-			Hydra.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Hydra Anticheat for hacking.");
+			switch(punishment)
+			{
+				case Punishments.None:
+					break;
+
+				case Punishments.Kick:
+				case Punishments.ErrorKick:
+					Hydra.Log.LogMessage($"{player.Data.PlayerName} was kicked by Hydra Anticheat for hacking.");
+
+					// The vanilla anticheat prevents using the ErrorKick method if the game has not started yet
+					if(punishment == Punishments.Kick || LobbyBehaviour.Instance != null)
+					{
+						AmongUsClient.Instance.KickPlayer(player.OwnerId, false);
+					}
+					else
+					{
+						// When a game starts, the host waits around ten seconds to wait for all clients to send the ClientReady game message
+						// If the ten second timer is reached without a ClientReady game message being received by the host, the host will kick the player due to timeout
+						// The kick message shown to the player will explain that the player has a poor internet connection or that their device is too old
+						// and in-game, players will be shown that the player left due to an error instead of being kicked
+						// Any other disconnection messages other than ClientTimeout will result in the vanilla anticheat banning us from the lobby
+						AmongUsClient.Instance.SendLateRejection(player.OwnerId, DisconnectReasons.ClientTimeout);
+					}
+					break;
+
+				case Punishments.Ban:
+					Hydra.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Hydra Anticheat for hacking.");
+					AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
+					break;
+			}
 		}
 	}
 }
