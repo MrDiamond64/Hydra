@@ -186,7 +186,7 @@ namespace HydraMenu.anticheat
 
 				case Punishments.Kick:
 				case Punishments.ErrorKick:
-					Hydra.Log.LogMessage($"{player.Data.PlayerName} was kicked by Hydra Anticheat for hacking.");
+					Hydra.Log.LogMessage($"{player.Data.PlayerName} was kicked by Hydra Anticheat for hacking");
 
 					// The vanilla anticheat prevents using the ErrorKick method if the game has not started yet
 					if(punishment == Punishments.Kick || LobbyBehaviour.Instance != null)
@@ -205,7 +205,7 @@ namespace HydraMenu.anticheat
 					break;
 
 				case Punishments.Ban:
-					Hydra.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Hydra Anticheat for hacking.");
+					Hydra.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Hydra Anticheat for hacking");
 					AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
 					break;
 			}
