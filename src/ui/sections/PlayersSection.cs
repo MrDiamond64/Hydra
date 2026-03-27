@@ -173,19 +173,9 @@ namespace HydraMenu.ui.sections
 				Utilities.CopyPlayer(target);
 			}
 
-			// Can result in bans if you report someone's body after the round they were killed in
-			if(GUILayout.Button("Report Body") && (AmongUsClient.Instance.AmHost || target.Data.IsDead))
+			if(GUILayout.Button("Report Body"))
 			{
-				if(AmongUsClient.Instance.AmHost)
-				{
-					Hydra.Log.LogInfo($"Attempting to report {target.Data.PlayerName}'s body, we are the host so we directly use the StartMeeting RPC");
-					Utilities.OpenMeeting(PlayerControl.LocalPlayer, target.Data);
-				}
-				else
-				{
-					Hydra.Log.LogInfo($"Attempting to report {target.Data.PlayerName}'s body, we are not the host so we have to use the ReportDeadBody RPC");
-					PlayerControl.LocalPlayer.CmdReportDeadBody(target.Data);
-				}
+				AttemptReportBody(target);
 			}
 
 			GUILayout.Space(5);
@@ -357,6 +347,60 @@ namespace HydraMenu.ui.sections
 			{
 				target.RpcSetColor((byte)selectedColor);
 			}
+		}
+
+		private static void AttemptReportBody(PlayerControl target)
+		{
+			if(AmongUsClient.Instance.AmHost)
+			{
+				Hydra.Log.LogInfo($"Attempting to report {target.Data.PlayerName}'s body, we are the host so we directly use the StartMeeting RPC");
+				Utilities.OpenMeeting(PlayerControl.LocalPlayer, target.Data);
+			}
+
+			Hydra.Log.LogInfo($"Attempting to report {target.Data.PlayerName}'s body, we are not the host so we have to use the ReportDeadBody RPC");
+
+			bool hasAnticheat = AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && !Constants.IsVersionModded();
+			if(hasAnticheat)
+			{
+				// It may seem like this check is redundant as there should be no way for a player to be dead inside the lobby
+				// however there are ways that players can use to mark themselves as dead in the lobby
+				if(LobbyBehaviour.Instance != null)
+				{
+					Hydra.notifications.Send("Report Body", "The game must have started for this option to work.");
+					return;
+				}
+
+				if(!target.Data.IsDead)
+				{
+					Hydra.notifications.Send("Report Body", "You can only report bodies of players who have died in this round.");
+					return;
+				}
+
+				bool bodyExists = false;
+				// Loop over every single dead body that exists and check if it matches our target's player id
+				// From PlayerControl::ReportClosest
+				foreach(Collider2D collider in Physics2D.OverlapCircleAll(new Vector2(0, 0), 99999f, Constants.PlayersOnlyMask))
+				{
+					if(collider.tag != "DeadBody") continue;
+
+					DeadBody bodyComponent = collider.GetComponent<DeadBody>();
+					if(bodyComponent && bodyComponent.ParentId == target.PlayerId)
+					{
+						bodyExists = true;
+						break;
+					}
+				}
+
+				if(!bodyExists)
+				{
+					Hydra.notifications.Send("Report Body", "Unable to find a dead body for this player, you can only report a player's body if they have died this round and their body has not dissolved.");
+					return;
+				}
+			}
+
+			Hydra.Log.LogInfo($"All checks passed, we are able to report {target.Data.PlayerName}'s body.");
+
+			PlayerControl.LocalPlayer.CmdReportDeadBody(target.Data);
 		}
 
 		private static IEnumerator AttemptShapeshiftFrame(PlayerControl target)
