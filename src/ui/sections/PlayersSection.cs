@@ -355,6 +355,7 @@ namespace HydraMenu.ui.sections
 			{
 				Hydra.Log.LogInfo($"Attempting to report {target.Data.PlayerName}'s body, we are the host so we directly use the StartMeeting RPC");
 				Utilities.OpenMeeting(PlayerControl.LocalPlayer, target.Data);
+				return;
 			}
 
 			Hydra.Log.LogInfo($"Attempting to report {target.Data.PlayerName}'s body, we are not the host so we have to use the ReportDeadBody RPC");
