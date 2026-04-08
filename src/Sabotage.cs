@@ -280,27 +280,27 @@ namespace HydraMenu
 		public static void SabotageAll()
 		{
 			Dictionary<string, SystemTypes> sabotages = GetSabotages();
-			foreach(var (_, value) in sabotages)
+			foreach(SystemTypes system in sabotages.Values)
 			{
-				SabotageSystem(value);
+				SabotageSystem(system);
 			}
 		}
 
 		public static void FixAllSabotages()
 		{
 			Dictionary<string, SystemTypes> sabotages = GetSabotages();
-			foreach(var (_, value) in sabotages)
+			foreach(SystemTypes system in sabotages.Values)
 			{
-				FixSabotage(value);
+				FixSabotage(system);
 			}
 		}
 
 		public static void LockAll()
 		{
 			Dictionary<string, SystemTypes> doors = GetDoors();
-			foreach(var (_, value) in doors)
+			foreach(SystemTypes door in doors.Values)
 			{
-				LockDoor(value);
+				LockDoor(door);
 			}
 		}
 

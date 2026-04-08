@@ -19,7 +19,7 @@ public class Hydra : BasePlugin
 
 	public override void Load()
 	{
-		var harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
+		Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 		harmony.PatchAll();
 
 		AddComponent<MainUI>();
