@@ -26,6 +26,23 @@ namespace HydraMenu
 			{ "Reactor", new Vector2(-20.53f, -5.39f) },
 		};
 
+		public static Dictionary<string, Vector2> miraTeleportLocations = new Dictionary<string, Vector2>()
+		{
+			{ "Launchpad", new Vector2(-4.43f, 1.98f) },
+			{ "Medbay", new Vector2(14.58f, 0.33f) },
+			{ "Communications", new Vector2(15.60f, 4.96f) },
+			{ "Locker Room", new Vector2(9.68f, 3.71f) },
+			{ "Decontamination", new Vector2(6.12f, 6.34f) },
+			{ "Laboratory", new Vector2(9.43f, 13.98f) },
+			{ "Reactor", new Vector2(2.55f, 11.71f) },
+			{ "Office", new Vector2(14.68f, 20.63f) },
+			{ "Admin", new Vector2(19.41f, 19.01f) },
+			{ "Greenhouse", new Vector2(17.92f, 23.86f) },
+			{ "Cafeteria", new Vector2(25.44f, 2.77f) },
+			{ "Storage", new Vector2(19.59f, 4.79f) },
+			{ "Weapons", new Vector2(19.94f, -1.96f) },
+		};
+
 		public static Dictionary<string, Vector2> polusTeleportLocations = new Dictionary<string, Vector2>()
 		{
 			{ "Dropship", new Vector2(16.61f, -1.17f) },
@@ -50,6 +67,9 @@ namespace HydraMenu
 			{
 				case MapNames.Skeld:
 					return skeldTeleportLocations;
+
+				case MapNames.MiraHQ:
+					return miraTeleportLocations;
 
 				case MapNames.Polus:
 					return polusTeleportLocations;
