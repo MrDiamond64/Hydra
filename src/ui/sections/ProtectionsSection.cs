@@ -19,6 +19,7 @@ namespace HydraMenu.ui.sections
 
 			// Overloads
 			Protections.HardenedReadPackedUInt.Enabled = GUILayout.Toggle(Protections.HardenedReadPackedUInt.Enabled, "Use hardened packet int deserializer");
+			Protections.BlockInvalidLadderOverload = GUILayout.Toggle(Protections.BlockInvalidLadderOverload, "Protect against invalid ladder overload");
 
 			Protections.Votekicks.Enabled = GUILayout.Toggle(Protections.Votekicks.Enabled, "Prevent being votekicked as host");
 		}

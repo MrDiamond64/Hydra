@@ -6,6 +6,8 @@ namespace HydraMenu.features
 {
 	internal class Protections
 	{
+		public static bool BlockInvalidLadderOverload { get; set; } = true;
+
 		[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SetEndpoint))]
 		public static class ForceDTLS
 		{
@@ -93,6 +95,25 @@ namespace HydraMenu.features
 
 				__result = output;
 				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleRpc))]
+		public static class OnPlayerPhysicsRpc
+		{
+			static bool Prefix(PlayerPhysics __instance, byte callId, MessageReader reader)
+			{
+				if((RpcCalls)callId != RpcCalls.ClimbLadder) return true;
+				int oldReadPosition = reader.Position;
+
+				int ladderId = reader.ReadPackedInt32();
+				if(BlockInvalidLadderOverload && (!ShipStatus.Instance || ladderId > ShipStatus.Instance.Ladders.Length - 1))
+				{
+					return false;
+				}
+
+				reader.Position = oldReadPosition;
+				return true;
 			}
 		}
 
