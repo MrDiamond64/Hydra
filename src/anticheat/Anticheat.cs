@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Hazel;
 using HydraMenu.anticheat.rpc;
+using System;
 using System.Collections.Generic;
 
 namespace HydraMenu.anticheat
@@ -50,39 +51,7 @@ namespace HydraMenu.anticheat
 		{
 			static bool Prefix(PlayerControl __instance, byte callId, MessageReader reader)
 			{
-				RpcCalls RpcId = (RpcCalls)callId;
-
-				RpcHandlers.TryGetValue(RpcId, out RpcCheck rpcCheck);
-				if(!Enabled || rpcCheck == null || !rpcCheck.Enabled) return true;
-
-				if(rpcCheck.GetExpectedNetObject() != typeof(PlayerControl))
-				{
-					// Recieved a RPC that should've been sent for a different net object, some sort of exploit attempt?
-					return false;
-				}
-
-				// Only we, the host, should be sending host-only RPCs
-				if(AmongUsClient.Instance.AmHost && rpcCheck.IsHostOnly())
-				{
-					Flag(__instance, $"Sending RPC {RpcId} while non-host");
-					return false;
-				}
-
-				int oldReadPosition = reader.Position;
-				bool blockRpc = false;
-
-				rpcCheck.Validate(__instance, reader, ref blockRpc);
-
-				if(DiscardRPC && !blockRpc)
-				{
-					// Put the read position back to its previous spot to not mess up the HandleRpc function
-					reader.Position = oldReadPosition;
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return HandleRpc(typeof(PlayerControl), __instance, (RpcCalls)callId, reader);
 			}
 		}
 
@@ -91,33 +60,7 @@ namespace HydraMenu.anticheat
 		{
 			static bool Prefix(PlayerPhysics __instance, byte callId, MessageReader reader)
 			{
-				PlayerControl player = __instance.myPlayer;
-				RpcCalls RpcId = (RpcCalls)callId;
-
-				RpcHandlers.TryGetValue(RpcId, out RpcCheck rpcCheck);
-				if(!Enabled || rpcCheck == null || !rpcCheck.Enabled) return true;
-
-				if(rpcCheck.GetExpectedNetObject() != typeof(PlayerPhysics))
-				{
-					// Recieved a RPC that should've been sent for a different net object, some sort of exploit attempt?
-					return false;
-				}
-
-				int oldReadPosition = reader.Position;
-				bool blockRpc = false;
-
-				rpcCheck.Validate(player, reader, ref blockRpc);
-
-				if(DiscardRPC && !blockRpc)
-				{
-					// Put the read position back to its previous spot to not mess up the HandleRpc function
-					reader.Position = oldReadPosition;
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return HandleRpc(typeof(PlayerPhysics), __instance.myPlayer, (RpcCalls)callId, reader);
 			}
 		}
 
@@ -126,33 +69,7 @@ namespace HydraMenu.anticheat
 		{
 			static bool Prefix(CustomNetworkTransform __instance, byte callId, MessageReader reader)
 			{
-				PlayerControl player = __instance.myPlayer;
-				RpcCalls RpcId = (RpcCalls)callId;
-
-				RpcHandlers.TryGetValue(RpcId, out RpcCheck rpcCheck);
-				if(!Enabled || rpcCheck == null || !rpcCheck.Enabled) return true;
-
-				if(rpcCheck.GetExpectedNetObject() != typeof(CustomNetworkTransform))
-				{
-					// Recieved a RPC that should've been sent for a different net object, some sort of exploit attempt?
-					return false;
-				}
-
-				int oldReadPosition = reader.Position;
-				bool blockRpc = false;
-
-				rpcCheck.Validate(player, reader, ref blockRpc);
-
-				if(DiscardRPC && !blockRpc)
-				{
-					// Put the read position back to its previous spot to not mess up the HandleRpc function
-					reader.Position = oldReadPosition;
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return HandleRpc(typeof(CustomNetworkTransform), __instance.myPlayer, (RpcCalls)callId, reader);
 			}
 		}
 
@@ -161,32 +78,42 @@ namespace HydraMenu.anticheat
 		{
 			static bool Prefix(ShipStatus __instance, byte callId, MessageReader reader)
 			{
-				RpcCalls RpcId = (RpcCalls)callId;
+				return HandleRpc(typeof(ShipStatus), null, (RpcCalls)callId, reader);
+			}
+		}
 
-				RpcHandlers.TryGetValue(RpcId, out RpcCheck rpcCheck);
-				if(!Enabled || rpcCheck == null || !rpcCheck.Enabled) return true;
+		private static bool HandleRpc(Type sourceNetObj, PlayerControl player, RpcCalls rpc, MessageReader reader)
+		{
+			RpcHandlers.TryGetValue(rpc, out RpcCheck rpcCheck);
+			if(!Enabled || rpcCheck == null || !rpcCheck.Enabled) return true;
 
-				if(rpcCheck.GetExpectedNetObject() != typeof(ShipStatus))
-				{
-					// Recieved a RPC that should've been sent for a different net object, some sort of exploit attempt?
-					return false;
-				}
+			if(rpcCheck.GetExpectedNetObject() != sourceNetObj)
+			{
+				// Recieved a RPC that should've been sent for a different net object, some sort of exploit attempt?
+				return false;
+			}
 
-				int oldReadPosition = reader.Position;
-				bool blockRpc = false;
+			// Only we, the host, should be sending host-only RPCs
+			if(player != null && AmongUsClient.Instance.AmHost && rpcCheck.IsHostOnly())
+			{
+				Flag(player, $"{player.Data.PlayerName} sent the {rpc} RPC while non-host.");
+				return false;
+			}
 
-				rpcCheck.Validate(null, reader, ref blockRpc);
+			int oldReadPosition = reader.Position;
+			bool blockRpc = false;
 
-				if(DiscardRPC && !blockRpc)
-				{
-					// Put the read position back to its previous spot to not mess up the HandleRpc function
-					reader.Position = oldReadPosition;
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+			rpcCheck.Validate(player, reader, ref blockRpc);
+
+			if(DiscardRPC && !blockRpc)
+			{
+				// Put the read position back to its previous spot to not mess up the HandleRpc function
+				reader.Position = oldReadPosition;
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
