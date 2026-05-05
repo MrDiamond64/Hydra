@@ -1,5 +1,4 @@
 ﻿using AmongUs.GameOptions;
-using AmongUs.InnerNet.GameDataMessages;
 using Hazel;
 
 namespace HydraMenu

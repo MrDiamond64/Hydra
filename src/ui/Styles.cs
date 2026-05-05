@@ -131,12 +131,8 @@ namespace HydraMenu.ui
 
 		private static Texture2D CreateColoredTexture(string textureName, Color color, float opacity = 1.0f)
 		{
-			Texture2D background;
-			// Check if the cached background we have is null, as the garbage collector could delete our cached Texture2D and we would be returning a null Texture
-			if(CachedTextures.TryGetValue(textureName, out background) && background != null)
-			{
-				return background;
-			}
+			CachedTextures.TryGetValue(textureName, out Texture2D background);
+			if(background != null) return background;
 
 			Hydra.Log.LogInfo($"Cache lookup for texture {textureName} returned a miss, creating the required texture...");
 
