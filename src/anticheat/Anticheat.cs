@@ -18,6 +18,7 @@ namespace HydraMenu.anticheat
 			{ RpcCalls.CheckName, new CheckName() },
 			{ RpcCalls.SetName, new SetName() },
 			{ RpcCalls.SetColor, new SetColor() },
+			{ RpcCalls.ReportDeadBody, new ReportDeadBody() },
 			{ RpcCalls.SetScanner, new SetScanner() },
 			{ RpcCalls.SetStartCounter, new SetStartCounter() },
 			{ RpcCalls.EnterVent, new EnterVent() },
