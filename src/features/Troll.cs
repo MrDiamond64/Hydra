@@ -32,11 +32,12 @@ namespace HydraMenu.features
 			{
 				if(!Enabled) return;
 
-				Hydra.Log.LogInfo($"Received updated for VentilationSystem, going to kick out all players who are inside a vent");
+				Hydra.Log.LogInfo($"Received update for VentilationSystem, going to kick out all players who are inside a vent");
 
 				if(__instance.PlayersInsideVents.Count >= PlayerControl.AllPlayerControls.Count)
 				{
-					Hydra.Log.LogInfo($"Apparently there are more people inside of vents than people inside the game, the host may be trying to overload our game! Players in vents: {__instance.PlayersInsideVents.Count}, total players: {PlayerControl.AllPlayerControls.Count}"); return;
+					Hydra.Log.LogInfo($"Apparently there are more people inside of vents than people inside the game, the host may be trying to overload our game! Players in vents: {__instance.PlayersInsideVents.Count}, total players: {PlayerControl.AllPlayerControls.Count}");
+					return;
 				}
 
 				foreach(byte ventId in __instance.PlayersInsideVents.Values)
