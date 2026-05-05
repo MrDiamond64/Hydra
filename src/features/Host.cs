@@ -114,7 +114,7 @@ namespace HydraMenu.features
 
 			static void Postfix(PlayerControl player, MessageReader msgReader)
 			{
-				if(!Enabled || player.OwnerId == AmongUsClient.Instance.HostId) return;
+				if(!Enabled || !AmongUsClient.Instance.AmHost || player.OwnerId == AmongUsClient.Instance.HostId) return;
 
 				// Prevent an exploit where if the comms sabotage is active, someone could enter and leave the security cameras to remove the comms effect from themselves
 				if(Sabotage.IsSabotageActive(SystemTypes.Comms))
