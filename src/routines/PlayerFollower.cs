@@ -78,5 +78,11 @@ namespace HydraMenu.routines
 			following = null;
 			if(PlayerControl.LocalPlayer) PlayerControl.LocalPlayer.moveable = true;
 		}
+
+		public override void OnDisconnect()
+		{
+			Hydra.notifications.Send("Player Follower", "Player Follower was disabled as you left the game.", 10);
+			Enabled = false;
+		}
 	}
 }

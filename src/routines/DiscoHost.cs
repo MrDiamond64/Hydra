@@ -42,5 +42,11 @@ namespace HydraMenu.routines
 				return;
 			}
 		}
+
+		public override void OnDisconnect()
+		{
+			Hydra.notifications.Send("Disco Party", "Disco Party was disabled as you left the game.", 10);
+			Enabled = false;
+		}
 	}
 }

@@ -43,5 +43,11 @@ namespace HydraMenu.routines
 				return;
 			}
 		}
+
+		public override void OnDisconnect()
+		{
+			Hydra.notifications.Send("Trigger Spores", "Auto-Trigger Spores was disabled as you left the game.", 10);
+			Enabled = false;
+		}
 	}
 }

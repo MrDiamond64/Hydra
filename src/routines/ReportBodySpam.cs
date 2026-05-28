@@ -47,5 +47,11 @@ namespace HydraMenu.routines
 				return;
 			}
 		}
+
+		public override void OnDisconnect()
+		{
+			Hydra.notifications.Send("Report Body Spam", "Report Body Spam was disabled as you left the game.", 10);
+			Enabled = false;
+		}
 	}
 }

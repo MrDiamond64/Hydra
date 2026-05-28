@@ -56,5 +56,11 @@ namespace HydraMenu.routines
 				return;
 			}
 		}
+
+		public override void OnDisconnect()
+		{
+			Hydra.notifications.Send("Door Troller", "Door Troller was disabled as you left the game.", 10);
+			Enabled = false;
+		}
 	}
 }
