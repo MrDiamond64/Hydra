@@ -9,7 +9,6 @@ namespace HydraMenu.routines
 			name = "PlayerFollower";
 		}
 
-		public bool _enabled = false;
 		private PlayerControl following;
 
 		// This routine can only be enabled for a specific player, so we want the Players UI to only show the routine as being enabled when selecting a certain player

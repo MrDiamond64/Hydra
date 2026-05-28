@@ -10,13 +10,21 @@ namespace HydraMenu.routines
 		public PlayerFollowerRoutine playerFollower = new PlayerFollowerRoutine();
 		public ReportBodySpam reportBodySpam = new ReportBodySpam();
 
+		public IRoutine[] routineList = [];
+
+		public RoutineManager()
+		{
+			routineList = [ autoTriggerSpores, discoHost, doorTroller, playerFollower, reportBodySpam ];
+		}
+
 		public void Update()
 		{
-			if(autoTriggerSpores.Enabled) autoTriggerSpores.Run();
-			if(discoHost.Enabled) discoHost.Run();
-			if(doorTroller.Enabled) doorTroller.Run();
-			if(playerFollower._enabled) playerFollower.Run();
-			if(reportBodySpam.Enabled) reportBodySpam.Run();
+			foreach(IRoutine routine in routineList)
+			{
+				if(!routine._enabled) continue;
+
+				routine.Run();
+			}
 		}
 	}
 }
