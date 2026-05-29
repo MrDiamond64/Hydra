@@ -18,7 +18,7 @@ namespace HydraMenu.anticheat.rpc
 			}
 
 			// We are not able to send SnapTo RPCs with other player's NetTransform net ids on Vanilla servers
-			if(blockRpc && (AmongUsClient.Instance.AmLocalHost || AmongUsClient.Instance.AmModdedHost))
+			if(blockRpc && (AmongUsClient.Instance.AmHost && !Utilities.IsAnticheatPresent()))
 			{
 				player.NetTransform.RpcSnapTo(player.transform.position);
 			}

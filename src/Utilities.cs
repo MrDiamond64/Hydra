@@ -16,10 +16,7 @@ namespace HydraMenu
 
 			if(ingame)
 			{
-				PlayerControl.LocalPlayer.CmdCheckColor((byte)rnd.Next(0, 15));
-
-				// string randomName = AccountManager.Instance.GetRandomName();
-				// PlayerControl.LocalPlayer.CmdCheckName(randomName);
+				PlayerControl.LocalPlayer.CmdCheckColor((byte)rnd.Next(0, 17));
 
 				PlayerControl.LocalPlayer.RpcSetHat(allHats[rnd.Next(0, allHats.Length)].ProductId);
 				PlayerControl.LocalPlayer.RpcSetVisor(allVisors[rnd.Next(0, allVisors.Length)].ProductId);

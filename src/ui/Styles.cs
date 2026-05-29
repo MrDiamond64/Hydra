@@ -62,8 +62,8 @@ namespace HydraMenu.ui
 				style.normal.textColor = ColorValues[UIColors.White];
 				style.alignment = TextAnchor.MiddleLeft;
 				style.padding.bottom = 1;
-				style.padding.left = 8;
-				style.fontSize = (int)(MainUI.scale * 14);
+				style.padding.left = (int)(8 * MainUI.scale);
+				style.fontSize = (int)(14 * MainUI.scale);
 
 				return style;
 			}
@@ -81,7 +81,7 @@ namespace HydraMenu.ui
 				style.normal.textColor = ColorValues[UIColors.White];
 				style.alignment = TextAnchor.MiddleLeft;
 				style.padding.bottom = 1;
-				style.padding.left = 13;
+				style.padding.left = (int)(13 * MainUI.scale);
 				style.fontSize = (int)(MainUI.scale * 14);
 
 				return style;

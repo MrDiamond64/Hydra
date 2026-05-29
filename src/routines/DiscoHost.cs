@@ -20,7 +20,7 @@ namespace HydraMenu.routines
 			System.Random rnd = new System.Random();
 			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
 			{
-				player.RpcSetColor((byte)rnd.Next(0, 18));
+				player.RpcSetColor((byte)rnd.Next(0, 17));
 			}
 
 			timeElapsed = 0f;

@@ -10,7 +10,7 @@ namespace HydraMenu.anticheat.rpc
 		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
 			// On modded lobbies, it is common for players to have custom names
-			if(Constants.IsVersionModded()) return;
+			if(!Utilities.IsAnticheatPresent()) return;
 
 			uint netId = reader.ReadUInt32();
 			string requestedName = reader.ReadString();
@@ -51,7 +51,7 @@ namespace HydraMenu.anticheat.rpc
 		// On modded servers, the host should never recieve the SetName RPC
 		public override bool IsHostOnly()
 		{
-			return Constants.IsVersionModded();
+			return !Utilities.IsAnticheatPresent();
 		}
 	}
 }

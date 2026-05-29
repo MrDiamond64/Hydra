@@ -5,9 +5,11 @@
 		public string name = "";
 
 		public bool _enabled = false;
-		public virtual bool Enabled {
+		public virtual bool Enabled
+		{
 			get { return _enabled; }
-			set {
+			set
+			{
 				if(value == _enabled) return;
 				_enabled = value;
 
