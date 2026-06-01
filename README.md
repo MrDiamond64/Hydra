@@ -17,6 +17,7 @@ We have a Discord server, feel free to join and talk, ask for help, or offer sug
 - Show chat messages by ghosts (Useful for moderation to determine if players are acting fair)
 - Always visible chat button
 - Be able to flip the Skeld map as host
+- Always impostor as host
 - Player color randomizer
 - Teleporter
 - Sabotage and close doors as crewmate

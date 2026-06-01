@@ -117,7 +117,6 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Spawn Lobby"))
 			{
-				// From GameStartManager::Start
 				LobbyBehaviour.Instance = UnityEngine.Object.Instantiate<LobbyBehaviour>(GameStartManager.Instance.LobbyPrefab);
 				AmongUsClient.Instance.Spawn(LobbyBehaviour.Instance, -2, SpawnFlags.None);
 
@@ -151,6 +150,24 @@ namespace HydraMenu.ui.sections
 			}
 
 			GUILayout.Space(5);
+			GUILayout.Label("Shapeshift Controls:");
+			if(GUILayout.Button("Shapeshift Everyone Into Me"))
+			{
+				AmongUsClient.Instance.StartCoroutine(ShapeshiftAll(PlayerControl.LocalPlayer).WrapToIl2Cpp());
+			}
+
+			if(GUILayout.Button("Shapeshift Everyone Into Random"))
+			{
+				PlayerControl target = Utilities.GetRandomPlayer(false, false, false, false);
+				AmongUsClient.Instance.StartCoroutine(ShapeshiftAll(target).WrapToIl2Cpp());
+			}
+
+			if(GUILayout.Button("Revert All Shapeshifts"))
+			{
+				AmongUsClient.Instance.StartCoroutine(RevertAllShapeshift().WrapToIl2Cpp());
+			}
+
+			GUILayout.Space(5);
 			GUILayout.Label("Disco Party:");
 			Hydra.routines.discoHost.Enabled = GUILayout.Toggle(Hydra.routines.discoHost.Enabled, "Enabled");
 
@@ -169,6 +186,43 @@ namespace HydraMenu.ui.sections
 			AmongUsClient.Instance.Spawn(ship, -2, SpawnFlags.None);
 
 			Hydra.notifications.Send("Map Spawner", $"{(MapNames)mapId} has been spawned.", 5);
+		}
+
+		private static IEnumerator ShapeshiftAll(PlayerControl target)
+		{
+			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
+			{
+				Hydra.notifications.Send("Framer", "You need to be the host of the lobby in order to use this feature.");
+				yield break;
+			}
+
+			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			{
+				if(player == target || player.shapeshiftTargetPlayerId == target.PlayerId) continue;
+
+				PlayersSection.ShapeshiftPlayer(player, target);
+
+				// This function can send up to 15 reliable messages at once, so we need to implement a delay to avoid kicks
+				yield return Effects.Wait(0.05f);
+			}
+		}
+
+		private static IEnumerator RevertAllShapeshift()
+		{
+			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
+			{
+				Hydra.notifications.Send("Framer", "You need to be the host of the lobby in order to use this feature.");
+				yield break;
+			}
+
+			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			{
+				if(player.shapeshiftTargetPlayerId == -1) continue;
+
+				PlayersSection.ShapeshiftPlayer(player, player);
+
+				yield return Effects.Wait(0.05f);
+			}
 		}
 	}
 }

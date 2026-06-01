@@ -214,7 +214,8 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Frame Shapeshift"))
 			{
-				AttemptShapeshiftFrame(target);
+				PlayerControl randomPl = Utilities.GetRandomPlayer(false, false, false, false);
+				ShapeshiftPlayer(target, randomPl);
 			}
 
 			GUILayout.BeginHorizontal();
@@ -417,7 +418,7 @@ namespace HydraMenu.ui.sections
 			PlayerControl.LocalPlayer.CmdReportDeadBody(target.Data);
 		}
 
-		private static void AttemptShapeshiftFrame(PlayerControl target)
+		public static void ShapeshiftPlayer(PlayerControl victim, PlayerControl target)
 		{
 			bool hasAnticheat = Utilities.IsAnticheatPresent();
 
@@ -434,24 +435,23 @@ namespace HydraMenu.ui.sections
 			}
 
 			Network.BatchedMessage batch = new Network.BatchedMessage();
-			PlayerControl randomPl = Utilities.GetRandomPlayer(false, false, false, false);
 
 			// The vanilla anticheat will ban the host if they attempt to send the Shapeshift RPC for a player whose role is not Shapeshifter
 			// To get around this, we temporarily change the player's role to Shapeshifter, make them shapeshift, and revert them back to their previous role
-			if(hasAnticheat && target.Data.RoleType != RoleTypes.Shapeshifter)
+			if(hasAnticheat && victim.Data.RoleType != RoleTypes.Shapeshifter)
 			{
-				RoleTypes currentRole = target.Data.RoleType;
+				RoleTypes currentRole = victim.Data.RoleType;
 
 				// The client that we're attempting to frame shouldn't notice anything as during role selection the SetRole RPC is sent with the canOverrideRole option set to false
 				// meaning any future SetRole RPCs will be ignored unless the new role is a ghost role
 				// Just in case this ever gets changed in the future, we could broadcast the SetRole RPC to a junk client ID instead of everyone to avoid the client knowing they became a Shapeshifter
-				batch.QueueSetRole(target, RoleTypes.Shapeshifter, true);
-				batch.QueueShapeshift(target, randomPl, true);
-				batch.QueueSetRole(target, currentRole, true);
+				batch.QueueSetRole(victim, RoleTypes.Shapeshifter, true);
+				batch.QueueShapeshift(victim, target, true);
+				batch.QueueSetRole(victim, currentRole, true);
 			}
 			else
 			{
-				batch.QueueShapeshift(target, randomPl, true);
+				batch.QueueShapeshift(victim, target, true);
 			}
 
 			batch.FinishBatch();
