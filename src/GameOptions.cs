@@ -1,5 +1,6 @@
 ﻿using AmongUs.GameOptions;
 using Hazel;
+using HydraMenu.features;
 
 namespace HydraMenu
 {
@@ -26,6 +27,10 @@ namespace HydraMenu
 				GameManager.Instance.LogicOptions.SetGameOptions(options);
 				return;
 			}
+
+			// Very hacky way of doing this, but ensure we still have the Shapeshift ratelimit bypass present
+			// If we attempt to modify our game options then this will have the unintended behavior of affecting our lobby settings
+			if(Protections.BypassShapeshiftRatelimits.Enabled) options.SetFloat(FloatOptionNames.ShapeshifterCooldown, 0.0f);
 
 			MessageWriter writer = MessageWriter.Get(SendOption.Reliable);
 			writer.StartMessage((byte)FindLogicOptionsIndex());

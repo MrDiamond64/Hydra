@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using AmongUs.GameOptions;
+using HarmonyLib;
 using Hazel;
 using InnerNet;
 
@@ -112,6 +113,27 @@ namespace HydraMenu.features
 
 				// Prevent players from being able to votekick you as host
 				return !(Enabled && AmongUsClient.Instance.AmHost);
+			}
+		}
+
+		[HarmonyPatch(typeof(AmongUsClient), nameof(InnerNetClient.CoStartGame))]
+		public static class BypassShapeshiftRatelimits
+		{
+			public static bool Enabled { get; set; } = true;
+
+			static void Postfix()
+			{
+				if(!Enabled || !AmongUsClient.Instance.AmHost) return;
+
+				PlayerControl player = Utilities.GetRandomPlayer();
+
+				// Shapeshifting and reverting shapeshifts have strict ratelimits for the host, which can impact the Mass Shapeshift feature in Host options
+				// We can bypass these ratelimits by sending a game options update and setting the shapeshift cooldown to zero seconds
+				IGameOptions options = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				options.SetFloat(FloatOptionNames.ShapeshifterCooldown, 0.0f);
+
+				// Send the settings update to a random player, we don't want to mess up our saved lobby settings
+				GameOptions.SendGameOptionsToClient(options, player.OwnerId);
 			}
 		}
 	}
