@@ -71,10 +71,10 @@ namespace HydraMenu.features
 			}
 		}
 
-		[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
+		[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnEnable))]
 		class OnShipStatusCreate
 		{
-			static void Prefix()
+			static void Postfix()
 			{
 				if(!Enabled) return;
 

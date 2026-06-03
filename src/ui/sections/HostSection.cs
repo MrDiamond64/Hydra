@@ -1,4 +1,5 @@
-﻿using BepInEx.Unity.IL2CPP.Utils.Collections;
+﻿using AmongUs.GameOptions;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HydraMenu.features;
 using InnerNet;
 using System;
@@ -206,10 +207,26 @@ namespace HydraMenu.ui.sections
 
 		private static IEnumerator RevertAllShapeshift()
 		{
-			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
+			if(Utilities.IsAnticheatPresent())
 			{
-				Hydra.notifications.Send("Shapeshift Player", "You need to be the host of the lobby in order to use this feature.");
-				yield break;
+				if(!AmongUsClient.Instance.AmHost)
+				{
+					Hydra.notifications.Send("Framer", "You need to be the host of the lobby in order to use this feature.");
+					yield break;
+				}
+
+				PlayerControl player = Utilities.GetRandomPlayer();
+
+				// Shapeshifting and reverting shapeshifts have strict ratelimits for the host
+				// We can bypass these ratelimits by sending a game options update and setting the shapeshift cooldown to zero seconds
+				IGameOptions options = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				options.SetFloat(FloatOptionNames.ShapeshifterCooldown, 0.0f);
+
+				// Send the settings update to a random player, we don't want to mess up our saved lobby settings
+				// I originally thought that we could just send this message on the start of games instead of every time we want to revert a shapeshift
+				// however if we use the 'Game Options Modifier' in the Players tab then we would be reverting our shapeshift cooldown
+				// and we would be affected by shapeshift ratelimits again
+				GameOptions.SendGameOptionsToClient(options, player.OwnerId);
 			}
 
 			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
