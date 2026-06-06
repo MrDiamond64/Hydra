@@ -1,5 +1,6 @@
 ﻿using AmongUs.Data;
 using AmongUs.GameOptions;
+using HydraMenu.features;
 using InnerNet;
 using System;
 using UnityEngine;
@@ -167,6 +168,8 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Space(5);
 			GUILayout.Label("Host Only Features:" + (AmongUsClient.Instance.AmHost ? "" : "\n(Using these will get you kicked!)"));
+
+			Troll.AutoReportBodies.source = Controls.PlayerSpecificToggle("Auto Report Bodies As", target, Troll.AutoReportBodies.source);
 
 			if(GUILayout.Button("Force Meeting As"))
 			{

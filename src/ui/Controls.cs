@@ -69,7 +69,8 @@ namespace HydraMenu.ui
 		public static PlayerControl PlayerSpecificToggle(string label, PlayerControl selectedPlayer, PlayerControl currentPlayer)
 		{
 			GUIStyle toggle = new GUIStyle(GUI.skin.toggle);
-			bool isCurrentSelection = selectedPlayer == currentPlayer;
+			// We do not want the toggle to appear as enabled if selectedPlayer is null
+			bool isCurrentSelection = selectedPlayer != null && selectedPlayer == currentPlayer;
 
 			if(isCurrentSelection)
 			{

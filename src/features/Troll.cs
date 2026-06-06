@@ -7,17 +7,30 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
 		public static class AutoReportBodies
 		{
-			public static bool Enabled { get; set; } = false;
+			public static PlayerControl source;
 
-			static void Prefix(PlayerControl __instance, PlayerControl target, MurderResultFlags resultFlags)
+			public static bool Enabled
 			{
-				if(!Enabled || PlayerControl.LocalPlayer.Data.IsDead) return;
+				get { return source != null; }
+				set
+				{
+					if(!value) source = null;
+				}
+			}
 
-				Hydra.Log.LogInfo($"Recieved MurderPlayer for {target.Data.PlayerName} with result flags {resultFlags}");
+			static void Postfix(PlayerControl __instance, PlayerControl target, MurderResultFlags resultFlags)
+			{
+				if(!Enabled || !resultFlags.HasFlag(MurderResultFlags.Succeeded)) return;
 
-				if(!resultFlags.HasFlag(MurderResultFlags.Succeeded)) return;
+				if(AmongUsClient.Instance.AmHost)
+				{
+					Utilities.OpenMeeting(source, target.Data);
+					return;
+				}
 
-				Hydra.notifications.Send("Auto Report Bodies", $"{target.Data.PlayerName} was just killed by {__instance.Data.PlayerName} ({Utilities.GetPlayerColor(__instance.Data)}), their body has been automatically reported.");
+				if(PlayerControl.LocalPlayer.Data.IsDead) return;
+
+				Hydra.notifications.Send("Auto Report Bodies", $"{target.Data.PlayerName} was killed by {__instance.Data.PlayerName} {Utilities.GetPlayerColor(__instance.Data)}, their body has been automatically reported.");
 				PlayerControl.LocalPlayer.CmdReportDeadBody(target.Data);
 			}
 		}
