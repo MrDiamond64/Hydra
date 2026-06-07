@@ -53,6 +53,8 @@ namespace HydraMenu
 				validPlayers.Add(player);
 			}
 
+			if(validPlayers.Count == 0) return null;
+
 			System.Random rnd = new System.Random();
 			return validPlayers[rnd.Next(validPlayers.Count)];
 		}

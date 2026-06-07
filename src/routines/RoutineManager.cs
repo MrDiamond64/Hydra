@@ -8,6 +8,7 @@ namespace HydraMenu.routines
 		public AutoTriggerSporesRoutine autoTriggerSpores = new AutoTriggerSporesRoutine();
 		public DiscoHostRoutine discoHost = new DiscoHostRoutine();
 		public DoorTrollerRoutine doorTroller = new DoorTrollerRoutine();
+		public JailPlayerRoutine jailPlayer = new JailPlayerRoutine();
 		public PlayerFollowerRoutine playerFollower = new PlayerFollowerRoutine();
 		public ReportBodySpam reportBodySpam = new ReportBodySpam();
 
@@ -15,7 +16,7 @@ namespace HydraMenu.routines
 
 		public RoutineManager()
 		{
-			routineList = [ autoTriggerSpores, discoHost, doorTroller, playerFollower, reportBodySpam ];
+			routineList = [ autoTriggerSpores, discoHost, doorTroller, jailPlayer, playerFollower, reportBodySpam ];
 		}
 
 		public void Update()
