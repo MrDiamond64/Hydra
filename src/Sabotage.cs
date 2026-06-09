@@ -262,6 +262,17 @@ namespace HydraMenu
 			ShipStatus.Instance.RpcCloseDoorsOfType(door);
 		}
 
+		public static void UnlockDoor(SystemTypes system)
+		{
+			for(byte i = 0; i < ShipStatus.Instance.AllDoors.Count; i++)
+			{
+				OpenableDoor door = ShipStatus.Instance.AllDoors[i];
+				if(door.Room != system) continue;
+
+				UnlockDoor(door);
+			}
+		}
+
 		public static void UnlockDoor(int id)
 		{
 			MapNames currentMap = Utilities.GetCurrentMap();
@@ -281,25 +292,25 @@ namespace HydraMenu
 
 		public static void UnlockDoor(OpenableDoor door, int index = 0)
 		{
-			if(AmongUsClient.Instance.AmHost)
+			if(!AmongUsClient.Instance.AmHost)
 			{
-				door.SetDoorway(true);
-
-				MapNames currentMap = Utilities.GetCurrentMap();
-				if(currentMap == MapNames.Skeld)
-				{
-					AutoDoorsSystemType doorSystem = ShipStatus.Instance.Systems[SystemTypes.Doors].Cast<AutoDoorsSystemType>();
-					doorSystem.dirtyBits |= 1U << index;
-				}
-				else
-				{
-					DoorsSystemType doorSystem = ShipStatus.Instance.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
-					doorSystem.IsDirty = true;
-				}
+				ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Doors, (byte)(door.Id | 64));
 				return;
 			}
 
-			ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Doors, (byte)(door.Id | 64));
+			door.SetDoorway(true);
+
+			MapNames currentMap = Utilities.GetCurrentMap();
+			if(currentMap == MapNames.Skeld)
+			{
+				AutoDoorsSystemType doorSystem = ShipStatus.Instance.Systems[SystemTypes.Doors].Cast<AutoDoorsSystemType>();
+				doorSystem.dirtyBits |= 1U << index;
+			}
+			else
+			{
+				DoorsSystemType doorSystem = ShipStatus.Instance.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
+				doorSystem.IsDirty = true;
+			}
 		}
 
 		public static void SabotageAll()

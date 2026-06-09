@@ -90,7 +90,22 @@ namespace HydraMenu.ui.sections
 
 		private void HandleCloseDoor(SystemTypes door)
 		{
-			Sabotage.LockDoor(door);
+			Event currentEvent = Event.current;
+
+			if(currentEvent.button == 0)
+			{
+				Sabotage.LockDoor(door);
+				return;
+			}
+
+
+			if(!Sabotage.CanUnlockDoors())
+			{
+				Hydra.notifications.Send("Sabotage", "You can only unlock doors if you are the host or if the map is Polus, Airship, or Fungle.");
+				return;
+			}
+
+			Sabotage.UnlockDoor(door);
 		}
 	}
 }
