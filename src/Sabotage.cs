@@ -72,7 +72,8 @@ namespace HydraMenu
 			{ "Communications", SystemTypes.Comms },
 			{ "Main Hall", SystemTypes.MainHall },
 			{ "Kitchen", SystemTypes.Kitchen },
-			{ "Medical", SystemTypes.Medical }
+			{ "Medical", SystemTypes.Medical },
+			{ "Lounge", SystemTypes.Lounge }
 		};
 
 		public static Dictionary<string, SystemTypes> fungleSabotages = new Dictionary<string, SystemTypes>()
