@@ -161,7 +161,7 @@ namespace HydraMenu.features
 			public static bool Enabled { get; set; } = false;
 			public static RoleTypes assignedRole = RoleTypes.Viper;
 
-			// Make sure List<T> is imported from Il2cppSystem otherwise this will not work!
+			// Make sure List<T> is imported from Il2cppSystem otherwise things will go terribly wrong!
 			static void Prefix(ref List<NetworkedPlayerInfo> players, ref List<RoleTypes> roleList, ref int rolesAssigned)
 			{
 				if(!Enabled || !AmongUsClient.Instance.AmHost) return;
@@ -194,6 +194,17 @@ namespace HydraMenu.features
 				{
 					Hydra.Log.LogInfo($"Found an instance of our role in the roles list at index {roleIndex}, removing from the list");
 					roleList.RemoveAt(roleIndex);
+				}
+
+				// To determine if the intro cutscene should play, the game waits for SetRole RPCs, checks if the assigned role is not a ghost role,
+				// and then checks if all players have either been assigned a role or were disconnected
+				// The problem is that if we are trying to assign ourself a ghost role, and we are the last player to be assigned a role
+				// then the PlayerControl::CoSetRole execution flow will not display the intro custscene
+				// resulting in the entire lobby encountering a black screen
+				// To get around this, we check for this edge case and assign ourself a non-host role, and then set our role to a ghost role
+				if(RoleManager.IsGhostRole(assignedRole) && players.Count == 0)
+				{
+					PlayerControl.LocalPlayer.RpcSetRole(RoleManager.IsImpostorRole(assignedRole) ? RoleTypes.Impostor : RoleTypes.Crewmate);
 				}
 
 				PlayerControl.LocalPlayer.RpcSetRole(assignedRole);

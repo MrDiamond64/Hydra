@@ -25,24 +25,18 @@ namespace HydraMenu.ui.sections
 			GUILayout.BeginHorizontal();
 			selectedRole = Controls.HorizontalRoleSlider(selectedRole);
 
-			if(GUILayout.Button("Apply Role" + (AmongUsClient.Instance.AmHost ? "" : " (Local)")) && PlayerControl.LocalPlayer)
+			if(GUILayout.Button("Apply Role" + (AmongUsClient.Instance.AmHost ? "" : " (Local)")))
 			{
-				Hydra.Log.LogInfo($"Updating role to {selectedRole}");
 				UpdateRole(selectedRole);
-
-				if(AmongUsClient.Instance.AmHost)
-				{
-					Hydra.Log.LogInfo("Since we are host, we can send the SetRole RPC to sync the new role to the server");
-					PlayerControl.LocalPlayer.RpcSetRole(selectedRole, true);
-				}
-
-				Hydra.notifications.Send("Update Role", $"Your role has been updated to {selectedRole}.");
 			}
+
 			GUILayout.EndHorizontal();
 		}
 
 		public static void UpdateRole(RoleTypes role)
 		{
+			Hydra.Log.LogInfo($"Updating role to {role}");
+
 			bool isGhost = RoleManager.IsGhostRole(role);
 
 			// When a player turns into the ghost, the PlayerControl::CoSetRole function hides the report button. This function then calls the RoleManager::SetRole function we call here
@@ -51,6 +45,14 @@ namespace HydraMenu.ui.sections
 			HudManager.Instance.ReportButton.gameObject.SetActive(!isGhost);
 
 			RoleManager.Instance.SetRole(PlayerControl.LocalPlayer, role);
+
+			if(AmongUsClient.Instance.AmHost)
+			{
+				Hydra.Log.LogInfo("Since we are host, we can send the SetRole RPC to sync the new role to the server");
+				PlayerControl.LocalPlayer.RpcSetRole(role, true);
+			}
+
+			Hydra.notifications.Send("Update Role", $"Your role has been updated to {role}.");
 		}
 	}
 }
