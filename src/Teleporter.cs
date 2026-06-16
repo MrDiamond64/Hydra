@@ -63,21 +63,14 @@ namespace HydraMenu
 		{
 			MapNames currentMap = Utilities.GetCurrentMap();
 
-			switch(currentMap)
+			return currentMap switch
 			{
-				case MapNames.Skeld:
-					return skeldTeleportLocations;
-
-				case MapNames.MiraHQ:
-					return miraTeleportLocations;
-
-				case MapNames.Polus:
-					return polusTeleportLocations;
-
+				MapNames.Skeld => skeldTeleportLocations,
+				MapNames.MiraHQ => miraTeleportLocations,
+				MapNames.Polus => polusTeleportLocations,
 				// If we don't have any teleport locations for the current map then just default to the Skeld ones
-				default:
-					return skeldTeleportLocations;
-			}
+				_ => skeldTeleportLocations,
+			};
 		}
 
 		public static void TeleportTo(Vector2 position)

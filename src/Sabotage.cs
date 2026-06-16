@@ -86,53 +86,31 @@ namespace HydraMenu
 		public static Dictionary<string, SystemTypes> GetSabotages()
 		{
 			MapNames map = Utilities.GetCurrentMap();
-			switch(map)
+			return map switch
 			{
-				case MapNames.Skeld:
-				case MapNames.Dleks:
-					return skeldSabotages;
-
-				case MapNames.MiraHQ:
-					return miraSabotages;
-
-				case MapNames.Polus:
-					return polusSabotages;
-
-				case MapNames.Airship:
-					return airshipSabotages;
-
-				case MapNames.Fungle:
-					return fungleSabotages;
-
+				MapNames.Skeld or MapNames.Dleks => skeldSabotages,
+				MapNames.MiraHQ => miraSabotages,
+				MapNames.Polus => polusSabotages,
+				MapNames.Airship => airshipSabotages,
+				MapNames.Fungle => fungleSabotages,
 				// If we don't have any sabotages for the current map then just default to the Skeld ones
-				default:
-					return skeldSabotages;
-			}
+				_ => skeldSabotages,
+			};
 		}
 
 		public static Dictionary<string, SystemTypes> GetDoors()
 		{
 			MapNames map = Utilities.GetCurrentMap();
-			switch(map)
+			return map switch
 			{
-				case MapNames.Skeld:
-				case MapNames.Dleks:
-					return skeldDoors;
-
+				MapNames.Skeld or MapNames.Dleks => skeldDoors,
 				// Mira has no closable doors
-				case MapNames.MiraHQ:
-					return [];
-
-				case MapNames.Polus:
-					return polusDoors;
-
-				case MapNames.Airship:
-					return airshipDoors;
-
+				MapNames.MiraHQ => [],
+				MapNames.Polus => polusDoors,
+				MapNames.Airship => airshipDoors,
 				// If we don't have any doors for the current map then just default to the Skeld ones
-				default:
-					return skeldDoors;
-			}
+				_ => skeldDoors,
+			};
 		}
 
 		// I thought that maybe we could check if ShipStatus::Systems included an entry for the doors system type

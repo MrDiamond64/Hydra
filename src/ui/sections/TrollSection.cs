@@ -19,6 +19,12 @@ namespace HydraMenu.ui.sections
 			Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
 			Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");
 
+			if(GUILayout.Button("Copy Random Player"))
+			{
+				PlayerControl randomPl = Utilities.GetRandomPlayer();
+				Utilities.CopyPlayer(randomPl);
+			}
+
 			if(GUILayout.Button("Trigger All Spores"))
 			{
 				if(Utilities.GetCurrentMap() != MapNames.Fungle)
@@ -36,12 +42,6 @@ namespace HydraMenu.ui.sections
 
 					Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
 				}
-			}
-
-			if(GUILayout.Button("Copy Random Player"))
-			{
-				PlayerControl randomPl = Utilities.GetRandomPlayer();
-				Utilities.CopyPlayer(randomPl);
 			}
 
 			GUILayout.Space(5);
