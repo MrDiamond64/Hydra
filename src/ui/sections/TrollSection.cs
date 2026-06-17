@@ -544,8 +544,6 @@ namespace HydraMenu.ui.sections
 			batch.UseAnticheatBypass();
 			batch.QueueDespawn(netObject.NetId);
 			batch.FinishBatch();
-
-			UnityEngine.Object.Destroy(netObject.gameObject);
 		}
 	}
 }
