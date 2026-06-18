@@ -208,6 +208,16 @@ namespace HydraMenu
 				writer.EndMessage();
 			}
 
+			public void QueueSetStartCounter(PlayerControl source, sbyte counter, int seq)
+			{
+				writer.StartMessage((byte)GameDataTypes.RpcFlag);
+				writer.WritePacked(source.NetId);
+				writer.Write((byte)RpcCalls.SetStartCounter);
+				writer.WritePacked(seq);
+				writer.Write(counter);
+				writer.EndMessage();
+			}
+
 			public void QueueSnapTo(PlayerControl source, ushort seq, Vector2 position)
 			{
 				source.NetTransform.SnapTo(position, seq);

@@ -193,6 +193,16 @@ namespace HydraMenu.ui.sections
 				Object.Destroy(MeetingHud.Instance.gameObject);
 			}
 
+			if(GUILayout.Button("Fuck Start Timer"))
+			{
+				System.Random rnd = new System.Random();
+
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+				batch.UseAnticheatBypass();
+				batch.QueueSetStartCounter(PlayerControl.LocalPlayer, (sbyte)rnd.Next(-128, 127), ++PlayerControl.LocalPlayer.LastStartCounter);
+				batch.FinishBatch();
+			}
+
 			if(GUILayout.Button("Disable New Lobby Creation"))
 			{
 				int index = GameManager.Instance.IsHideAndSeek() ? 5 : 4;
@@ -381,6 +391,7 @@ namespace HydraMenu.ui.sections
 
 			batch.QueueDataFlag(GameManager.Instance.NetId, writer);
 			batch.QueueSceneChange(AmongUsClient.Instance.ClientId, "Tutorial");
+			batch.QueueSetStartCounter(PlayerControl.LocalPlayer, -69, ++PlayerControl.LocalPlayer.LastStartCounter);
 
 			batch.FinishBatch();
 		}

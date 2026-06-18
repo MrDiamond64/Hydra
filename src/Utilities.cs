@@ -208,6 +208,11 @@ namespace HydraMenu
 
 			Network.BatchedMessage batch = new Network.BatchedMessage();
 
+			if(Self.UseBypassRpc)
+			{
+				batch.UseAnticheatBypass();
+			}
+
 			// The vanilla anticheat will ban the host if they attempt to send the Shapeshift RPC for a player whose role is not Shapeshifter
 			// To get around this, we temporarily change the player's role to Shapeshifter, make them shapeshift, and revert them back to their previous role
 			if(hasAnticheat && victim.Data.RoleType != RoleTypes.Shapeshifter)
