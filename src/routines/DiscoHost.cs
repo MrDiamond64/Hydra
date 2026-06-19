@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using HydraMenu.features;
+using UnityEngine;
 
 namespace HydraMenu.routines
 {
@@ -9,16 +10,26 @@ namespace HydraMenu.routines
 		public float randomizationDelay = 0.5f;
 		private float timeElapsed = 0f;
 
+		private System.Random rnd = new System.Random();
+
 		public override void Run()
 		{
 			timeElapsed += Time.deltaTime;
 			if(timeElapsed < randomizationDelay) return;
 
-			System.Random rnd = new System.Random();
+			Network.BatchedMessage batch = new Network.BatchedMessage();
+
+			if(Self.UseBypassRpc)
+			{
+				batch.UseAnticheatBypass();
+			}
+
 			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
 			{
-				player.RpcSetColor((byte)rnd.Next(0, 18));
+				batch.QueueSetColor(player, (byte)rnd.Next(0, 18));
 			}
+
+			batch.FinishBatch();
 
 			timeElapsed = 0f;
 		}

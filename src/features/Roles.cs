@@ -171,15 +171,17 @@ namespace HydraMenu.features
 		}
 
 		[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SendClientReady))]
-		class AlwaysImposter
+		public static class AlwaysImposter
 		{
+			public static RoleTypes selectedRole = RoleTypes.Viper;
+
 			static void Prefix()
 			{
 				if(!AlwaysImp) return;
 
 				Network.BatchedMessage batch = new Network.BatchedMessage();
 				batch.UseAnticheatBypass();
-				batch.QueueSetRole(PlayerControl.LocalPlayer, RoleTypes.Viper, false);
+				batch.QueueSetRole(PlayerControl.LocalPlayer, selectedRole, false);
 				batch.FinishBatch();
 			}
 		}

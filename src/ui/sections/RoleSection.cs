@@ -26,6 +26,9 @@ namespace HydraMenu.ui.sections
 			Host.NoKillCooldown.Enabled = GUILayout.Toggle(Host.NoKillCooldown.Enabled, "No Kill Cooldown");
 			Roles.NoKillChecks = GUILayout.Toggle(Roles.NoKillChecks, "No Kill Checks");
 
+			GUILayout.Label($"Always imposter role: {Roles.AlwaysImposter.selectedRole}");
+			Roles.AlwaysImposter.selectedRole = Controls.HorizontalRoleSlider(Roles.AlwaysImposter.selectedRole);
+
 			GUILayout.Label($"Change role to: {selectedRole}");
 			GUILayout.BeginHorizontal();
 			selectedRole = Controls.HorizontalRoleSlider(selectedRole);

@@ -139,24 +139,6 @@ namespace HydraMenu.features
 			}
 		}
 
-		[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.LateBroadcastReliableMessage))]
-		class ForceSendQueuedMessage
-		{
-			static bool Prefix(IGameDataMessage rpcMessage)
-			{
-				if(!UseBypassRpc) return true;
-
-				Network.BatchedMessage batch = new Network.BatchedMessage();
-				batch.UseAnticheatBypass();
-
-				rpcMessage.Serialize(batch.writer);
-
-				batch.FinishBatch();
-
-				return false;
-			}
-		}
-
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSendChat))]
 		public static class CustomChat
 		{

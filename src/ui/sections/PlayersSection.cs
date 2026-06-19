@@ -188,6 +188,21 @@ namespace HydraMenu.ui.sections
 				TrollSection.TurnAllTo(target);
 			}
 
+			if(GUILayout.Button("Complete All Tasks"))
+			{
+				Il2CppSystem.Collections.Generic.List<PlayerTask> allTasks = target.myTasks;
+
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+				batch.UseAnticheatBypass();
+
+				foreach(PlayerTask task in allTasks)
+				{
+					batch.QueueCompleteTask(target, (byte)task.Id);
+				}
+
+				batch.FinishBatch();
+			}
+
 			if(GUILayout.Button("Revive Player"))
 			{
 				target.Data.IsDead = false;
@@ -239,15 +254,26 @@ namespace HydraMenu.ui.sections
 				}
 				else
 				{
-					foreach(PlayerControl player in PlayerControl.AllPlayerControls)
-					{
-						PlayerVoteArea votingArea = MeetingHud.Instance.playerStates[player.PlayerId];
+					MeetingHud.VoterState[] array = new MeetingHud.VoterState[PlayerControl.AllPlayerControls.Count];
 
-						votingArea.SetVote(target.PlayerId);
+					for(int i = 0; i < array.Length; i++)
+					{
+						MeetingHud.VoterState state = array[i];
+
+						state.VoterId = (byte)(PlayerControl.AllPlayerControls.Count % 15);
+						state.VotedForId = target.PlayerId;
 					}
 
-					MeetingHud.Instance.SetDirtyBit(1);
-					MeetingHud.Instance.CheckForEndVoting();
+					Network.BatchedMessage batch = new Network.BatchedMessage();
+
+					if(Self.UseBypassRpc)
+					{
+						batch.UseAnticheatBypass();
+					}
+
+					batch.QueueVotingComplete(array, target.Data, false);
+
+					batch.FinishBatch();
 				}
 			}
 
@@ -261,9 +287,19 @@ namespace HydraMenu.ui.sections
 
 				// Show the Exile screen with the player being ejected
 				MeetingHud.VoterState[] votes = Array.Empty<MeetingHud.VoterState>();
-				MeetingHud.Instance.RpcVotingComplete(votes, target.Data, false);
+
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+
+				if(Self.UseBypassRpc)
+				{
+					batch.UseAnticheatBypass();
+				}
+
+				batch.QueueVotingComplete(votes, target.Data, false);
 				// If we created a MeetingHud object then it will be destroyed by the RpcClose function
-				MeetingHud.Instance.RpcClose();
+				batch.QueueCloseMeeting();
+
+				batch.FinishBatch();
 			}
 			GUILayout.EndHorizontal();
 
@@ -288,12 +324,18 @@ namespace HydraMenu.ui.sections
 					taskIds[i] = i;
 				}
 
-				target.Data.RpcSetTasks(taskIds);
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+				if(Self.UseBypassRpc) batch.UseAnticheatBypass();
+				batch.QueueSetTasks(target.Data, taskIds);
+				batch.FinishBatch();
 			}
 
 			if(GUILayout.Button("Clear Tasks"))
 			{
-				target.Data.RpcSetTasks(Array.Empty<byte>());
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+				if(Self.UseBypassRpc) batch.UseAnticheatBypass();
+				batch.QueueSetTasks(target.Data, Array.Empty<byte>());
+				batch.FinishBatch();
 			}
 			GUILayout.EndHorizontal();
 

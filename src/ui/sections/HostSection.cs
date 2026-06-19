@@ -141,8 +141,18 @@ namespace HydraMenu.ui.sections
 				else
 				{
 					MeetingHud.VoterState[] votes = Array.Empty<MeetingHud.VoterState>();
-					MeetingHud.Instance.RpcVotingComplete(votes, null, false);
-					MeetingHud.Instance.RpcClose();
+
+					Network.BatchedMessage batch = new Network.BatchedMessage();
+
+					if(Self.UseBypassRpc)
+					{
+						batch.UseAnticheatBypass();
+					}
+
+					batch.QueueVotingComplete(votes, null, false);
+					batch.QueueCloseMeeting();
+
+					batch.FinishBatch();
 				}
 			}
 

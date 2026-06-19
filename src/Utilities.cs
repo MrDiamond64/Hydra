@@ -89,22 +89,31 @@ namespace HydraMenu
 
 			bool hasAnticheat = IsAnticheatPresent();
 
+			Network.BatchedMessage batch = new Network.BatchedMessage();
+
+			if(Self.UseBypassRpc)
+			{
+				batch.UseAnticheatBypass();
+			}
+
 			// We cannot change the name of our player in server-authoritative lobbies, even as the host
 			if(!hasAnticheat)
 			{
-				PlayerControl.LocalPlayer.RpcSetName(outfit.PlayerName);
+				batch.QueueSetName(PlayerControl.LocalPlayer, outfit.PlayerName);
 			}
 
 			if(!hasAnticheat || AmongUsClient.Instance.AmHost)
 			{
-				PlayerControl.LocalPlayer.RpcSetColor((byte)outfit.ColorId);
+				batch.QueueSetColor(PlayerControl.LocalPlayer, (byte)outfit.ColorId);
 			}
 
-			PlayerControl.LocalPlayer.RpcSetNamePlate(outfit.NamePlateId);
-			PlayerControl.LocalPlayer.RpcSetHat(outfit.HatId);
-			PlayerControl.LocalPlayer.RpcSetVisor(outfit.VisorId);
-			PlayerControl.LocalPlayer.RpcSetSkin(outfit.SkinId);
-			PlayerControl.LocalPlayer.RpcSetPet(outfit.PetId);
+			batch.QueueSetNameplateStr(PlayerControl.LocalPlayer, outfit.NamePlateId, ++outfit.NamePlateSequenceId);
+			batch.QueueSetHatStr(PlayerControl.LocalPlayer, outfit.HatId, ++outfit.HatSequenceId);
+			batch.QueueSetVisorStr(PlayerControl.LocalPlayer, outfit.VisorId, ++outfit.VisorSequenceId);
+			batch.QueueSetSkinStr(PlayerControl.LocalPlayer, outfit.SkinId, ++outfit.SkinSequenceId);
+			batch.QueueSetPetStr(PlayerControl.LocalPlayer, outfit.PetId, ++outfit.PetSequenceId);
+
+			batch.FinishBatch();
 		}
 
 		public static void AttemptStartMeeting(PlayerControl reporter, NetworkedPlayerInfo target)
@@ -164,7 +173,16 @@ namespace HydraMenu
 				}
 			}
 
-			reporter.CmdReportDeadBody(target);
+			Network.BatchedMessage batch = new Network.BatchedMessage();
+
+			if(Self.UseBypassRpc)
+			{
+				batch.UseAnticheatBypass();
+			}
+
+			batch.QueueReportDeadBody(reporter, target);
+
+			batch.FinishBatch();
 		}
 
 		public static void OpenMeeting(PlayerControl reporter, NetworkedPlayerInfo target)
