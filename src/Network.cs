@@ -369,7 +369,7 @@ namespace HydraMenu
 
 			public void QueueLobbyTimeExpiring(int timer)
 			{
-				LobbyBehaviour.Instance.HandleLobbyTimerExtensionRequest(69420, false, 255, 0, 0);
+				LobbyBehaviour.Instance.HandleLobbyTimerExtensionRequest(timer, false, 255, 0, 0); // dumbass
 
 				writer.StartMessage((byte)GameDataTypes.RpcFlag);
 				writer.WritePacked(LobbyBehaviour.Instance.NetId);
