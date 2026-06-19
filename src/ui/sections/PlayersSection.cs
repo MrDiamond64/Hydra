@@ -309,12 +309,18 @@ namespace HydraMenu.ui.sections
 					taskIds[i] = i;
 				}
 
-				target.Data.RpcSetTasks(taskIds);
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+				if(Self.UseBypassRpc) batch.UseAnticheatBypass();
+				batch.QueueSetTasks(target.Data, taskIds);
+				batch.FinishBatch();
 			}
 
 			if(GUILayout.Button("Clear Tasks"))
 			{
-				target.Data.RpcSetTasks(Array.Empty<byte>());
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+				if(Self.UseBypassRpc) batch.UseAnticheatBypass();
+				batch.QueueSetTasks(target.Data, Array.Empty<byte>());
+				batch.FinishBatch();
 			}
 			GUILayout.EndHorizontal();
 
