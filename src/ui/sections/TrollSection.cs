@@ -1,4 +1,4 @@
-﻿using AmongUs.GameOptions;
+using AmongUs.GameOptions;
 using AmongUs.InnerNet.GameDataMessages;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Hazel;
