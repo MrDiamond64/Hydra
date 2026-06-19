@@ -13,13 +13,11 @@ namespace HydraMenu.ui.sections
     {
         public SelfSection() : base("Self")
         {
-            nameOverride = "";
-
+            usernameInput = new("Edit Username");
         }
 
         private uint level = 199;
-        private string nameOverride = "";
-        private bool isEditingName = false;
+        private Controls.TextInput usernameInput;
         private bool isNameReady = false;
 
         public override void Render()
@@ -33,9 +31,8 @@ namespace HydraMenu.ui.sections
             {
                 if (!isNameReady)
                 {
-                    nameOverride = PlayerControl.LocalPlayer.Data.PlayerName;
+                    usernameInput.contents = PlayerControl.LocalPlayer.Data.PlayerName;
                     isNameReady = true;
-
                 }
                 GUILayout.Label($"Role: {PlayerControl.LocalPlayer.Data.RoleType}");
             }
@@ -140,48 +137,14 @@ namespace HydraMenu.ui.sections
 
             GUILayout.Space(5);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Edit Username:", GUILayout.Width(110));
 
-            // A button that behaves like an interactive text field
-            string buttonText = isEditingName ? (nameOverride + "|") : (string.IsNullOrEmpty(nameOverride) ? "[Click here to type]" : nameOverride);
-            if (GUILayout.Button(buttonText))
-            {
-                isEditingName = !isEditingName;
-            }
-            GUILayout.EndHorizontal();
-
-            // Capture raw keyboard events when the pseudo-text field is active
-            if (isEditingName)
-            {
-                Event e = Event.current;
-                if (e != null && e.type == EventType.KeyDown)
-                {
-                    if (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.Escape)
-                    {
-                        isEditingName = false;
-                    }
-                    else if (e.keyCode == KeyCode.Backspace)
-                    {
-                        if (nameOverride.Length > 0)
-                        {
-                            nameOverride = nameOverride.Substring(0, nameOverride.Length - 1);
-                        }
-                    }
-                    else if (e.character != '\0' && !char.IsControl(e.character))
-                    {
-                        nameOverride += e.character;
-                    }
-                    e.Use();
-                }
-                GUILayout.Label("<i><color=yellow>Typing active... Press [Enter] or click the field again to lock it in.</color></i>");
-            }
+            usernameInput.Render();
 
             if (GUILayout.Button("Set Username"))
             {
-                isEditingName = false; // Turn off editing mode
                 Network.BatchedMessage bm = new();
                 bm.UseAnticheatBypass();
-                bm.QueueSetName(PlayerControl.LocalPlayer, nameOverride);
+                bm.QueueSetName(PlayerControl.LocalPlayer, usernameInput.contents);
                 bm.FinishBatch();
             }
         }

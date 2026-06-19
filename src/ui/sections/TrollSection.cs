@@ -158,14 +158,6 @@ namespace HydraMenu.ui.sections
                 FunnyLobbyTimer();
             }
 
-            if (GUILayout.Button("Close Lobby"))
-            {
-                Network.BatchedMessage batch = new Network.BatchedMessage();
-                batch.UseAnticheatBypass();
-                batch.QueueLobbyTimeExpiring(1);
-                batch.FinishBatch();
-            }
-
             if (GUILayout.Button("Nuke Lobby"))
             {
                 RenameAll("<color=yellow>Your lobby has been ㏊cked by Hydra Menu</color>\nGet the best ㏊cks for Among Us at:\ndiscord.gg/ADKj3GM2Wb\n\ngithub.com/MrDiamond64/Hydra");
@@ -444,7 +436,7 @@ namespace HydraMenu.ui.sections
 
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
-                batch.QueueSetNameplate(player, host.NamePlateId, (byte)(player.Data.DefaultOutfit.NamePlateSequenceId + 2));
+                batch.QueueSetNameplateStr(player, host.NamePlateId, (byte)(player.Data.DefaultOutfit.NamePlateSequenceId + 2));
                 batch.QueueSetSkinStr(player, host.SkinId, (byte)(player.Data.DefaultOutfit.SkinSequenceId + 2));
                 batch.QueueSetVisorStr(player, host.VisorId, (byte)(player.Data.DefaultOutfit.VisorSequenceId + 2));
                 batch.QueueSetPetStr(player, host.PetId, (byte)(player.Data.DefaultOutfit.PetSequenceId + 2));
@@ -452,6 +444,52 @@ namespace HydraMenu.ui.sections
 
             batch.FinishBatch();
         }
+
+        public static void TurnAllTo(PlayerControl target)
+        {
+            NetworkedPlayerInfo.PlayerOutfit outfit = target.Data.DefaultOutfit;
+
+            Network.BatchedMessage batch = new Network.BatchedMessage();
+            batch.UseAnticheatBypass();
+
+            int currentCount = 0;
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            {
+                if (currentCount == 0)
+                {
+                    batch = new Network.BatchedMessage();
+                    batch.UseAnticheatBypass();
+                }
+
+                currentCount++;
+                Hydra.Log.LogInfo($"Changing name of {player.Data.PlayerName}");
+
+                batch.QueueSetName(player, outfit.PlayerName);
+                batch.QueueSetColor(player, (byte)outfit.ColorId);
+                batch.QueueSetLevel(player, target.Data.PlayerLevel);
+                batch.QueueSetNameplateStr(player, outfit.NamePlateId, (byte)(player.Data.DefaultOutfit.NamePlateSequenceId + 2));
+                batch.QueueSetHatStr(player, outfit.HatId, (byte)(player.Data.DefaultOutfit.HatSequenceId + 2));
+                batch.QueueSetSkinStr(player, outfit.SkinId, (byte)(player.Data.DefaultOutfit.SkinSequenceId + 2));
+                batch.QueueSetVisorStr(player, outfit.VisorId, (byte)(player.Data.DefaultOutfit.VisorSequenceId + 2));
+                batch.QueueSetPetStr(player, outfit.PetId, (byte)(player.Data.DefaultOutfit.PetSequenceId + 2));
+
+                if (currentCount == 4)
+                {
+                    Hydra.Log.LogInfo($"Finishing batch, ended up with {batch.writer.Length} bytes.");
+                    batch.FinishBatch();
+                    currentCount = 0;
+                }
+            }
+
+            if (currentCount != 0)
+            {
+                Hydra.Log.LogInfo($"Finishing batch, ended up with {batch.writer.Length} bytes.");
+                batch.FinishBatch();
+            }
+
+            batch.FinishBatch();
+        }
+
 
         private static IEnumerator KillAllHost()
         {
