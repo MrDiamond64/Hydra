@@ -122,14 +122,12 @@ namespace HydraMenu.ui.sections
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Turn all to Me"))
 			{
-				TurnAllToHost1(PlayerControl.LocalPlayer);
-				TurnAllToHost2(PlayerControl.LocalPlayer);
+				TurnAllTo(PlayerControl.LocalPlayer);
 			}
 
 			if(GUILayout.Button("Turn all to Host"))
 			{
-				TurnAllToHost1(AmongUsClient.Instance.GetHost().Character);
-				TurnAllToHost2(AmongUsClient.Instance.GetHost().Character);
+				TurnAllTo(AmongUsClient.Instance.GetHost().Character);
 			}
 			GUILayout.EndHorizontal();
 
@@ -409,37 +407,46 @@ namespace HydraMenu.ui.sections
 			batch.FinishBatch();
 		}
 
-		private static void TurnAllToHost1(PlayerControl target)
+		public static void TurnAllTo(PlayerControl target)
 		{
-			NetworkedPlayerInfo.PlayerOutfit host = target.Data.DefaultOutfit;
+			NetworkedPlayerInfo.PlayerOutfit outfit = target.Data.DefaultOutfit;
 
 			Network.BatchedMessage batch = new Network.BatchedMessage();
 			batch.UseAnticheatBypass();
 
+			int currentCount = 0;
 			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
 			{
-				batch.QueueSetName(player, host.PlayerName);
-				batch.QueueSetColor(player, (byte)host.ColorId);
-				batch.QueueSetLevel(player, 465);
-				batch.QueueSetHatStr(player, host.HatId, (byte)(player.Data.DefaultOutfit.HatSequenceId + 2));
+				if(currentCount == 0)
+				{
+					batch = new Network.BatchedMessage();
+					batch.UseAnticheatBypass();
+				}
+
+				currentCount++;
+				Hydra.Log.LogInfo($"Changing name of {player.Data.PlayerName}");
+
+				batch.QueueSetName(player, outfit.PlayerName);
+				batch.QueueSetColor(player, (byte)outfit.ColorId);
+				batch.QueueSetLevel(player, target.Data.PlayerLevel);
+				batch.QueueSetNameplate(player, outfit.NamePlateId, (byte)(player.Data.DefaultOutfit.NamePlateSequenceId + 2));
+				batch.QueueSetHatStr(player, outfit.HatId, (byte)(player.Data.DefaultOutfit.HatSequenceId + 2));
+				batch.QueueSetSkinStr(player, outfit.SkinId, (byte)(player.Data.DefaultOutfit.SkinSequenceId + 2));
+				batch.QueueSetVisorStr(player, outfit.VisorId, (byte)(player.Data.DefaultOutfit.VisorSequenceId + 2));
+				batch.QueueSetPetStr(player, outfit.PetId, (byte)(player.Data.DefaultOutfit.PetSequenceId + 2));
+
+				if(currentCount == 5)
+				{
+					Hydra.Log.LogInfo($"Finishing batch, ended up with {batch.writer.Length} bytes.");
+					batch.FinishBatch();
+					currentCount = 0;
+				}
 			}
 
-			batch.FinishBatch();
-		}
-
-		private static void TurnAllToHost2(PlayerControl target)
-		{
-			NetworkedPlayerInfo.PlayerOutfit host = target.Data.DefaultOutfit;
-
-			Network.BatchedMessage batch = new Network.BatchedMessage();
-			batch.UseAnticheatBypass();
-
-			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			if(currentCount != 0)
 			{
-				batch.QueueSetNameplate(player, host.NamePlateId, (byte)(player.Data.DefaultOutfit.NamePlateSequenceId + 2));
-				batch.QueueSetSkinStr(player, host.SkinId, (byte)(player.Data.DefaultOutfit.SkinSequenceId + 2));
-				batch.QueueSetVisorStr(player, host.VisorId, (byte)(player.Data.DefaultOutfit.VisorSequenceId + 2));
-				batch.QueueSetPetStr(player, host.PetId, (byte)(player.Data.DefaultOutfit.PetSequenceId+ 2));
+				Hydra.Log.LogInfo($"Finishing batch, ended up with {batch.writer.Length} bytes.");
+				batch.FinishBatch();
 			}
 
 			batch.FinishBatch();

@@ -168,6 +168,11 @@ namespace HydraMenu.ui.sections
 				Utilities.AttemptStartMeeting(PlayerControl.LocalPlayer, target.Data);
 			}
 
+			if(GUILayout.Button("Turn All Into"))
+			{
+				TrollSection.TurnAllTo(target);
+			}
+
 			if(GUILayout.Button("Revive Player"))
 			{
 				target.Data.IsDead = false;

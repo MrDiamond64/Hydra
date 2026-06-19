@@ -353,6 +353,20 @@ namespace HydraMenu
 				writer.EndMessage();
 			}
 
+			public void QueueCheckMurder(PlayerControl source, PlayerControl target)
+			{
+				if(AmongUsClient.Instance.AmHost)
+				{
+					source.CheckMurder(target);
+				}
+
+				writer.StartMessage((byte)GameDataTypes.RpcFlag);
+				writer.WritePacked(source.NetId);
+				writer.Write((byte)RpcCalls.CheckMurder);
+				writer.WriteNetObject(target);
+				writer.EndMessage();
+			}
+
 			public void QueueLobbyTimeExpiring(int timer)
 			{
 				LobbyBehaviour.Instance.HandleLobbyTimerExtensionRequest(69420, false, 255, 0, 0);
