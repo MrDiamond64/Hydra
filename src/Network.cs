@@ -214,6 +214,16 @@ namespace HydraMenu
 				writer.EndMessage();
 			}
 
+			public void QueueCloseMeeting()
+			{
+				MeetingHud.Instance.Close();
+
+				writer.StartMessage((byte)GameDataTypes.RpcFlag);
+				writer.WritePacked(MeetingHud.Instance.NetId);
+				writer.Write((byte)RpcCalls.CloseMeeting);
+				writer.EndMessage();
+			}
+
 			public void QueueVotingComplete(MeetingHud.VoterState[] voteStates, NetworkedPlayerInfo ejectedPlayer, bool isTie)
 			{
 				MeetingHud.Instance.VotingComplete(voteStates, ejectedPlayer, isTie);
@@ -224,9 +234,9 @@ namespace HydraMenu
 
 				writer.WritePacked(voteStates.Length);
 
-				for(int i = 0; i < voteStates.Length; i++)
+				foreach(MeetingHud.VoterState state in voteStates)
 				{
-					MeetingHud.VoterState voteState = voteStates[i];
+					state.Serialize(writer);
 				}
 
 				writer.Write(ejectedPlayer.PlayerId);

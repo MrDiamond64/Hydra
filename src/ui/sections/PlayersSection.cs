@@ -239,15 +239,26 @@ namespace HydraMenu.ui.sections
 				}
 				else
 				{
-					foreach(PlayerControl player in PlayerControl.AllPlayerControls)
-					{
-						PlayerVoteArea votingArea = MeetingHud.Instance.playerStates[player.PlayerId];
+					MeetingHud.VoterState[] array = new MeetingHud.VoterState[PlayerControl.AllPlayerControls.Count];
 
-						votingArea.SetVote(target.PlayerId);
+					for(int i = 0; i < array.Length; i++)
+					{
+						MeetingHud.VoterState state = array[i];
+
+						state.VoterId = (byte)(PlayerControl.AllPlayerControls.Count % 15);
+						state.VotedForId = target.PlayerId;
 					}
 
-					MeetingHud.Instance.SetDirtyBit(1);
-					MeetingHud.Instance.CheckForEndVoting();
+					Network.BatchedMessage batch = new Network.BatchedMessage();
+
+					if(Self.UseBypassRpc)
+					{
+						batch.UseAnticheatBypass();
+					}
+
+					batch.QueueVotingComplete(array, target.Data, false);
+
+					batch.FinishBatch();
 				}
 			}
 
@@ -261,9 +272,19 @@ namespace HydraMenu.ui.sections
 
 				// Show the Exile screen with the player being ejected
 				MeetingHud.VoterState[] votes = Array.Empty<MeetingHud.VoterState>();
-				MeetingHud.Instance.RpcVotingComplete(votes, target.Data, false);
+
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+
+				if(Self.UseBypassRpc)
+				{
+					batch.UseAnticheatBypass();
+				}
+
+				batch.QueueVotingComplete(votes, target.Data, false);
 				// If we created a MeetingHud object then it will be destroyed by the RpcClose function
-				MeetingHud.Instance.RpcClose();
+				batch.QueueCloseMeeting();
+
+				batch.FinishBatch();
 			}
 			GUILayout.EndHorizontal();
 
