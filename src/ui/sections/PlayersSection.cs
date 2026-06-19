@@ -147,10 +147,25 @@ namespace HydraMenu.ui.sections
 
 			Hydra.routines.playerFollower.Enabled = Controls.PlayerSpecificToggle("Follow", target, ref Hydra.routines.playerFollower.following);
 
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Teleport"))
 			{
 				// We do not want to use PlayerControl::GetTruePosition() here as it would teleport us to the player's feet
 				Teleporter.TeleportTo(target.transform.position);
+			}
+
+			if(GUILayout.Button("Teleport To Me"))
+			{
+				Network.BatchedMessage batch = new Network.BatchedMessage();
+				batch.UseAnticheatBypass();
+				batch.QueueSnapTo(target, (ushort)(target.NetTransform.lastSequenceId + 2), PlayerControl.LocalPlayer.transform.position);
+				batch.FinishBatch();
+			}
+			GUILayout.EndHorizontal();
+
+			if(GUILayout.Button("TP Everyone To"))
+			{
+				TrollSection.TPTo(target);
 			}
 
 			if(GUILayout.Button("Murder"))

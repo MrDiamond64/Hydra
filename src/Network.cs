@@ -403,9 +403,9 @@ namespace HydraMenu
                 writer.EndMessage();
             }
 
-            public void QueueLobbyTimeExpiring(int timer)
-            {
-                LobbyBehaviour.Instance.HandleLobbyTimerExtensionRequest(timer, false, 255, 0, 0);
+			public void QueueLobbyTimeExpiring(int timer)
+			{
+				LobbyBehaviour.Instance.HandleLobbyTimerExtensionRequest(69420, false, 255, 0, 0);
 
                 writer.StartMessage((byte)GameDataTypes.RpcFlag);
                 writer.WritePacked(LobbyBehaviour.Instance.NetId);
@@ -415,12 +415,12 @@ namespace HydraMenu
                 writer.EndMessage();
             }
 
-            public void FinishBatch()
-            {
-                writer.EndMessage();
-                AmongUsClient.Instance.SendOrDisconnect(writer);
-                writer.Recycle();
-            }
-        }
-    }
+			public void FinishBatch()
+			{
+				writer.EndMessage();
+				AmongUsClient.Instance.SendOrDisconnect(writer);
+				writer.Recycle();
+			}
+		}
+	}
 }

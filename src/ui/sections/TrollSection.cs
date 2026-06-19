@@ -1,4 +1,4 @@
-﻿using AmongUs.GameOptions;
+using AmongUs.GameOptions;
 using AmongUs.InnerNet.GameDataMessages;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Hazel;
@@ -157,7 +157,7 @@ namespace HydraMenu.ui.sections
             {
                 FunnyLobbyTimer();
             }
-
+            
             if (GUILayout.Button("Nuke Lobby"))
             {
                 RenameAll("<color=yellow>Your lobby has been ㏊cked by Hydra Menu</color>\nGet the best ㏊cks for Among Us at:\ndiscord.gg/ADKj3GM2Wb\n\ngithub.com/MrDiamond64/Hydra");
