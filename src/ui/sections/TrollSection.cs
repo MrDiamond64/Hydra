@@ -157,15 +157,7 @@ namespace HydraMenu.ui.sections
             {
                 FunnyLobbyTimer();
             }
-
-            if (GUILayout.Button("Close Lobby"))
-            {
-                Network.BatchedMessage batch = new Network.BatchedMessage();
-                batch.UseAnticheatBypass();
-                batch.QueueLobbyTimeExpiring(1);
-                batch.FinishBatch();
-            }
-
+            
             if (GUILayout.Button("Nuke Lobby"))
             {
                 RenameAll("<color=yellow>Your lobby has been ㏊cked by Hydra Menu</color>\nGet the best ㏊cks for Among Us at:\ndiscord.gg/ADKj3GM2Wb\n\ngithub.com/MrDiamond64/Hydra");
