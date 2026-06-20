@@ -77,13 +77,6 @@ namespace HydraMenu
 				}
 			}
 
-			public void UseAnticheatBypass()
-			{
-				writer.StartMessage((byte)GameDataTypes.DataFlag);
-				writer.Write(0);
-				writer.EndMessage();
-			}
-
 			public void QueueDataFlag(InnerNetObject netObj)
 			{
 				writer.StartMessage((byte)GameDataTypes.DataFlag);

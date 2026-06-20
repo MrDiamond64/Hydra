@@ -20,8 +20,6 @@ namespace HydraMenu.ui.sections
 			Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
 			Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");
 
-			ForceHost.Enabled = GUILayout.Toggle(ForceHost.Enabled, "Force Host");
-
 			if(GUILayout.Button("Copy Random Player"))
 			{
 				PlayerControl randomPl = Utilities.GetRandomPlayer();
@@ -46,6 +44,8 @@ namespace HydraMenu.ui.sections
 					Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
 				}
 			}
+
+			GUIStyle.Space(5);
 
 			// Automatically close and open all doors at a set interval
 			GUILayout.Label("Door Troller:");
