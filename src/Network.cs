@@ -77,20 +77,6 @@ namespace HydraMenu
 				}
 			}
 
-			public void QueueDataFlag(InnerNetObject netObj)
-			{
-				writer.StartMessage((byte)GameDataTypes.DataFlag);
-				writer.WritePacked(netObj.NetId);
-				netObj.Serialize(writer, false);
-				writer.EndMessage();
-			}
-
-			public void QueueSpawn(InnerNetObject netObject, int ownerId = -2, SpawnFlags flags = SpawnFlags.None)
-			{
-				SpawnGameDataMessage spawn = AmongUsClient.Instance.CreateSpawnMessage(netObject, ownerId, flags);
-				spawn.Serialize(writer);
-			}
-
 			public void QueueDataFlag(uint netId, MessageWriter msg)
 			{
 				writer.StartMessage((byte)GameDataTypes.DataFlag);
@@ -99,39 +85,10 @@ namespace HydraMenu
 				writer.EndMessage();
 			}
 
-			public void QueueDespawn(uint netId)
+			public void QueueSpawn(InnerNetObject netObject, int ownerId = -2, SpawnFlags flags = SpawnFlags.None)
 			{
-				writer.StartMessage((byte)GameDataTypes.DespawnFlag);
-				writer.WritePacked(netId);
-				writer.EndMessage();
-			}
-
-			public void QueueSceneChange(int clientId, string scene)
-			{
-				writer.StartMessage((byte)GameDataTypes.SceneChangeFlag);
-				writer.WritePacked(clientId);
-				writer.Write(scene);
-				writer.EndMessage();
-			}
-
-			public void QueueCompleteTask(PlayerControl source, byte taskId)
-			{
-				source.CompleteTask(taskId);
-
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(source.NetId);
-				writer.Write((byte)RpcCalls.CompleteTask);
-				writer.Write(taskId);
-				writer.EndMessage();
-			}
-
-			public void QueueCheckName(PlayerControl source, string name)
-			{
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(source.NetId);
-				writer.Write((byte)RpcCalls.CheckName);
-				writer.Write(name);
-				writer.EndMessage();
+				SpawnGameDataMessage spawn = AmongUsClient.Instance.CreateSpawnMessage(netObject, ownerId, flags);
+				spawn.Serialize(writer);
 			}
 
 			public void QueueSetName(PlayerControl source, string name)
@@ -182,54 +139,6 @@ namespace HydraMenu
 				writer.Write((byte)RpcCalls.MurderPlayer);
 				writer.WritePacked(target.NetId);
 				writer.Write((int)result);
-				writer.EndMessage();
-			}
-
-			public void QueueSendChat(PlayerControl source, string text)
-			{
-				if(HudManager.Instance != null)
-				{
-					HudManager.Instance.Chat.AddChat(source, text, true);
-				}
-
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(source.NetId);
-				writer.Write((byte)RpcCalls.SendChat);
-				writer.Write(text);
-				writer.EndMessage();
-			}
-
-			public void QueueSetScanner(PlayerControl source, bool scanning, byte seq)
-			{
-				source.SetScanner(scanning, seq);
-
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(source.NetId);
-				writer.Write((byte)RpcCalls.SetScanner);
-				writer.Write(scanning);
-				writer.Write(seq);
-				writer.EndMessage();
-			}
-
-			public void QueueSetStartCounter(PlayerControl source, sbyte counter, int seq)
-			{
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(source.NetId);
-				writer.Write((byte)RpcCalls.SetStartCounter);
-				writer.WritePacked(seq);
-				writer.Write(counter);
-				writer.EndMessage();
-			}
-
-			public void QueueSnapTo(PlayerControl source, ushort seq, Vector2 position)
-			{
-				source.NetTransform.SnapTo(position, seq);
-
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(source.NetTransform.NetId);
-				writer.Write((byte)RpcCalls.SnapTo);
-				NetHelpers.WriteVector2(position, writer);
-				writer.Write(seq);
 				writer.EndMessage();
 			}
 
@@ -284,17 +193,6 @@ namespace HydraMenu
 				writer.WritePacked(player.NetId);
 				writer.Write((byte)RpcCalls.SetTasks);
 				writer.WriteBytesAndSize(tasks);
-				writer.EndMessage();
-			}
-
-			public void QueueSetLevel(PlayerControl source, uint level)
-			{
-				source.SetLevel(level);
-
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(source.NetId);
-				writer.Write((byte)RpcCalls.SetLevel);
-				writer.WritePacked(level);
 				writer.EndMessage();
 			}
 
@@ -379,32 +277,6 @@ namespace HydraMenu
 				writer.Write((byte)RpcCalls.Shapeshift);
 				writer.WriteNetObject(target);
 				writer.Write(shouldAnimate);
-				writer.EndMessage();
-			}
-
-			public void QueueCheckMurder(PlayerControl source, PlayerControl target)
-			{
-				if(AmongUsClient.Instance.AmHost)
-				{
-					source.CheckMurder(target);
-				}
-
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(source.NetId);
-				writer.Write((byte)RpcCalls.CheckMurder);
-				writer.WriteNetObject(target);
-				writer.EndMessage();
-			}
-
-			public void QueueLobbyTimeExpiring(int timer)
-			{
-				LobbyBehaviour.Instance.HandleLobbyTimerExtensionRequest(69420, false, 255, 0, 0);
-
-				writer.StartMessage((byte)GameDataTypes.RpcFlag);
-				writer.WritePacked(LobbyBehaviour.Instance.NetId);
-				writer.Write((byte)RpcCalls.LobbyTimeExpiring);
-				writer.WritePacked(timer);
-				writer.Write(false);
 				writer.EndMessage();
 			}
 
