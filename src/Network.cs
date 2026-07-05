@@ -142,6 +142,20 @@ namespace HydraMenu
 				writer.EndMessage();
 			}
 
+			public void QueueSnapTo(PlayerControl source, Vector2 position)
+			{
+				source.NetTransform.SnapTo(position, (ushort)(source.NetTransform.lastSequenceId + 1));
+
+				ushort seqId = (ushort)(source.NetTransform.lastSequenceId + 2);
+
+				writer.StartMessage((byte)GameDataTypes.RpcFlag);
+				writer.WritePacked(source.NetTransform.NetId);
+				writer.Write((byte)RpcCalls.SnapTo);
+				NetHelpers.WriteVector2(position, writer);
+				writer.Write(seqId);
+				writer.EndMessage();
+			}
+
 			public void QueueCloseMeeting()
 			{
 				MeetingHud.Instance.Close();

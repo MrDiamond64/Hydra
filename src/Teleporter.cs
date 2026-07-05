@@ -84,5 +84,24 @@ namespace HydraMenu
 				PlayerControl.LocalPlayer.NetTransform.SnapTo(position);
 			}
 		}
+
+		public static void TeleportPlayerTo(PlayerControl player, Vector2 position)
+		{
+			Network.BatchedMessage batch = new Network.BatchedMessage();
+			batch.QueueSnapTo(player, position);
+			batch.FinishBatch();
+		}
+
+		public static void TeleportAllTo(Vector2 position)
+		{
+			Network.BatchedMessage batch = new Network.BatchedMessage();
+
+			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			{
+				batch.QueueSnapTo(player, position);
+			}
+
+			batch.FinishBatch();
+		}
 	}
 }

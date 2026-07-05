@@ -115,6 +115,8 @@ namespace HydraMenu.ui.sections
 				return;
 			}
 
+			bool hasAnticheat = Utilities.IsAnticheatPresent();
+
 			ClientData clientData = AmongUsClient.Instance.GetClientFromCharacter(target);
 			if(clientData != null)
 			{
@@ -147,10 +149,22 @@ namespace HydraMenu.ui.sections
 
 			Hydra.routines.playerFollower.Enabled = Controls.PlayerSpecificToggle("Follow", target, ref Hydra.routines.playerFollower.following);
 
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Teleport"))
 			{
 				// We do not want to use PlayerControl::GetTruePosition() here as it would teleport us to the player's feet
 				Teleporter.TeleportTo(target.transform.position);
+			}
+
+			if(!hasAnticheat && GUILayout.Button("Teleport to Me"))
+			{
+				Teleporter.TeleportPlayerTo(target, PlayerControl.LocalPlayer.transform.position);
+			}
+			GUILayout.EndHorizontal();
+
+			if(!hasAnticheat && GUILayout.Button("Teleport All To"))
+			{
+				Teleporter.TeleportAllTo(target.transform.position);
 			}
 
 			if(GUILayout.Button("Murder"))
