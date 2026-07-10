@@ -2,6 +2,7 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HydraMenu.assets;
 using HydraMenu.features;
+using HydraMenu.network;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,12 +45,12 @@ namespace HydraMenu.ui.sections
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Start Medbay Scan"))
 			{
-				Network.SendSetScanner(true);
+				RPCEmitter.SendSetScanner(true);
 			}
 
 			if(GUILayout.Button("Finish Medbay Scan"))
 			{
-				Network.SendSetScanner(false);
+				RPCEmitter.SendSetScanner(false);
 			}
 			GUILayout.EndHorizontal();
 
@@ -127,7 +128,7 @@ namespace HydraMenu.ui.sections
 				return;
 			}
 
-			Network.SendPlayAnimation((byte)task);
+			RPCEmitter.SendPlayAnimation((byte)task);
 		}
 	}
 }

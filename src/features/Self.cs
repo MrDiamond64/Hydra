@@ -1,5 +1,6 @@
 ﻿using AmongUs.Data.Player;
 using HarmonyLib;
+using HydraMenu.network;
 
 namespace HydraMenu.features
 {
@@ -33,7 +34,7 @@ namespace HydraMenu.features
 
 				if(AlwaysShowTaskAnimations)
 				{
-					Network.SendSetScanner(value);
+					RPCEmitter.SendSetScanner(value);
 					return false;
 				}
 				else
@@ -52,7 +53,7 @@ namespace HydraMenu.features
 
 				if(AlwaysShowTaskAnimations)
 				{
-					Network.SendPlayAnimation(animType);
+					RPCEmitter.SendPlayAnimation(animType);
 					return false;
 				}
 				else
