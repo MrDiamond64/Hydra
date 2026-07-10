@@ -1,8 +1,8 @@
 ﻿using AmongUs.GameOptions;
-using HydraMenu.features;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static HydraMenu.network.Constants;
 
 namespace HydraMenu
 {
@@ -237,14 +237,29 @@ namespace HydraMenu
 
 		public static MapNames GetCurrentMap()
 		{
-			if(AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay)
+			// Fall back to current map according to game options if ShipStatus does not exist
+			if(ShipStatus.Instance == null)
 			{
-				return (MapNames)AmongUsClient.Instance.TutorialMapId;
+				if(AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay)
+				{
+					return (MapNames)AmongUsClient.Instance.TutorialMapId;
+				}
+				else
+				{
+					return (MapNames)GameOptionsManager.Instance.CurrentGameOptions.MapId;
+				}
 			}
-			else
+
+			return (SpawnType)ShipStatus.Instance.SpawnId switch
 			{
-				return (MapNames)GameOptionsManager.Instance.CurrentGameOptions.MapId;
-			}
+				SpawnType.SkeldShipStatus => MapNames.Skeld,
+				SpawnType.DleksShipStatus => MapNames.Dleks,
+				SpawnType.MiraShipStatus => MapNames.MiraHQ,
+				SpawnType.PolusShipStatus => MapNames.Polus,
+				SpawnType.AirshipShipStatus => MapNames.Airship,
+				SpawnType.FungleShipStatus => MapNames.Fungle,
+				_ => MapNames.Skeld
+			};
 		}
 
 		public static bool IsAnticheatPresent()
@@ -255,7 +270,7 @@ namespace HydraMenu
 			// On vanilla lobbies, NetworkedPlayerInfo net objects are owned by the backend among us servers (-4)
 			// If our NetworkedPlayerInfo net object is owned by the host, we can assume that the lobby has a lax anticheat without server authority
 			// which does not require us to use any sort of bypasses
-			return PlayerControl.LocalPlayer.Data.OwnerId != -2;
+			return PlayerControl.LocalPlayer.Data.OwnerId != (int)OwnerIds.Host;
 		}
 
 		public static string GetPlayerColor(NetworkedPlayerInfo player)
