@@ -44,6 +44,7 @@ namespace HydraMenu.network
 		{
 			if(Protections.BlockInvalidGameDataMessages && (reader.Tag == 3 || reader.Tag > 7))
 			{
+				reader.Recycle();
 				return;
 			}
 
