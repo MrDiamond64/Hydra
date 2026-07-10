@@ -20,6 +20,7 @@ namespace HydraMenu.network
 			{
 				if(Protections.BlockLargeGameMessages && parentReader.Length > MAX_MESSAGE_LENGTH)
 				{
+					parentReader.Recycle();
 					return false;
 				}
 
