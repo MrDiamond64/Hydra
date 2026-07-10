@@ -66,7 +66,6 @@ namespace HydraMenu.ui
 			return (PlayerColors)GUILayout.HorizontalSlider((int)currentColor, 0, Palette.ColorNames.Length);
 		}
 
-
 		public static bool PlayerSpecificToggle(string label, PlayerControl selectedPlayer, ref PlayerControl currentPlayer)
 		{
 			GUIStyle toggle = new GUIStyle(GUI.skin.toggle);
@@ -118,6 +117,33 @@ namespace HydraMenu.ui
 				else
 				{
 					currentPlayers.Remove(hashCode);
+				}
+			}
+
+			return currentPlayers.Count != 0;
+		}
+
+		public static bool GlobalPlayerSpecificToggle(string label, ref HashSet<int> currentPlayers)
+		{
+			GUIStyle toggle = new GUIStyle(GUI.skin.toggle);
+			bool enabled = currentPlayers.Count != 0;
+
+			if(enabled)
+			{
+				toggle.normal = toggle.onNormal;
+				toggle.active = toggle.onActive;
+				toggle.hover = toggle.onHover;
+			}
+
+			if(GUILayout.Button(label, toggle))
+			{
+				if(!enabled)
+				{
+					currentPlayers.Add(int.MaxValue);
+				}
+				else
+				{
+					currentPlayers.Clear();
 				}
 			}
 

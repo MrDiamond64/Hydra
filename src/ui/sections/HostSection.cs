@@ -167,7 +167,7 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Space(5);
 			GUILayout.Label("Disco Party:");
-			Hydra.routines.discoHost.Enabled = GUILayout.Toggle(Hydra.routines.discoHost.Enabled, "Enabled");
+			Hydra.routines.discoHost.Enabled = Controls.GlobalPlayerSpecificToggle("Enabled", ref Hydra.routines.discoHost.targets);
 
 			GUILayout.Label($"Color randomization delay: {Hydra.routines.discoHost.randomizationDelay:F2}s");
 			Hydra.routines.discoHost.randomizationDelay = GUILayout.HorizontalSlider(Hydra.routines.discoHost.randomizationDelay, 0.1f, 2.0f);
