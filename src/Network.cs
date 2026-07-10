@@ -49,13 +49,6 @@ namespace HydraMenu
 			AmongUsClient.Instance.FinishRpcImmediately(writer);
 		}
 
-		public static void SendDataFlag(uint netId, MessageWriter msg, int targetClientId = -1)
-		{
-			BatchedMessage batch = new BatchedMessage(targetClientId);
-			batch.QueueDataFlag(netId, msg);
-			batch.FinishBatch();
-		}
-
 		public class BatchedMessage
 		{
 			public MessageWriter writer;
