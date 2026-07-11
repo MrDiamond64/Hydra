@@ -266,16 +266,12 @@ namespace HydraMenu.ui.sections
 					taskIds[i] = i;
 				}
 
-				BatchedMessage batch = new BatchedMessage();
-				batch.QueueSetTasks(target.Data, taskIds);
-				batch.FinishBatch();
+				target.Data.RpcSetTasks(taskIds);
 			}
 
 			if(GUILayout.Button("Clear Tasks"))
 			{
-				BatchedMessage batch = new BatchedMessage();
-				batch.QueueSetTasks(target.Data, Array.Empty<byte>());
-				batch.FinishBatch();
+				target.Data.RpcSetTasks(Array.Empty<byte>());
 			}
 			GUILayout.EndHorizontal();
 

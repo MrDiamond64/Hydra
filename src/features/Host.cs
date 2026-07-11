@@ -141,7 +141,7 @@ namespace HydraMenu.features
 				systemUpdate.Write(operation == 1);
 				systemUpdate.EndMessage();
 
-				BatchedMessage batch = new BatchedMessage();
+				BatchedMessage batch = new BatchedMessage(player.OwnerId);
 				batch.QueueDataFlag(ShipStatus.Instance.NetId, systemUpdate);
 				batch.FinishBatch();
 			}

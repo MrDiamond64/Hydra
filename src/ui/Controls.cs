@@ -51,7 +51,6 @@ namespace HydraMenu.ui
 			Fortegreen
 		}
 
-
 		public static RoleTypes HorizontalRoleSlider(RoleTypes currentRole)
 		{
 			int currentValue = RolesList.IndexOf(currentRole);
@@ -156,7 +155,7 @@ namespace HydraMenu.ui
 			GUI.Box(rect, "", Styles.CreateCrewmateColorBox(colorName, colorName != "Fortegreen" ? player.Color : Color.black));
 		}
 
-		public static void DrawButtonCell<TKey,TValue>(Dictionary<TKey,TValue> buttons, Action<TValue> action, int columnsPerRow)
+		public static void DrawButtonCell<TKey, TValue>(Dictionary<TKey, TValue> buttons, Action<TValue> action, int columnsPerRow)
 		{
 			int currentColumn = 0;
 

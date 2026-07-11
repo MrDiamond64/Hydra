@@ -20,25 +20,15 @@ namespace HydraMenu.assets
 		{
 			MapNames currentMap = Utilities.GetCurrentMap();
 
-			switch(currentMap)
+			return currentMap switch
 			{
-				case MapNames.Skeld:
-				case MapNames.Dleks:
-					return skeldAnimations;
-
-				case MapNames.Polus:
-					return polusAnimations;
-
+				MapNames.Skeld or MapNames.Dleks => skeldAnimations,
+				MapNames.Polus => polusAnimations,
 				// These maps do not have any task animations, other than medbay scan
-				case MapNames.MiraHQ:
-				case MapNames.Airship:
-				case MapNames.Fungle:
-					return [];
-
+				MapNames.MiraHQ or MapNames.Airship or MapNames.Fungle => [],
 				// If we do not any known animations for the current map then just default to the Skeld ones:
-				default:
-					return skeldAnimations;
-			}
+				_ => skeldAnimations,
+			};
 		}
 	}
 }

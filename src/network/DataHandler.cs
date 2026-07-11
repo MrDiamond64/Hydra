@@ -45,13 +45,15 @@ namespace HydraMenu.network
 
 		public static void HandleGameDataInner(InnerNetClient innerNetClient, MessageReader reader, int msgNum)
 		{
-			if(Protections.BlockInvalidGameDataMessages && (reader.Tag == 3 || reader.Tag > 7))
+			GameDataTypes type = (GameDataTypes)reader.Tag;
+
+			if(Protections.BlockInvalidGameDataMessages && (type == GameDataTypes.Invalid || type == (GameDataTypes)3 || type > GameDataTypes.ReadyFlag))
 			{
 				reader.Recycle();
 				return;
 			}
 
-			bool isValid = Anticheat.HandleGameData((GameDataTypes)reader.Tag, reader);
+			bool isValid = Anticheat.HandleGameData(type, reader);
 			if(!isValid)
 			{
 				reader.Recycle();

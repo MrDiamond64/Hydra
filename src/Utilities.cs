@@ -1,5 +1,6 @@
 ﻿using AmongUs.GameOptions;
 using HydraMenu.network;
+using InnerNet;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -118,7 +119,7 @@ namespace HydraMenu
 
 			bool hasAnticheat = IsAnticheatPresent();
 
-			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
+			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
 			{
 				Hydra.notifications.Send("Start Meeting", "The game must have started in order for this feature to work.");
 				return;
@@ -169,9 +170,7 @@ namespace HydraMenu
 				}
 			}
 
-			BatchedMessage batch = new BatchedMessage();
-			batch.QueueReportDeadBody(reporter, target);
-			batch.FinishBatch();
+			reporter.CmdReportDeadBody(target);
 		}
 
 		public static void OpenMeeting(PlayerControl reporter, NetworkedPlayerInfo target)
@@ -207,7 +206,7 @@ namespace HydraMenu
 				return;
 			}
 
-			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
+			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
 			{
 				Hydra.notifications.Send("Shapeshift Player", "The game must have started for this option to work.");
 				return;
