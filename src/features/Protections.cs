@@ -9,6 +9,7 @@ namespace HydraMenu.features
 	{
 		public static bool BlockLargeGameMessages { get; set; } = true;
 		public static bool BlockInvalidGameDataMessages { get; set; } = true;
+		public static bool BlockUnauthorizedSystemUpdates { get; set; } = true;
 
 		[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SetEndpoint))]
 		public static class ForceDTLS
@@ -163,6 +164,28 @@ namespace HydraMenu.features
 				}
 
 				reader.Position = oldReadPosition;
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.HandleRpc))]
+		class OnShipStatusRPC
+		{
+			static bool Prefix(byte callId, MessageReader reader)
+			{
+				switch((RpcCalls)callId)
+				{
+					case RpcCalls.CloseDoorsOfType:
+						// Only the host should receive CloseDoorsOfType RPCs
+						if(BlockUnauthorizedSystemUpdates && !AmongUsClient.Instance.AmHost) return false;
+						break;
+
+					case RpcCalls.UpdateSystem:
+						// Only the host should receive CloseDoorsOfType RPCs
+						if(BlockUnauthorizedSystemUpdates && !AmongUsClient.Instance.AmHost) return false;
+						break;
+				}
+
 				return true;
 			}
 		}

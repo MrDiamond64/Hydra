@@ -1,7 +1,6 @@
 ﻿using AmongUs.GameOptions;
 using Hazel;
 using HydraMenu.network;
-using Il2CppInterop.Generator.Extensions;
 using InnerNet;
 using System.Collections.Generic;
 using System.Linq;
