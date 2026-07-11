@@ -60,6 +60,65 @@ namespace HydraMenu
 			{ "Specimen", new Vector2(36.78f, -19.28f) }
 		};
 
+		public static Dictionary<string, Vector2> airshipTeleportLocations = new Dictionary<string, Vector2>()
+		{
+			{ "Engine Room", new Vector2(-0.73f, 0.60f) },
+			{ "Communications", new Vector2(-13.03f, 1.31f ) },
+			{ "Cockpit", new Vector2(-20.98f, -1.15f ) },
+			{ "Armory", new Vector2(-10.28f, -6.44f ) },
+			{ "Kitchen", new Vector2(-4.31f, -11.08f ) },
+			{ "Viewing Deck", new Vector2(-13.62f, -12.68f ) },
+			{ "Security", new Vector2(7.13f, -11.51f ) },
+			{ "Electrical", new Vector2(16.29f, -6.33f ) },
+			{ "Medical", new Vector2(22.85f, -7.40f ) },
+			{ "Cargo Bay", new Vector2(33.74f, -0.76f ) },
+			{ "Lounge", new Vector2(25.82f, 7.24f ) },
+			{ "Records", new Vector2(19.86f, 10.07f ) },
+			{ "Showers", new Vector2(20.88f, 0.48f ) },
+			{ "Main Hall", new Vector2(10.77f, -0.13f ) },
+			{ "Brig", new Vector2(-0.94f, 8.66f ) },
+			{ "Vault", new Vector2(-8.78f, 8.13f ) },
+			{ "Gap Room", new Vector2(4.15f, 8.73f ) },
+			{ "Meeting Room", new Vector2(11.03f, 16.06f ) },
+		};
+
+		public static Dictionary<string, Vector2> fungleTeleportLocations = new Dictionary<string, Vector2>()
+		{
+			{ "Meeting Room", new Vector2(-3.08f, -0.41f) },
+			{ "The Dorm", new Vector2(1.66f, -1.53f) },
+			{ "Laboratory", new Vector2(-4.31f, -8.56f) },
+			{ "Greenhouse", new Vector2(9.34f, -9.92f) },
+			{ "Reactor", new Vector2(21.38f, -7.48f) },
+			{ "Upper Engine", new Vector2(21.54f, 2.97f) },
+			{ "Lookout", new Vector2(7.79f, 1.53f) },
+			{ "Mining Pit", new Vector2(12.56f, 9.28f) },
+			{ "Communications", new Vector2(21.17f, 13.70f) },
+			{ "Storage", new Vector2(-0.44f, 5.69f) },
+			{ "Dropship", new Vector2(-7.59f, 10.76f) },
+			{ "Cafeteria", new Vector2(-16.49f, 7.14f) },
+			{ "Splash Zone", new Vector2(-17.89f, -0.08f) },
+			{ "Kitchen", new Vector2(-15.55f, -7.52f) },
+			{ "Dock", new Vector2(-23.00f, -7.16f) },
+		};
+
+		public static Dictionary<string, Vector2> dleksTeleportLocations = new Dictionary<string, Vector2>()
+		{
+			{ "Cafeteria", new Vector2(0.78f, 2.48f) },
+			{ "Weapons", new Vector2(-8.04f, 1.24f) },
+			{ "Medbay", new Vector2(8.61f, -4.30f) },
+			{ "Admin", new Vector2(-2.79f, -7.69f) },
+			{ "Oxygen", new Vector2(-6.50f, -3.50f) },
+			{ "Navigation", new Vector2(-16.77f, -4.67f) },
+			{ "Shields", new Vector2(-9.26f, -12.19f) },
+			{ "Communications", new Vector2(-5.10f, -15.24f ) },
+			{ "Storage", new Vector2(3.72f, -14.61f ) },
+			{ "Electrical", new Vector2(6.91f, -8.60f ) },
+			{ "Upper Engine", new Vector2(17.61f, -0.72f) },
+			{ "Lower Engine", new Vector2(17.33f, -13.10f ) },
+			{ "Security", new Vector2(12.81f, -3.01f) },
+			{ "Reactor", new Vector2(20.53f, -5.39f) },
+		};
+
 		public static Dictionary<string, Vector2> GetTeleportLocations()
 		{
 			MapNames currentMap = Utilities.GetCurrentMap();
@@ -69,6 +128,9 @@ namespace HydraMenu
 				MapNames.Skeld => skeldTeleportLocations,
 				MapNames.MiraHQ => miraTeleportLocations,
 				MapNames.Polus => polusTeleportLocations,
+				MapNames.Airship => airshipTeleportLocations,
+				MapNames.Fungle => fungleTeleportLocations,
+				MapNames.Dleks => dleksTeleportLocations,
 				// If we don't have any teleport locations for the current map then just default to the Skeld ones
 				_ => skeldTeleportLocations,
 			};
