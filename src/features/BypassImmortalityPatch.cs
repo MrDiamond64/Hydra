@@ -25,7 +25,7 @@ namespace HydraMenu.features
                 if (target != null)
                 {
                  // Make the target that you sent CheckMurder to Exit out of the vent so you can kill them
-                    VentilationSystem.Update(VentilationSystem.Operation.Exit, 50);[cite: 1]
+                    VentilationSystem.Update(VentilationSystem.Operation.Exit, 50);
                 }
 
                 return true;
