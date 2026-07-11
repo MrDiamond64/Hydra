@@ -160,6 +160,17 @@ namespace HydraMenu.network
 			writer.EndMessage();
 		}
 
+		public void QueueUpdateSystem(PlayerControl source, SystemTypes system, MessageWriter msg)
+		{
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(ShipStatus.Instance.NetId);
+			writer.Write((byte)RpcCalls.UpdateSystem);
+			writer.Write((byte)system);
+			writer.WriteNetObject(source);
+			writer.Write(msg, false);
+			writer.EndMessage();
+		}
+
 		public void QueueSetHatStr(PlayerControl source, string hat, byte seqid)
 		{
 			source.SetHat(hat, source.Data.DefaultOutfit.ColorId);

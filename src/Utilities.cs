@@ -1,5 +1,7 @@
 ﻿using AmongUs.GameOptions;
+using Hazel;
 using HydraMenu.network;
+using Il2CppInterop.Generator.Extensions;
 using InnerNet;
 using System.Collections.Generic;
 using System.Linq;
@@ -283,6 +285,73 @@ namespace HydraMenu
 			}
 
 			return player.GetPlayerColorString();
+		}
+
+		// This kick method allows a player who is not the host of the lobby to kick someone out of the lobby by making them trigger the Among Us Anticheat
+		// There are various RPCs that can only be sent by the host of the lobby, such as MurderPlayer, Shapeshift, ProtectPlayer, etc
+		// These RPCs are sent by the host in response to their client-authoritative equivalent, such as CheckMurder, CheckShapeshift, CheckProtect, etc
+		// If we are able to make a player send a host-only RPC without being the host of the lobby, we can make the anticheat kick them out of the lobby
+		// Most RPC handlers have checks to ensure that the client is the host of the lobby to avoid exactly this exploit
+		// however one exception is UpdateSystem RPC for Ventilation System
+		// Sending a ventilation system update with an operation of StartCleaning or BootFromVent will result in the host sending a BootFromVent RPC, which is one of these host-only RPCs
+		// however nowhere in the callstack from ShipStatus::UpdateSystem to PlayerPhysics::RpcBootFromVent is there a check to ensure that the current client is the host of the lobby
+		// If you were to send this system update to someone other than the host, they will send the BootFromVent RPC and get kicked by the Among Us anticheat
+		// In my experience this has been incredibly useful to kick out players who are blatantly hacking, calling useless meetings, or causing other mischief even if I am not the host if the lobby
+		public static void KickPlayer(PlayerControl player, bool skipFirstStage = false)
+		{
+			if(AmongUsClient.Instance.AmHost)
+			{
+				AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
+				Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.");
+				return;
+			}
+
+			if(player.OwnerId == AmongUsClient.Instance.HostId)
+			{
+				Hydra.notifications.Send("Kick Player", "You are not able to kick out the host of the lobby");
+				return;
+			}
+
+			if(ShipStatus.Instance == null)
+			{
+				Hydra.notifications.Send("Kick Player", "The game must have started in order for this feature to work.");
+				return;
+			}
+
+			if(!IsAnticheatPresent())
+			{
+				Hydra.notifications.Send("Kick Player", "This feature only works in server-authoritative lobbies.");
+				return;
+			}
+
+			BatchedMessage batch = new BatchedMessage(player.OwnerId);
+
+			if(!skipFirstStage)
+			{
+				Hydra.Log.LogInfo($"Sending Enter ventilation system update to {player.OwnerId}");
+
+				MessageWriter writer = MessageWriter.Get(SendOption.Reliable);
+				writer.Write((ushort)0);
+				writer.Write((byte)VentilationSystem.Operation.Enter);
+				writer.Write((byte)0);
+
+				batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, writer);
+				writer.Recycle();
+			}
+
+			Hydra.Log.LogInfo($"Sending BootImposters ventilation system update to {player.OwnerId}");
+
+			MessageWriter writer2 = MessageWriter.Get(SendOption.Reliable);
+			writer2.Write((ushort)1);
+			writer2.Write((byte)VentilationSystem.Operation.BootImpostors);
+			writer2.Write((byte)0);
+
+			batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, writer2);
+			writer2.Recycle();
+
+			batch.FinishBatch();
+
+			Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.");
 		}
 	}
 }

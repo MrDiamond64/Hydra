@@ -1,4 +1,6 @@
-﻿using HydraMenu.features;
+﻿using Hazel;
+using HydraMenu.features;
+using HydraMenu.network;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
@@ -18,6 +20,29 @@ namespace HydraMenu.ui.sections
 			Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
 			Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
 			Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");
+
+			if(GUILayout.Button("Kick All Players"))
+			{
+				Hydra.Log.LogInfo($"Sending Enter ventilation system update to all players");
+
+				MessageWriter writer = MessageWriter.Get(SendOption.Reliable);
+				writer.Write((ushort)0);
+				writer.Write((byte)VentilationSystem.Operation.Enter);
+				writer.Write((byte)0);
+
+				BatchedMessage batch = new BatchedMessage();
+				batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, writer);
+				batch.FinishBatch();
+
+				writer.Recycle();
+
+				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+				{
+					if(player == PlayerControl.LocalPlayer || player.OwnerId == AmongUsClient.Instance.HostId) continue;
+
+					Utilities.KickPlayer(player, true);
+				}
+			}
 
 			if(GUILayout.Button("Copy Random Player"))
 			{

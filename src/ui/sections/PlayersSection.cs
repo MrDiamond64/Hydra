@@ -187,6 +187,11 @@ namespace HydraMenu.ui.sections
 				Utilities.AttemptStartMeeting(PlayerControl.LocalPlayer, target.Data);
 			}
 
+			if(GUILayout.Button("Kick Player"))
+			{
+				Utilities.KickPlayer(target);
+			}
+
 			GUILayout.Space(5);
 			GUILayout.Label("Host Only Features:" + (AmongUsClient.Instance.AmHost ? "" : "\n(Using these will get you kicked!)"));
 
