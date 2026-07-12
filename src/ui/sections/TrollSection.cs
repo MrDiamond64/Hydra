@@ -9,6 +9,9 @@ namespace HydraMenu.ui.sections
 	{
 		public TrollSection() : base("Troll") { }
 
+		public int selectedVent = 0;
+		public System.Random rnd = new System.Random();
+
 		public override void Render()
 		{
 			if(PlayerControl.LocalPlayer == null)
@@ -70,7 +73,33 @@ namespace HydraMenu.ui.sections
 			}
 
 			GUILayout.Space(5);
+			GUILayout.Label($"Vent TP:");
+			Hydra.routines.teleportSpammer.Enabled = GUILayout.Toggle(Hydra.routines.teleportSpammer.Enabled, "Teleport Flooder");
 
+			GUILayout.Label($"Teleport everyone to vent: {selectedVent}");
+			selectedVent = (int)GUILayout.HorizontalSlider(selectedVent, 0, ShipStatus.Instance != null ? ShipStatus.Instance.AllVents.Count - 1 : 10);
+
+			if(GUILayout.Button("Teleport to Vent"))
+			{
+				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+				{
+					Teleporter.TeleportToVent(player, selectedVent);
+				}
+			}
+
+			if(GUILayout.Button("Teleport to Random Vent"))
+			{
+				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+				{
+					if(player == PlayerControl.LocalPlayer) continue;
+
+					int ventId = rnd.Next(0, ShipStatus.Instance.AllVents.Count);
+
+					Teleporter.TeleportToVent(player, ventId);
+				}
+			}
+
+			GUILayout.Space(5);
 			// Automatically close and open all doors at a set interval
 			GUILayout.Label("Door Troller:");
 			Hydra.routines.doorTroller.Enabled = GUILayout.Toggle(Hydra.routines.doorTroller.Enabled, "Enabled");

@@ -48,6 +48,7 @@ namespace HydraMenu.ui.sections
 		private Vector2 subsectionScrollVector;
 
 		private static Controls.PlayerColors selectedColor = Controls.PlayerColors.Red;
+		private static int selectedVent = 0;
 
 		public override void HandleSubsectionMove(int offset)
 		{
@@ -153,6 +154,7 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label(playerInfo);
 
 			Hydra.routines.playerFollower.Enabled = Controls.PlayerSpecificToggle("Follow", target, ref Hydra.routines.playerFollower.following);
+			Hydra.routines.jailPlayer.Enabled = Controls.PlayerSpecificToggle("Place in Jail", target, ref Hydra.routines.jailPlayer.targets);
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Teleport"))
@@ -192,12 +194,18 @@ namespace HydraMenu.ui.sections
 				Utilities.KickPlayer(target);
 			}
 
+			GUILayout.Label($"Teleport player to vent: {selectedVent}");
+			selectedVent = (int)GUILayout.HorizontalSlider(selectedVent, 0, (ShipStatus.Instance != null ? ShipStatus.Instance.AllVents.Count - 1 : 10));
+			if(GUILayout.Button("Teleport"))
+			{
+				Teleporter.TeleportToVent(target, selectedVent);
+			}
+
 			GUILayout.Space(5);
 			GUILayout.Label("Host Only Features:" + (AmongUsClient.Instance.AmHost ? "" : "\n(Using these will get you kicked!)"));
 
 			Troll.AutoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies As", target, ref Troll.AutoReportBodies.source);
 			Hydra.routines.discoHost.Enabled = Controls.PlayerSpecificToggle("Disco Mode", target, ref Hydra.routines.discoHost.targets);
-			Hydra.routines.jailPlayer.Enabled = Controls.PlayerSpecificToggle("Place in Jail", target, ref Hydra.routines.jailPlayer.targets);
 
 			if(GUILayout.Button("Force Meeting As"))
 			{

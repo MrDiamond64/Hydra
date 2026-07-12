@@ -11,12 +11,13 @@ namespace HydraMenu.routines
 		public JailPlayerRoutine jailPlayer = new JailPlayerRoutine();
 		public PlayerFollowerRoutine playerFollower = new PlayerFollowerRoutine();
 		public ReportBodySpam reportBodySpam = new ReportBodySpam();
+		public TeleportSpammer teleportSpammer = new TeleportSpammer();
 
 		public IRoutine[] routineList = [];
 
 		public RoutineManager()
 		{
-			routineList = [ autoTriggerSpores, discoHost, doorTroller, jailPlayer, playerFollower, reportBodySpam ];
+			routineList = [ autoTriggerSpores, discoHost, doorTroller, jailPlayer, playerFollower, reportBodySpam, teleportSpammer ];
 		}
 
 		public void Update()
