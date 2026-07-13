@@ -30,7 +30,7 @@ namespace HydraMenu.routines
 				SystemTypes room = GetRoomForPlayer(player);
 				if(room != jailRoom)
 				{
-					player.MyPhysics.RpcBootFromVent(ventId);
+					Teleporter.TeleportToVent(player, ventId);
 				}
 			}
 		}
@@ -98,13 +98,6 @@ namespace HydraMenu.routines
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
 				Hydra.notifications.Send("Jail Player", "Jail Player can only be used inside of a game.", 10);
-				Enabled = false;
-				return;
-			}
-
-			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
-			{
-				Hydra.notifications.Send("Jail Player", "Jail Player can only be used if you are the host of the lobby.", 10);
 				Enabled = false;
 				return;
 			}

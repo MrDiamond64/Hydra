@@ -59,7 +59,6 @@ namespace HydraMenu.features
 			}
 		}
 
-
 		[HarmonyPatch(typeof(PlatformSpecificData), nameof(PlatformSpecificData.Serialize))]
 		class SpoofPlatform
 		{

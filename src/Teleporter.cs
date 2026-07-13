@@ -1,4 +1,6 @@
-﻿using HydraMenu.network;
+﻿using Hazel;
+using HydraMenu.features;
+using HydraMenu.network;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -165,6 +167,46 @@ namespace HydraMenu
 			}
 
 			batch.FinishBatch();
+		}
+
+		public static void TeleportToVent(PlayerControl player, int ventId)
+		{
+			if(ShipStatus.Instance == null)
+			{
+				Hydra.notifications.Send("Vent TP", "The game must have started in order for this feature to work");
+				return;
+			}
+
+			if(AmongUsClient.Instance.AmHost)
+			{
+				player.MyPhysics.RpcBootFromVent(ventId);
+				return;
+			}
+
+			if(!Troll.VentSeqIds.ContainsKey(player))
+			{
+				// High enough value to supersede the actual sequence ID
+				Troll.VentSeqIds.Add(player, 10000);
+			}
+
+			MessageWriter enterVent = MessageWriter.Get(SendOption.None);
+			enterVent.Write(++Troll.VentSeqIds[player]);
+			enterVent.Write((byte)VentilationSystem.Operation.Enter);
+			enterVent.Write((byte)ventId);
+
+			MessageWriter bootFromVent = MessageWriter.Get(SendOption.None);
+			bootFromVent.Write(++Troll.VentSeqIds[player]);
+			bootFromVent.Write((byte)VentilationSystem.Operation.BootImpostors);
+			bootFromVent.Write((byte)ventId);
+
+			BatchedMessage batch = new BatchedMessage(AmongUsClient.Instance.HostId);
+			batch.QueueUpdateSystem(player, SystemTypes.Ventilation, enterVent);
+			batch.QueueUpdateSystem(player, SystemTypes.Ventilation, bootFromVent);
+			batch.FinishBatch();
+
+			enterVent.Recycle();
+			bootFromVent.Recycle();
+
 		}
 	}
 }

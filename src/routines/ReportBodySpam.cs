@@ -25,7 +25,6 @@ namespace HydraMenu.routines
 			}
 
 			PlayerControl.LocalPlayer.RpcStartMeeting(player.Data);
-
 		}
 
 		public override void OnEnable()

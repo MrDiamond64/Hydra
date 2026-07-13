@@ -9,6 +9,8 @@ namespace HydraMenu.features
 	{
 		public static bool BlockLargeGameMessages { get; set; } = true;
 		public static bool BlockInvalidGameDataMessages { get; set; } = true;
+		public static bool BlockUnauthorizedSystemUpdates { get; set; } = true;
+		public static bool ProtectAgainstNonHostKickExploit { get; set; } = true;
 
 		[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SetEndpoint))]
 		public static class ForceDTLS
@@ -160,6 +162,40 @@ namespace HydraMenu.features
 				if(arrayLength > 1024 || arrayLength > reader.BytesRemaining)
 				{
 					return false;
+				}
+
+				reader.Position = oldReadPosition;
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.HandleRpc))]
+		class OnShipStatusRPC
+		{
+			static bool Prefix(byte callId, MessageReader reader)
+			{
+				int oldReadPosition = reader.Position;
+
+				switch((RpcCalls)callId)
+				{
+					case RpcCalls.CloseDoorsOfType:
+						// Only the host should receive CloseDoorsOfType RPCs
+						if(BlockUnauthorizedSystemUpdates && !AmongUsClient.Instance.AmHost) return false;
+						break;
+
+					case RpcCalls.UpdateSystem:
+						SystemTypes system = (SystemTypes)reader.ReadByte();
+						PlayerControl player = reader.ReadNetObject<PlayerControl>();
+
+						if(ProtectAgainstNonHostKickExploit && system == SystemTypes.Ventilation && !AmongUsClient.Instance.AmHost)
+						{
+							Hydra.notifications.Send("Protections Alert", $"{player.Data.PlayerName} attempted to use the VentilationSystem kick exploit on you!");
+							return false;
+						}
+
+						// Only the host should receive CloseDoorsOfType RPCs
+						if(BlockUnauthorizedSystemUpdates && !AmongUsClient.Instance.AmHost) return false;
+						break;
 				}
 
 				reader.Position = oldReadPosition;

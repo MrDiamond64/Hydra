@@ -1,5 +1,6 @@
 ﻿using HydraMenu.network;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -18,19 +19,33 @@ namespace HydraMenu.routines
 		{
 			timeElapsed += Time.deltaTime;
 			if(timeElapsed < randomizationDelay) return;
+			timeElapsed = 0f;
+
+			List<int> colors = Enumerable.Range(0, 18).ToList();
 
 			BatchedMessage batch = new BatchedMessage();
 
 			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
 			{
-				if(IsGlobal || targets.Contains(player.GetHashCode()))
+				if(!IsGlobal && !targets.Contains(player.GetHashCode())) continue;
 
-				batch.QueueSetColor(player, (byte)rnd.Next(0, 18));
+				// Assign each player a unique color
+				int color;
+				if(colors.Count != 0)
+				{
+					color = colors[rnd.Next(0, colors.Count)];
+					colors.Remove(color);
+				}
+				else
+				{
+					// To ensure compatability for lobbies with more than 18 players
+					color = rnd.Next(0, 18);
+				}
+
+				batch.QueueSetColor(player, (byte)color);
 			}
 
 			batch.FinishBatch();
-
-			timeElapsed = 0f;
 		}
 
 		public bool IsGlobal
