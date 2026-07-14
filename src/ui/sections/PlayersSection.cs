@@ -47,8 +47,8 @@ namespace HydraMenu.ui.sections
 		public static PlayerControl selectedPlayer;
 		private Vector2 subsectionScrollVector;
 
-		private static Controls.PlayerColors selectedColor = Controls.PlayerColors.Red;
-		private static int selectedVent = 0;
+		private Controls.PlayerColors selectedColor = Controls.PlayerColors.Red;
+		private int selectedVent = 0;
 
 		public override void HandleSubsectionMove(int offset)
 		{
@@ -119,7 +119,7 @@ namespace HydraMenu.ui.sections
 			return RoleManager.IsImpostorRole(role) ? "red" : "#8afcfc";
 		}
 
-		private static void RenderPlayerControls(PlayerControl target)
+		private void RenderPlayerControls(PlayerControl target)
 		{
 			if(target == null || target.Data == null)
 			{
@@ -195,7 +195,7 @@ namespace HydraMenu.ui.sections
 			}
 
 			GUILayout.Label($"Teleport player to vent: {selectedVent}");
-			selectedVent = (int)GUILayout.HorizontalSlider(selectedVent, 0, (ShipStatus.Instance != null ? ShipStatus.Instance.AllVents.Count - 1 : 10));
+			selectedVent = (int)GUILayout.HorizontalSlider(selectedVent, 0, ShipStatus.Instance != null ? ShipStatus.Instance.AllVents.Count - 1 : 10);
 			if(GUILayout.Button("Teleport"))
 			{
 				Teleporter.TeleportToVent(target, selectedVent);
@@ -397,7 +397,7 @@ namespace HydraMenu.ui.sections
 
 			Hydra.Log.LogInfo($"Attempting to kill {target.Data.PlayerName}, we are not the host so we have to use the CheckMurder RPC");
 
-			// The CheckMurder RPC handler will not authorize kills if you are not the imposter or you are inside of a meeting
+			// The CheckMurder RPC handler will not authorize kills if you are not the imposter or you are inside a meeting
 			// There are more checks, but I do not think it is worth adding them all here
 			if(!RoleManager.IsImpostorRole(PlayerControl.LocalPlayer.Data.RoleType))
 			{
