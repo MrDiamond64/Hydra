@@ -90,6 +90,24 @@ namespace HydraMenu.features
 				}
 			}
 		}
+[HarmonyPatch(typeof(LogicOptionsHnS), nameof(LogicOptionsHnS.GetCrewmateLeadTime))]
+ public static class NoSeekerAnimationPatch
+ {
+     public static bool Enabled { get; set; } = true;
+	 
+     public static bool Prefix(ref int __result)
+     {
+         if (Enabled)
+         {
+             __result = 0;     
+             return false;
+         }
+		 else
+		 {
+         return true;
+		 }
+     }
+ }
 
 		// PlayerControl::FixedUpdate sets PlayerControl::set_Visible to false if the player is dead, or true if the player is alive
 		// The set_Visible function runs CosmeticsLayer::set_Visible in order to hide or show the player's cosmetics
