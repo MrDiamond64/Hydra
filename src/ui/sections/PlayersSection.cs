@@ -125,7 +125,7 @@ namespace HydraMenu.ui.sections
 
 			GUIStyle style = player == selectedPlayer ? Styles.PlayerBoxActive : Styles.PlayerBox;
 
-			if(player.OwnerId == AmongUsClient.Instance.HostId)
+			if(player.Data.OwnerId == AmongUsClient.Instance.HostId)
 			{
 				style.normal.textColor = new Color(1.0f, 0.84f, 0.0f); // #FFD700
 			}
@@ -173,7 +173,7 @@ namespace HydraMenu.ui.sections
 					$"\nPUID: " + (streamerMode ? "REDACTED" : target.Data.Puid) +
 					$"\nLevel: {target.Data.PlayerLevel + 1}" +
 					$"\nDevice: {platform.Platform}" +
-					(target.OwnerId == AmongUsClient.Instance.HostId ? "\nHost: true" : "");
+					(target.Data.OwnerId == AmongUsClient.Instance.HostId ? "\nHost: true" : "");
 			}
 
 			GUILayout.Label(playerInfo);
