@@ -8,7 +8,7 @@ namespace HydraMenu.anticheat.rpc
 	{
 		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
 		{
-			Vector2 position = NetHelpers.ReadVector2(reader);
+			// Vector2 position = NetHelpers.ReadVector2(reader);
 			// ushort seqId = reader.ReadUInt16();
 
 			if(LobbyBehaviour.Instance != null)

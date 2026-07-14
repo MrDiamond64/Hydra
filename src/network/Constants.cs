@@ -4,10 +4,10 @@
 	{
 		public enum OwnerIds
 		{
-			// Technically not a real net object owner ID, only used by InnerNetClient::StartRpcImmedietely to know if a GameData or a GameDataTo root message should be used
+			// Technically not a real net object owner ID, only used by InnerNetClient::StartRpcImmediately to know if a GameData or a GameDataTo root message should be used
 			Everyone = -1,
 			Host = -2,
-			// Also not a real net object owner ID, only used in AmongUsClient::Spawn to auto-populate the current client's ID
+			// Also not a real net object owner ID, only used in AmongUsClient::Spawn to autopopulate the current client's ID
 			Self = -3,
 			Server = -4
 		}

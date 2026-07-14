@@ -5,7 +5,7 @@ namespace HydraMenu.features
 {
 	internal class Immortality
 	{
-		// The PlayerControl::CheckMurder function is the handler for CheckMurder RPCs. When the host of the lobby recieves this RPC, it first checks
+		// The PlayerControl::CheckMurder function is the handler for CheckMurder RPCs. When the host of the lobby receives this RPC, it first checks
 		// to make sure that the player who attempted to kill is an imposter and is alive, and then checks if the player who should be killed is alive, is not inside a vent, and is not on a ladder or platform
 		// If everything goes smoothly, a MurderPlayer RPC with flag Succeeded is sent to all online players and the player killed
 		// If one of the above checks fails, then a MurderPlayer RPC with flag FailedError is sent and the player is not killed
@@ -19,7 +19,7 @@ namespace HydraMenu.features
 		// for the ventilation system with an operation of Enter, which tells players that you are inside of a vent
 		// This feature is used for the vent-cleaning feature to determine which players should be kicked out of a vent
 		// but it also used by the backend Among Us servers to determine if a player is inside a vent when handling CheckMurder RPCs
-		// So when the backend Among Us servers recieved a CheckMurder RPC, it goes through a list of all net objects that exist for the given lobby, finds ShipStatus, gets the data for the ventilationsystem, and determines if a player is inside of a vent through there
+		// So when the backend Among Us servers received a CheckMurder RPC, it goes through a list of all net objects that exist for the given lobby, finds ShipStatus, gets the data for the VentilationSystem, and determines if a player is inside of a vent through there
 		// Server authority here is actually helpful for us as our previous theory for immortality would make us immortal in the eyes of the host, meanwhile this will make us visible for all online players
 		private static readonly int CUSTOM_VENT_ID = 50;
 

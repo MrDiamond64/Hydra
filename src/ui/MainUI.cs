@@ -68,7 +68,7 @@ namespace HydraMenu.ui
 			if(Input.GetKeyDown(KeyCode.F6))
 			{
 				System.Random random = new System.Random();
-				Hydra.notifications.Send("Test", $"The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. {random.Next(0, 100)}");
+				Hydra.notifications.Send("Test", $"The quick brown fox jumps over the lazy dog. {random.Next(0, 100)}");
 			}
 
 			if(!visible) return;

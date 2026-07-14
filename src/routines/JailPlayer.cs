@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HydraMenu.routines
 {
-	// This could be implemented as a postix patch of CustomNetworkTransform::Deserialize or as a routine
+	// This could be implemented as a postfix patch of CustomNetworkTransform::Deserialize or as a routine
 	// It took me a while, but I concluded that using a routine is a more elegant design choice
 	public class JailPlayerRoutine : IRoutine
 	{
@@ -11,7 +11,7 @@ namespace HydraMenu.routines
 
 		public HashSet<int> targets = new HashSet<int>();
 
-		// For the sake of performance, only check if players are outside of the jail every 500ms
+		// For the sake of performance, only check if players are outside the jail every 500ms
 		public float delay = 0.5f;
 		private float timeElapsed = 0f;
 

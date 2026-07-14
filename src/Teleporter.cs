@@ -206,7 +206,6 @@ namespace HydraMenu
 
 			enterVent.Recycle();
 			bootFromVent.Recycle();
-
 		}
 	}
 }

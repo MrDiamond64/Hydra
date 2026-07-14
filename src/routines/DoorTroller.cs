@@ -34,21 +34,21 @@ namespace HydraMenu.routines
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Door Troller", "Door troller can only be used if the game has started.", 10);
+				Hydra.notifications.Send("Door Troller", "Door Troller can only be used if the game has started.", 10);
 				Enabled = false;
 				return;
 			}
 
 			if(ShipStatus.Instance.AllDoors.Count == 0)
 			{
-				Hydra.notifications.Send("Door Troller", "Door troller can not be used as this map does not have any doors.", 10);
+				Hydra.notifications.Send("Door Troller", "Door Troller can not be used as this map does not have any doors.", 10);
 				Enabled = false;
 				return;
 			}
 
 			if(!Sabotage.CanUnlockDoors())
 			{
-				Hydra.notifications.Send("Door Troller", "Door troller can only be used if you are the host, or if the current map supports unlocking doors.", 10);
+				Hydra.notifications.Send("Door Troller", "Door Troller can only be used if you are the host, or if the current map supports unlocking doors.", 10);
 				Enabled = false;
 				return;
 			}

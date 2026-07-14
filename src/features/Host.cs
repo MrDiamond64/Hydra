@@ -171,7 +171,7 @@ namespace HydraMenu.features
 
 				Hydra.Log.LogInfo($"Attempting to assign ourselves the {assignedRole} role");
 
-				// Stupid shenanagians to deal with il2cpp interop
+				// Stupid shenanigans to deal with IL2Cpp interop
 				Il2CppSystem.Predicate<NetworkedPlayerInfo> predicate = (Il2CppSystem.Predicate<NetworkedPlayerInfo>)(player => player == PlayerControl.LocalPlayer.Data);
 				int playerIndex = players.FindIndex(predicate);
 
@@ -191,7 +191,7 @@ namespace HydraMenu.features
 
 				Hydra.Log.LogMessage($"Player index is {roleIndex}");
 
-				// If the role we want to assign ourselvex exists in the roleList, then remove it
+				// If the role we want to assign ourselves exists in the roleList, then remove it
 				// We don't want there to be four imposters in the game when we intend for three imposters
 				if(roleIndex != -1)
 				{
@@ -201,10 +201,10 @@ namespace HydraMenu.features
 
 				// To determine if the intro cutscene should play, the game waits for SetRole RPCs, checks if the assigned role is not a ghost role,
 				// and then checks if all players have either been assigned a role or were disconnected
-				// The problem is that if we are trying to assign ourself a ghost role, and we are the last player to be assigned a role
-				// then the PlayerControl::CoSetRole execution flow will not display the intro custscene
+				// The problem is that if we are trying to assign ourselves a ghost role, and we are the last player to be assigned a role
+				// then the PlayerControl::CoSetRole execution flow will not display the intro cutscene
 				// resulting in the entire lobby encountering a black screen
-				// To get around this, we check for this edge case and assign ourself a non-host role, and then set our role to a ghost role
+				// To get around this, we check for this edge case and assign ourselves a non-host role, and then set our role to a ghost role
 				if(RoleManager.IsGhostRole(assignedRole) && players.Count == 0)
 				{
 					PlayerControl.LocalPlayer.RpcSetRole(RoleManager.IsImpostorRole(assignedRole) ? RoleTypes.Impostor : RoleTypes.Crewmate);

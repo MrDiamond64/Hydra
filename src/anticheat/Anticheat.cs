@@ -183,7 +183,7 @@ namespace HydraMenu.anticheat
 					else
 					{
 						// When a game starts, the host waits around ten seconds to wait for all clients to send the ClientReady game message
-						// If the ten second timer is reached without a ClientReady game message being received by the host, the host will kick the player due to timeout
+						// If the ten-second timer is reached without a ClientReady game message being received by the host, the host will kick the player due to timeout
 						// The kick message shown to the player will explain that the player has a poor internet connection or that their device is too old
 						// and in-game, players will be shown that the player left due to an error instead of being kicked
 						// Any other disconnection messages other than ClientTimeout will result in the vanilla anticheat kicking us from the lobby

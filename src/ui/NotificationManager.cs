@@ -36,9 +36,9 @@ namespace HydraMenu.ui
 
 		public void Update()
 		{
-			int notificaions = Math.Min(GetMaxNotifications(), notifications.Count);
+			int notificationCount = Math.Min(GetMaxNotifications(), notifications.Count);
 
-			for(int i = 0; i < notificaions; i++)
+			for(int i = 0; i < notificationCount; i++)
 			{
 				Notification notification = notifications[i];
 				notification.lifetime += Time.deltaTime;
@@ -50,7 +50,7 @@ namespace HydraMenu.ui
 					// Since we removed an element from the notifications list, we have to decrement both the current notification index
 					// and the max notifications to avoid errors from accessing outside the list length
 					i--;
-					notificaions--;
+					notificationCount--;
 					continue;
 				}
 			}
@@ -60,9 +60,9 @@ namespace HydraMenu.ui
 		{
 			if(DisableNotifications) return;
 
-			int notificaions = Math.Min(GetMaxNotifications(), notifications.Count);
+			int notificationCount = Math.Min(GetMaxNotifications(), notifications.Count);
 
-			for(byte i = 0; i < notificaions; i++)
+			for(byte i = 0; i < notificationCount; i++)
 			{
 				RenderNotification(i, notifications[i]);
 			}

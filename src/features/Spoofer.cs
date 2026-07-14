@@ -16,7 +16,7 @@ namespace HydraMenu.features
 		{
 			static bool Prefix(ref int __result)
 			{
-				// Starting a local lobby or entering freeplay will bug out if we are using a spoofed version
+				// Starting a local lobby or entering Freeplay will bug out if we are using a spoofed version
 				if(!shouldSpoofVersion || !AmongUsClient.Instance || AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame) return true;
 
 				__result = spoofedVersion;

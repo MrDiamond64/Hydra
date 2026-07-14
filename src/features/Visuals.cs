@@ -4,7 +4,7 @@ namespace HydraMenu.features
 {
     internal class Visuals
     {
-        // Is there a better way of implenting fullbright?
+        // Is there a better way of implanting fullbright?
         // This current method does not allow you to see through walls due to shadows
         [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
         public static class Fullbright
@@ -91,7 +91,7 @@ namespace HydraMenu.features
 			}
 		}
 
-		// PlayerControl::FixedUpdate sets PlayerControl::set_Visable to false if the player is dead, or true if the player is alive
+		// PlayerControl::FixedUpdate sets PlayerControl::set_Visible to false if the player is dead, or true if the player is alive
 		// The set_Visible function runs CosmeticsLayer::set_Visible in order to hide or show the player's cosmetics
 		// If we want to show ghosts even if we are alive, then we can reimplement PlayerControl::set_Visible and make it so player cosmetics are always visible
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Visible), MethodType.Setter)]

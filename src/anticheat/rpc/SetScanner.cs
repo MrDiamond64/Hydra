@@ -22,7 +22,7 @@ namespace HydraMenu.anticheat.rpc
 			// This applies to Imposters too if they were to somehow die, so we need to account for this false flag
 			if(RoleManager.IsImpostorRole(player.Data.RoleType) && scanning)
 			{
-				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC when they are an imposter {scanning}.");
+				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC when they are an imposter.");
 				blockRpc = true;
 			}
 
