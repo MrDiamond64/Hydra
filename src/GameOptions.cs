@@ -22,7 +22,7 @@ namespace HydraMenu
 		public static void SendGameOptionsToClient(IGameOptions options, int targetClientId)
 		{
 			// We have the manually apply game options in Freeplay as there is no networking layer there
-			// Freeplay has some settings that cannot be changed, such as player vision, so the Blind Player feature wont work there
+			// Freeplay has some settings that cannot be changed, such as player vision, so the Blind Player feature will not work there
 			if(AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay && targetClientId == PlayerControl.LocalPlayer.OwnerId)
 			{
 				GameManager.Instance.LogicOptions.SetGameOptions(options);

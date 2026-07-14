@@ -38,7 +38,7 @@ namespace HydraMenu.anticheat.rpc
 		{
 			// In host authority, the host sends the SetName RPC with the net id of the player's NetworkedPlayerInfo net object
 			// In server authority, the server sends the SetName RPC with the net id of the player's PlayerControl net object
-			// I don't know why this discrepancy exists, or why the setname RPC even includes the net id field
+			// I don't know why this discrepancy exists, or why the SetName RPC even includes the net id field
 			return Utilities.IsAnticheatPresent() ? player.NetId : player.Data.NetId;
 		}
 
@@ -48,7 +48,7 @@ namespace HydraMenu.anticheat.rpc
 		}
 
 		// On vanilla servers, the host is able to receive the SetName RPC due to how server-authority works
-		// On modded servers, the host should never recieve the SetName RPC
+		// On modded servers, the host should never receive the SetName RPC
 		public override bool IsHostOnly()
 		{
 			return !Utilities.IsAnticheatPresent();

@@ -106,7 +106,7 @@ namespace HydraMenu.ui
 
 			// The GUILayout::Toggle function always returns the current state of the toggle
 			// It is possible to determine when the toggle is changed, however it requires messy hacks involving getters and setters
-			// Using a GUILayout.Button disguised as a toggle that triggers only when the button is pressed is more pratical here
+			// Using a GUILayout.Button disguised as a toggle that triggers only when the button is pressed is more practical here
 			if(GUILayout.Button(label, toggle))
 			{
 				if(!isSelected)
@@ -179,7 +179,7 @@ namespace HydraMenu.ui
 				}
 			}
 
-			// If the amount of buttons does not divide into the amount of colums per row then we won't be ending the horizontal layout
+			// If the amount of buttons does not divide into the amount of columns per row then we won't be ending the horizontal layout
 			// so we check if we need to end it here
 			if(currentColumn != 0)
 			{

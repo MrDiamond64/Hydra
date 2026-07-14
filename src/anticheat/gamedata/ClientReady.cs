@@ -13,7 +13,7 @@ namespace HydraMenu.anticheat.gamedata
 			ClientData client = AmongUsClient.Instance.FindClientById(clientId);
 			if(client == null)
 			{
-				Anticheat.Flag($"Recieved ClientReady message for unknown client: {clientId}.");
+				Anticheat.Flag($"Received ClientReady message for unknown client: {clientId}.");
 				blockMessage = true;
 				return;
 			}

@@ -70,6 +70,11 @@ namespace HydraMenu.routines
 			}
 		}
 
+		public override void OnDisable()
+		{
+			targets.Clear();
+		}
+
 		public override void OnDisconnect()
 		{
 			Hydra.notifications.Send("Disco Party", "Disco Party was disabled as you left the game.", 10);

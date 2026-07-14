@@ -2,7 +2,7 @@
 {
 	public abstract class IRoutine
 	{
-		public readonly string name = "";
+		public readonly string name;
 
 		public bool _enabled = false;
 		public virtual bool Enabled

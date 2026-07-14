@@ -13,7 +13,7 @@ namespace HydraMenu.routines
 		public ReportBodySpam reportBodySpam = new ReportBodySpam();
 		public TeleportSpammer teleportSpammer = new TeleportSpammer();
 
-		public IRoutine[] routineList = [];
+		public readonly IRoutine[] routineList;
 
 		public RoutineManager()
 		{

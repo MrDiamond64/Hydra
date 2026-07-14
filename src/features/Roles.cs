@@ -51,7 +51,7 @@ namespace HydraMenu.features
 		*/
 
 		// Clicking the sabotage button has checks to make sure the current player is indeed an imposter, not in a vent, and that the current gamemode supports sabotages
-		// This means setting the GameObject's sabotage button state to active wont allow crewmates to sabotage alone, we need to override the DoClick function to not have those checks
+		// This means setting the GameObject's sabotage button state to active won't allow crewmates to sabotage alone, we need to override the DoClick function to not have those checks
 		[HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.DoClick))]
 		public static class SkipSabotageChecks
 		{

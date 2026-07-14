@@ -34,7 +34,6 @@ namespace HydraMenu.features
 
                     playerState.NameText.text = $"<color=\"{color}\">{nameText}</color>";
 
-                    // Move and resize the nametag to prevent overlapping with colorblind text
                     if (RevealRoles)
                     {
                         playerState.NameText.transform.localPosition = new Vector3(0.33f, 0.08f, 0f);
@@ -58,7 +57,7 @@ namespace HydraMenu.features
             }
         }
 
-        // Is there a better way of implenting fullbright?
+        // Is there a better way of implementing fullbright?
         // This current method does not allow you to see through walls due to shadows
         [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
         public static class Fullbright
@@ -145,28 +144,32 @@ namespace HydraMenu.features
 			}
 		}
 
-        [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
-        public static class KillCooldownUpdate
-        {
-            public static bool Enabled { get; set; } = false;
+		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
+		public static class KillCooldownUpdate
+		{
+			public static bool Enabled { get; set; } = false;
 
-            static void Postfix(PlayerControl __instance)
-            {
-                // Logic moved to VisualsRenderer.Update to prevent main thread hangs
-            }
-        }
+			static void Postfix(PlayerControl __instance)
+			{
+				// Logic moved to VisualsRenderer.Update to prevent main thread hangs
+			}
+		}
 
-        [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetName))]
-        public static class KillCooldownNametag
-        {
-            public static bool Enabled { get; set; } = true;
+		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetName))]
+		public static class KillCooldownNametag
+		{
+			public static bool Enabled { get; set; } = true;
 
-            static void Postfix(PlayerControl __instance)
-            {
-                // This method is called by the game to set the player's name.
-                // We let it happen, and our VisualsRenderer.Update will handle the cooldown overlay.
-            }
-        }
+			static void Postfix(PlayerControl __instance)
+			{
+				// This method is called by the game to set the player's name.
+				// We let it happen, and our VisualsRenderer.Update will handle the cooldown overlay.
+			}
+		}
+
+		// PlayerControl::FixedUpdate sets PlayerControl::set_Visible to false if the player is dead, or true if the player is alive
+		// The set_Visible function runs CosmeticsLayer::set_Visible in order to hide or show the player's cosmetics
+		// If we want to show ghosts even if we are alive, then we can reimplement PlayerControl::set_Visible and make it so player cosmetics are always visible
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Visible), MethodType.Setter)]
 		public static class ShowGhosts
 		{

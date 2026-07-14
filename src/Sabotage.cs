@@ -139,7 +139,7 @@ namespace HydraMenu
 					ShipStatus.Instance.RpcUpdateSystem(system, 128);
 					break;
 
-				// Eletrical sabotage requires us to update each individual light switch
+				// Electrical sabotage requires us to update each individual light switch
 				// The following code comes from SabotageSystemType::UpdateSystem
 				case SystemTypes.Electrical:
 					byte amount = 4;
@@ -165,7 +165,7 @@ namespace HydraMenu
 		{
 			switch(system)
 			{
-				// ShipStatus::RepairCriticalSabotages uses amount value of 16 to insta fix sabotages
+				// ShipStatus::RepairCriticalSabotages uses amount value of 16 to instantly fix sabotages
 				// This amount value should only be sent by the host, so this can be detected by anticheats
 				case SystemTypes.Reactor:
 				case SystemTypes.Laboratory:
@@ -195,7 +195,7 @@ namespace HydraMenu
 					// If the 8th bit is off, then the amount value is the index of the light switch (so 0, 1, 2, 3, or 4, and potentially 5 or 6 if those were to ever get added) that should get toggled
 					// If it is on, then the amount value is a binary representation of what switches should be toggled
 					// So if we had an amount value of 172 (which in binary is 1000 1101), that would mean light switches 0, 2, and 3 would be toggled
-					// I don't think the 8th bit is actually ever used outside of SabotageSystemType, so anticheats can detect this
+					// I don't think the 8th bit is actually ever used outside SabotageSystemType, so anticheats can detect this
 					ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Electrical, (byte)(amount | 128));
 					break;
 
@@ -262,7 +262,7 @@ namespace HydraMenu
 				return;
 			}
 
-			// On Skeld, all doors have an id of 0, so unfourtunately getting a door by its ID by using ShipStatus.Instance.AllDoors[id] wont work
+			// On Skeld, all doors have an id of 0, so unfortunately getting a door by its ID by using ShipStatus.Instance.AllDoors[id] won't work
 			for(byte i = 0; i < ShipStatus.Instance.AllDoors.Count; i++)
 			{
 				OpenableDoor door = ShipStatus.Instance.AllDoors[i];
