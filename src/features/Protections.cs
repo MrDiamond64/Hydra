@@ -7,15 +7,15 @@ namespace HydraMenu.features
 {
 	internal class Protections
 	{
-		public static bool BlockLargeGameMessages { get; set; } = true;
-		public static bool BlockInvalidGameDataMessages { get; set; } = true;
-		public static bool BlockUnauthorizedSystemUpdates { get; set; } = true;
-		public static bool ProtectAgainstNonHostKickExploit { get; set; } = true;
+		public static bool BlockLargeGameMessages { get => HydraMenu.ui.Settings.Config.Features.BlockLargeGameMessages; set => HydraMenu.ui.Settings.Config.Features.BlockLargeGameMessages = value; }
+		public static bool BlockInvalidGameDataMessages { get => HydraMenu.ui.Settings.Config.Features.BlockInvalidGameDataMessages; set => HydraMenu.ui.Settings.Config.Features.BlockInvalidGameDataMessages = value; }
+		public static bool BlockUnauthorizedSystemUpdates { get => HydraMenu.ui.Settings.Config.Features.BlockUnauthorizedSystemUpdates; set => HydraMenu.ui.Settings.Config.Features.BlockUnauthorizedSystemUpdates = value; }
+		public static bool ProtectAgainstNonHostKickExploit { get => HydraMenu.ui.Settings.Config.Features.ProtectAgainstNonHostKickExploit; set => HydraMenu.ui.Settings.Config.Features.ProtectAgainstNonHostKickExploit = value; }
 
 		[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SetEndpoint))]
 		public static class ForceDTLS
 		{
-			public static bool Enabled { get; set; } = true;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.ForceDTLSEnabled; set => HydraMenu.ui.Settings.Config.Features.ForceDTLSEnabled = value; }
 
 			static void Prefix(ref bool dtls)
 			{
@@ -26,7 +26,7 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(CustomNetworkTransform), nameof(CustomNetworkTransform.HandleRpc))]
 		public static class BlockServerTeleports
 		{
-			public static bool Enabled { get; set; } = true;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.BlockServerTeleportsEnabled; set => HydraMenu.ui.Settings.Config.Features.BlockServerTeleportsEnabled = value; }
 
 			static bool Prefix(CustomNetworkTransform __instance, byte callId)
 			{

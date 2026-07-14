@@ -12,7 +12,7 @@ namespace HydraMenu.features
 		{
 			public static PlayerControl source;
 
-			public static bool Enabled { get; set; } = false;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.AutoReportBodiesEnabled; set => HydraMenu.ui.Settings.Config.Features.AutoReportBodiesEnabled = value; }
 
 			static void Postfix(PlayerControl __instance, PlayerControl target, MurderResultFlags resultFlags)
 			{
@@ -34,7 +34,7 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(VentilationSystem), nameof(VentilationSystem.Deserialize))]
 		public static class BlockVenting
 		{
-			public static bool Enabled { get; set; } = false;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.BlockVentingEnabled; set => HydraMenu.ui.Settings.Config.Features.BlockVentingEnabled = value; }
 
 			static void Postfix(VentilationSystem __instance)
 			{

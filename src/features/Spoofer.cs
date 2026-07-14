@@ -1,15 +1,18 @@
 ﻿using AmongUs.InnerNet.GameDataMessages;
 using HarmonyLib;
 using Hazel;
+using AmongUs.Data;
+using AmongUs.Data.Player;
 
 namespace HydraMenu.features
 {
 	internal class Spoofer
 	{
-		public static bool shouldSpoofVersion = false;
-		public static int spoofedVersion = Constants.GetBroadcastVersion();
-		public static bool useModdedProtocol = false;
-		public static Platforms spoofedPlatform = Constants.GetPlatformType();
+		public static bool shouldSpoofVersion { get => HydraMenu.ui.Settings.Config.Features.ShouldSpoofVersion; set => HydraMenu.ui.Settings.Config.Features.ShouldSpoofVersion = value; }
+		public static int spoofedVersion { get => HydraMenu.ui.Settings.Config.Features.SpoofedVersion; set => HydraMenu.ui.Settings.Config.Features.SpoofedVersion = value; }
+		public static bool useModdedProtocol { get => HydraMenu.ui.Settings.Config.Features.UseModdedProtocol; set => HydraMenu.ui.Settings.Config.Features.UseModdedProtocol = value; }
+		public static Platforms spoofedPlatform { get => HydraMenu.ui.Settings.Config.Features.spoofedPlatform; set => HydraMenu.ui.Settings.Config.Features.spoofedPlatform = value; }
+		public static bool avoidPenalties { get => HydraMenu.ui.Settings.Config.Features.AvoidPenalties; set => HydraMenu.ui.Settings.Config.Features.AvoidPenalties = value; }
 
 		[HarmonyPatch(typeof(Constants), nameof(Constants.GetBroadcastVersion))]
 		class SpoofVersion
@@ -95,6 +98,18 @@ namespace HydraMenu.features
 						break;
 				}
 			}
+		}
+	}
+
+	[HarmonyPatch(typeof(PlayerBanData), nameof(PlayerBanData.BanMinutesLeft), MethodType.Getter)]
+	public static class PlayerBanData_BanMinutesLeft_Getter
+	{
+		public static void Postfix(PlayerBanData __instance, ref int __result)
+		{
+			if (!Spoofer.avoidPenalties) return;
+
+			__instance.BanPoints = 0f;
+			__result = 0;
 		}
 	}
 }

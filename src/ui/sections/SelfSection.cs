@@ -11,7 +11,79 @@ namespace HydraMenu.ui.sections
 {
 	internal class SelfSection : ISection
 	{
-		public SelfSection() : base("Self") { }
+		public SelfSection() : base("Self") 
+		{
+			AddFeature("Update Stats in Freeplay", () => {
+				Self.UpdateStatsFreeplay.Enabled = GUILayout.Toggle(Self.UpdateStatsFreeplay.Enabled, "Update Stats in Freeplay");
+			});
+			AddFeature("Become Immortal", () => {
+				Immortality.Enabled = GUILayout.Toggle(Immortality.Enabled, "Become Immortal");
+			});
+			AddFeature("Always Show Task Animations", () => {
+				Self.AlwaysShowTaskAnimations = GUILayout.Toggle(Self.AlwaysShowTaskAnimations, "Always Show Task Animations");
+			});
+			AddFeature("No Ladder Cooldown", () => {
+				Self.NoLadderCooldown.Enabled = GUILayout.Toggle(Self.NoLadderCooldown.Enabled, "No Ladder Cooldown");
+			});
+			AddFeature("Unlimited Meetings", () => {
+				Self.UnlimitedMeetings.enabled = GUILayout.Toggle(Self.UnlimitedMeetings.enabled, "Unlimited Meetings");
+			});
+			AddFeature("Call Meeting", () => {
+				if(GUILayout.Button("Call Meeting"))
+				{
+					Utilities.AttemptStartMeeting(PlayerControl.LocalPlayer, null);
+				}
+			});
+			AddFeature("Complete All Tasks", () => {
+				if(GUILayout.Button("Complete All Tasks"))
+				{
+					PlayerControl.LocalPlayer.StartCoroutine(CompleteAllTasks().WrapToIl2Cpp());
+				}
+			});
+			AddFeature("Start Medbay Scan", () => {
+				if(GUILayout.Button("Start Medbay Scan"))
+				{
+					RPCEmitter.SendSetScanner(true);
+				}
+			});
+			AddFeature("Finish Medbay Scan", () => {
+				if(GUILayout.Button("Finish Medbay Scan"))
+				{
+					RPCEmitter.SendSetScanner(false);
+				}
+			});
+			AddFeature("Randomize Avatar", () => {
+				if(GUILayout.Button("Randomize Avatar"))
+				{
+					if(AmongUsClient.Instance.AmConnected)
+					{
+						Utilities.RandomizePlayer(true);
+						Hydra.notifications.Send("Player Randomizer", "Your avatar has been randomized for this game.", 5);
+					}
+					else
+					{
+						Utilities.RandomizePlayer();
+						Hydra.notifications.Send("Player Randomizer", "Your name and avatar has been randomized.", 5);
+					}
+				}
+			});
+			AddFeature("Randomize Color", () => {
+				if(GUILayout.Button("Randomize Color"))
+				{
+					PlayerControl.LocalPlayer.CmdCheckColor((byte)Utilities.GetRandomUnusedColor());
+				}
+			});
+			AddFeature("Restore Avatar", () => {
+				if(GUILayout.Button("Restore Avatar"))
+				{
+					PlayerControl.LocalPlayer.CmdCheckColor(DataManager.Player.Customization.Color);
+					PlayerControl.LocalPlayer.RpcSetHat(DataManager.Player.Customization.Hat);
+					PlayerControl.LocalPlayer.RpcSetVisor(DataManager.Player.Customization.Visor);
+					PlayerControl.LocalPlayer.RpcSetSkin(DataManager.Player.Customization.Skin);
+					PlayerControl.LocalPlayer.RpcSetPet(DataManager.Player.Customization.Pet);
+				}
+			});
+		}
 
 		public override void Render()
 		{
@@ -24,69 +96,9 @@ namespace HydraMenu.ui.sections
 				GUILayout.Label($"Role: {PlayerControl.LocalPlayer.Data.RoleType}");
 			}
 
-			// Self.BypassIntentionalDisconnectionBlocks.Enabled = GUILayout.Toggle(Self.BypassIntentionalDisconnectionBlocks.Enabled, "Bypass intentional disconnection temp bans");
-			Self.UpdateStatsFreeplay.Enabled = GUILayout.Toggle(Self.UpdateStatsFreeplay.Enabled, "Update Stats in Freeplay");
-			Immortality.Enabled = GUILayout.Toggle(Immortality.Enabled, "Become Immortal");
-			Self.AlwaysShowTaskAnimations = GUILayout.Toggle(Self.AlwaysShowTaskAnimations, "Always Show Task Animations");
-			Self.NoLadderCooldown.Enabled = GUILayout.Toggle(Self.NoLadderCooldown.Enabled, "No Ladder Cooldown");
-			Self.UnlimitedMeetings.enabled = GUILayout.Toggle(Self.UnlimitedMeetings.enabled, "Unlimited Meetings");
-
-			if(GUILayout.Button("Call Meeting"))
+			foreach (var feature in Features)
 			{
-				Utilities.AttemptStartMeeting(PlayerControl.LocalPlayer, null);
-			}
-
-			if(GUILayout.Button("Complete All Tasks"))
-			{
-				PlayerControl.LocalPlayer.StartCoroutine(CompleteAllTasks().WrapToIl2Cpp());
-			}
-
-			GUILayout.Label("Task Animations:");
-			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Start Medbay Scan"))
-			{
-				RPCEmitter.SendSetScanner(true);
-			}
-
-			if(GUILayout.Button("Finish Medbay Scan"))
-			{
-				RPCEmitter.SendSetScanner(false);
-			}
-			GUILayout.EndHorizontal();
-
-			Dictionary<string, TaskTypes> animations = MapAssets.GetAnimations();
-			Controls.DrawButtonCell(animations, PlayAnimation, 2);
-
-			GUILayout.Space(5);
-			GUILayout.Label("Avatar Controls:");
-			if(GUILayout.Button("Randomize Avatar"))
-			{
-				if(AmongUsClient.Instance.AmConnected)
-				{
-					Utilities.RandomizePlayer(true);
-
-					Hydra.notifications.Send("Player Randomizer", "Your avatar has been randomized for this game.", 5);
-				}
-				else
-				{
-					Utilities.RandomizePlayer();
-
-					Hydra.notifications.Send("Player Randomizer", "Your name and avatar has been randomized.", 5);
-				}
-			}
-
-			if(GUILayout.Button("Randomize Color"))
-			{
-				PlayerControl.LocalPlayer.CmdCheckColor((byte)Utilities.GetRandomUnusedColor());
-			}
-
-			if(GUILayout.Button("Restore Avatar"))
-			{
-				PlayerControl.LocalPlayer.CmdCheckColor(DataManager.Player.Customization.Color);
-				PlayerControl.LocalPlayer.RpcSetHat(DataManager.Player.Customization.Hat);
-				PlayerControl.LocalPlayer.RpcSetVisor(DataManager.Player.Customization.Visor);
-				PlayerControl.LocalPlayer.RpcSetSkin(DataManager.Player.Customization.Skin);
-				PlayerControl.LocalPlayer.RpcSetPet(DataManager.Player.Customization.Pet);
+				feature.RenderAction();
 			}
 		}
 

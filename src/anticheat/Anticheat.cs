@@ -5,12 +5,14 @@ using HydraMenu.anticheat.gamedata;
 using HydraMenu.anticheat.rpc;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using BepInEx;
 
 namespace HydraMenu.anticheat
 {
 	internal class Anticheat
 	{
-		public static bool Enabled { get; set; } = true;
+		public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.AnticheatEnabled; set => HydraMenu.ui.Settings.Config.Features.AnticheatEnabled = value; }
 
 		public static Dictionary<GameDataTypes, GameDataCheck> GameDataHandlers = new Dictionary<GameDataTypes, GameDataCheck>()
 		{
@@ -40,7 +42,7 @@ namespace HydraMenu.anticheat
 			{ RpcCalls.SetLevel, new SetLevel() }
 		};
 
-		public static bool CheckSpoofedPlatforms { get; set; } = true;
+		public static bool CheckSpoofedPlatforms { get => HydraMenu.ui.Settings.Config.Features.CheckSpoofedPlatforms; set => HydraMenu.ui.Settings.Config.Features.CheckSpoofedPlatforms = value; }
 
 		public enum Punishments
 		{
@@ -166,6 +168,16 @@ namespace HydraMenu.anticheat
 
 		private static void Punish(PlayerControl player)
 		{
+			string logEntry = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Player: {player.Data.PlayerName} | FriendCode: {player.Data.FriendCode} | PUID: {player.Data.Puid} | Action: {punishment} | Reason: Hacking\n";
+			try
+			{
+				System.IO.File.AppendAllText(Path.Combine(Paths.ConfigPath, "anticheat_log.txt"), logEntry);
+			}
+			catch (Exception e)
+			{
+				Hydra.Log.LogError($"[Anticheat] Failed to write to log file: {e.Message}");
+			}
+
 			switch(punishment)
 			{
 				case Punishments.None:
