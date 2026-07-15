@@ -136,12 +136,13 @@ namespace HydraMenu.ui.sections
 
 		private bool IsHostPlayer(PlayerControl player)
 		{
-			if(player == null) return false;
+			if(player == null || player.Data == null || AmongUsClient.Instance == null)
+			{
+				return false;
+			}
 
 			int hostId = AmongUsClient.Instance.HostId;
-			return (player.OwnerId == hostId) ||
-				(player.Data != null && player.Data.OwnerId == hostId) ||
-				(AmongUsClient.Instance.AmHost && player == PlayerControl.LocalPlayer);
+			return player.Data.OwnerId == hostId;
 		}
 
 		private string GetRoleColor(RoleTypes role)
