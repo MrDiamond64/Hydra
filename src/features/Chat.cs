@@ -16,13 +16,27 @@ namespace HydraMenu.features
 
 				if(LogChatMessages) Hydra.Log.LogMessage($"[ChatLogger] {sourcePlayer.Data.PlayerName}: {chatText}");
 
+				string displayName = sourcePlayer.Data.PlayerName;
+				string color = sourcePlayer.Data.IsDead ? "black" : "white";
+				bool isImpostor = sourcePlayer.Data.Role != null && sourcePlayer.Data.Role.CanUseKillButton;
+
+				if(Visuals.RevealRoles && !sourcePlayer.Data.IsDead)
+				{
+					displayName += $" [{sourcePlayer.Data.RoleType}]";
+				}
+
+				if(Visuals.ShowImpostors && isImpostor && !sourcePlayer.Data.IsDead)
+				{
+					color = "red";
+				}
+
 				// This is kind of a hacky workaround to be able to see messages by ghosts
 				// The game has no easy way to show messages by ghosts, so we would have to completely reimplement the ChatController::AddChat function
 				// I don't really like reimplementing large functions as it makes backwards compatability harder and requires more effort when updating the mod to newer versions of AU
 				// Instead of having to reimplement the function, we can just use ChatController::AddChatWarning to add a chat bubble and include the player's name and message contents to the warning
 				if(ShowMessagesByGhosts && !PlayerControl.LocalPlayer.Data.IsDead && sourcePlayer.Data.IsDead)
 				{
-					__instance.AddChatWarning($"{sourcePlayer.Data.PlayerName}\n{chatText}");
+					__instance.AddChatWarning($"<color=\"{color}\">{displayName}</color>\n{chatText}");
 				}
 			}
 		}

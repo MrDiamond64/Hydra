@@ -24,7 +24,7 @@ namespace HydraMenu.features
 
                 if (Visuals.RevealRoles && !player.Data.IsDead)
                 {
-                    nameText += $"\n[{player.Data.RoleType}]";
+                    nameText += $" <size=60%>[{player.Data.RoleType}]</size>";
                 }
 
                 if (Visuals.ShowImpostors && isImpostor && !player.Data.IsDead)
@@ -32,16 +32,18 @@ namespace HydraMenu.features
                     color = "red";
                 }
 
-                if (Visuals.ShowKillCooldown && isImpostor && !player.Data.IsDead)
-                {
-                    float cooldown = player.killTimer;
-                    string cdColor = cooldown < 2.0f ? "red" : (cooldown < 5.0f ? "yellow" : "white");
-                    nameText += $"\n<size=80%><color=\"{cdColor}\">[Cooldown: {cooldown:F1}s]</color></size>";
-                }
-
                 if (player.cosmetics != null && player.cosmetics.nameText != null)
                 {
-                    player.cosmetics.nameText.text = $"<color=\"{color}\">{nameText}</color>";
+                    string displayText = $"<color=\"{color}\">{nameText}</color>";
+
+                    if (Visuals.ShowKillCooldown && isImpostor && !player.Data.IsDead)
+                    {
+                        float cooldown = player.killTimer;
+                        string cdColor = cooldown < 2.0f ? "red" : (cooldown < 5.0f ? "yellow" : "white");
+                        displayText = $"<size=80%><color=\"{cdColor}\">[Cooldown: {cooldown:F1}s]</color></size>\n{displayText}";
+                    }
+
+                    player.cosmetics.nameText.text = displayText;
                 }
             }
         }

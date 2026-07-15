@@ -24,7 +24,7 @@ namespace HydraMenu.features
 
                     if (RevealRoles)
                     {
-                        nameText += $"\n[{data.RoleType}]";
+                        nameText += $" <size=60%>[{data.RoleType}]</size>";
                     }
 
                     if (ShowImpostors && isImpostor)
@@ -34,16 +34,8 @@ namespace HydraMenu.features
 
                     playerState.NameText.text = $"<color=\"{color}\">{nameText}</color>";
 
-                    if (RevealRoles)
-                    {
-                        playerState.NameText.transform.localPosition = new Vector3(0.33f, 0.08f, 0f);
-                        playerState.NameText.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-                    }
-                    else
-                    {
-                        playerState.NameText.transform.localPosition = new Vector3(0.3384f, 0.0311f, -0.1f);
-                        playerState.NameText.transform.localScale = new Vector3(0.9f, 1f, 1f);
-                    }
+                    playerState.NameText.transform.localPosition = new Vector3(0.3384f, 0.0311f, -0.1f);
+                    playerState.NameText.transform.localScale = new Vector3(0.9f, 1f, 1f);
                 }
             } catch { }
         }
