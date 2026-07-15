@@ -54,10 +54,7 @@ namespace HydraMenu.ui.sections
 				GUILayout.Label("You are not currently in a game, or the game has not started yet. These options will not work.");
 			}
 
-			foreach (var feature in Features)
-			{
-				feature.RenderAction();
-			}
+			RenderTopActionButtons();
 
 			GUILayout.Space(5);
 			GUILayout.Label("Sabotages:");
@@ -80,6 +77,28 @@ namespace HydraMenu.ui.sections
 			{
 				Controls.DrawButtonCell(doors, HandleCloseDoor, 2);
 			}
+		}
+
+		private void RenderTopActionButtons()
+		{
+			if(Features.Count == 0) return;
+
+			Features[0].RenderAction();
+
+			if(Features.Count <= 1) return;
+
+			GUILayout.BeginHorizontal();
+			Features[1].RenderAction();
+			Features[2].RenderAction();
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			Features[3].RenderAction();
+			if(Features.Count > 4)
+			{
+				Features[4].RenderAction();
+			}
+			GUILayout.EndHorizontal();
 		}
 
 		private void HandleSabotage(SystemTypes system)

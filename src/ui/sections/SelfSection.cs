@@ -96,10 +96,30 @@ namespace HydraMenu.ui.sections
 				GUILayout.Label($"Role: {PlayerControl.LocalPlayer.Data.RoleType}");
 			}
 
-			foreach (var feature in Features)
-			{
-				feature.RenderAction();
-			}
+			RenderOrderedFeatures();
+		}
+
+		private void RenderOrderedFeatures()
+		{
+			Features[0].RenderAction();
+			Features[1].RenderAction();
+			Features[2].RenderAction();
+			Features[3].RenderAction();
+			Features[4].RenderAction();
+			Features[5].RenderAction();
+			Features[6].RenderAction();
+
+			GUILayout.Label("Task Animations:");
+			GUILayout.BeginHorizontal();
+			Features[7].RenderAction();
+			Features[8].RenderAction();
+			GUILayout.EndHorizontal();
+
+			GUILayout.Space(3);
+			GUILayout.Label("Avatar Controls:");
+			Features[9].RenderAction();
+			Features[10].RenderAction();
+			Features[11].RenderAction();
 		}
 
 		public IEnumerator CompleteAllTasks()

@@ -118,14 +118,9 @@ namespace HydraMenu.ui.sections
 			string playerName = player.Data.PlayerName;
 			playerName += $"\n<color=\"{GetRoleColor(player.Data.RoleType)}\">{player.Data.RoleType}</color>";
 
-			if (Visuals.ShowKillCooldown && !player.Data.IsDead && player.Data.Role.CanUseKillButton)
-			{
-				playerName += $"\n[Cooldown: {player.killTimer:F1}s]";
-			}
-
 			GUIStyle style = player == selectedPlayer ? Styles.PlayerBoxActive : Styles.PlayerBox;
 
-			if(player.Data.OwnerId == AmongUsClient.Instance.HostId)
+			if(IsHostPlayer(player))
 			{
 				style.normal.textColor = new Color(1.0f, 0.84f, 0.0f); // #FFD700
 			}
@@ -137,6 +132,16 @@ namespace HydraMenu.ui.sections
 
 			Rect playerColor = new Rect(0, position * PlayerButtonSize.y, PlayerColorBoxSize.x, PlayerColorBoxSize.y);
 			Controls.DrawCrewmateColorBox(playerColor, player.Data);
+		}
+
+		private bool IsHostPlayer(PlayerControl player)
+		{
+			if(player == null) return false;
+
+			int hostId = AmongUsClient.Instance.HostId;
+			return (player.OwnerId == hostId) ||
+				(player.Data != null && player.Data.OwnerId == hostId) ||
+				(AmongUsClient.Instance.AmHost && player == PlayerControl.LocalPlayer);
 		}
 
 		private string GetRoleColor(RoleTypes role)
@@ -173,7 +178,7 @@ namespace HydraMenu.ui.sections
 					$"\nPUID: " + (streamerMode ? "REDACTED" : target.Data.Puid) +
 					$"\nLevel: {target.Data.PlayerLevel + 1}" +
 					$"\nDevice: {platform.Platform}" +
-					(target.Data.OwnerId == AmongUsClient.Instance.HostId ? "\nHost: true" : "");
+					(IsHostPlayer(target) ? "\nHost: true" : "");
 			}
 
 			GUILayout.Label(playerInfo);
