@@ -31,8 +31,8 @@
 
 		public abstract void Run();
 
-		public virtual void OnEnable() { }
-		public virtual void OnDisable() { }
+		protected virtual void OnEnable() { }
+		protected virtual void OnDisable() { }
 		public virtual void OnDisconnect() { }
 	}
 }

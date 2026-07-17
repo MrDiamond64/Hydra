@@ -29,12 +29,12 @@
 			PlayerControl.LocalPlayer.transform.position = following.transform.position;
 		}
 
-		public override void OnEnable()
+		protected override void OnEnable()
 		{
 			PlayerControl.LocalPlayer.moveable = false;
 		}
 
-		public override void OnDisable()
+		protected override void OnDisable()
 		{
 			following = null;
 			if(PlayerControl.LocalPlayer != null) PlayerControl.LocalPlayer.moveable = true;

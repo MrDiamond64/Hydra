@@ -8,12 +8,14 @@ namespace HydraMenu.network
 {
 	internal class BatchedMessage
 	{
-		public MessageWriter writer;
+		public readonly MessageWriter writer;
+		public readonly int targetClientId;
 
 		public BatchedMessage(int targetClientId = -1)
 		{
 			writer = MessageWriter.Get(SendOption.Reliable);
 
+			this.targetClientId = targetClientId;
 			if(targetClientId == -1)
 			{
 				writer.StartMessage(InnerNet.Tags.GameData);
@@ -25,6 +27,11 @@ namespace HydraMenu.network
 				writer.Write(AmongUsClient.Instance.GameId);
 				writer.WritePacked(targetClientId);
 			}
+		}
+
+		private bool AmTarget
+		{
+			get { return targetClientId == -1 || targetClientId == AmongUsClient.Instance.ClientId; }
 		}
 
 		public void QueueDataFlag(uint netId, MessageWriter msg)
@@ -43,7 +50,10 @@ namespace HydraMenu.network
 
 		public void QueueSetName(PlayerControl source, string name)
 		{
-			source.SetName(name);
+			if(AmTarget)
+			{
+				source.SetName(name);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -55,7 +65,10 @@ namespace HydraMenu.network
 
 		public void QueueSetColor(PlayerControl source, byte color)
 		{
-			source.SetColor(color);
+			if(AmTarget)
+			{
+				source.SetColor(color);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -65,24 +78,12 @@ namespace HydraMenu.network
 			writer.EndMessage();
 		}
 
-		public void QueueReportDeadBody(PlayerControl source, NetworkedPlayerInfo target)
-		{
-			if(AmongUsClient.Instance.AmHost)
-			{
-				source.ReportDeadBody(target);
-				return;
-			}
-
-			writer.StartMessage((byte)GameDataTypes.RpcFlag);
-			writer.WritePacked(source.NetId);
-			writer.Write((byte)RpcCalls.ReportDeadBody);
-			writer.Write(target != null ? target.PlayerId : 255);
-			writer.EndMessage();
-		}
-
 		public void QueueMurderPlayer(PlayerControl source, PlayerControl target, MurderResultFlags result)
 		{
-			source.MurderPlayer(target, result);
+			if(AmTarget)
+			{
+				source.MurderPlayer(target, result);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -94,7 +95,10 @@ namespace HydraMenu.network
 
 		public void QueueSnapTo(PlayerControl source, Vector2 position)
 		{
-			source.NetTransform.SnapTo(position, (ushort)(source.NetTransform.lastSequenceId + 1));
+			if(AmTarget)
+			{
+				source.NetTransform.SnapTo(position, (ushort)(source.NetTransform.lastSequenceId + 1));
+			}
 
 			ushort seqId = (ushort)(source.NetTransform.lastSequenceId + 2);
 
@@ -108,7 +112,10 @@ namespace HydraMenu.network
 
 		public void QueueCloseMeeting()
 		{
-			MeetingHud.Instance.Close();
+			if(AmTarget)
+			{
+				MeetingHud.Instance.Close();
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(MeetingHud.Instance.NetId);
@@ -118,7 +125,10 @@ namespace HydraMenu.network
 
 		public void QueueVotingComplete(MeetingHud.VoterState[] voteStates, NetworkedPlayerInfo ejectedPlayer, bool isTie)
 		{
-			MeetingHud.Instance.VotingComplete(voteStates, ejectedPlayer, isTie);
+			if(AmTarget)
+			{
+				MeetingHud.Instance.VotingComplete(voteStates, ejectedPlayer, isTie);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(MeetingHud.Instance.NetId);
@@ -139,24 +149,16 @@ namespace HydraMenu.network
 
 		public void QueueAddVote(int sourceId, int targetId)
 		{
-			VoteBanSystem.Instance.AddVote(sourceId, targetId);
+			if(AmTarget)
+			{
+				VoteBanSystem.Instance.AddVote(sourceId, targetId);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(VoteBanSystem.Instance.NetId);
 			writer.Write((byte)RpcCalls.AddVote);
 			writer.Write(sourceId);
 			writer.Write(targetId);
-			writer.EndMessage();
-		}
-
-		public void QueueSetTasks(NetworkedPlayerInfo player, byte[] tasks)
-		{
-			player.SetTasks(tasks);
-
-			writer.StartMessage((byte)GameDataTypes.RpcFlag);
-			writer.WritePacked(player.NetId);
-			writer.Write((byte)RpcCalls.SetTasks);
-			writer.WriteBytesAndSize(tasks);
 			writer.EndMessage();
 		}
 
@@ -173,7 +175,10 @@ namespace HydraMenu.network
 
 		public void QueueSetHatStr(PlayerControl source, string hat, byte seqid)
 		{
-			source.SetHat(hat, source.Data.DefaultOutfit.ColorId);
+			if(AmTarget)
+			{
+				source.SetHat(hat, source.Data.DefaultOutfit.ColorId);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -185,7 +190,10 @@ namespace HydraMenu.network
 
 		public void QueueSetSkinStr(PlayerControl source, string skin, byte seqid)
 		{
-			source.SetSkin(skin, source.Data.DefaultOutfit.ColorId);
+			if(AmTarget)
+			{
+				source.SetSkin(skin, source.Data.DefaultOutfit.ColorId);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -197,7 +205,10 @@ namespace HydraMenu.network
 
 		public void QueueSetPetStr(PlayerControl source, string pet, byte seqid)
 		{
-			source.SetPet(pet, source.Data.DefaultOutfit.ColorId);
+			if(AmTarget)
+			{
+				source.SetPet(pet, source.Data.DefaultOutfit.ColorId);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -209,7 +220,10 @@ namespace HydraMenu.network
 
 		public void QueueSetVisorStr(PlayerControl source, string visor, byte seqid)
 		{
-			source.SetVisor(visor, source.Data.DefaultOutfit.ColorId);
+			if(AmTarget)
+			{
+				source.SetVisor(visor, source.Data.DefaultOutfit.ColorId);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -221,7 +235,10 @@ namespace HydraMenu.network
 
 		public void QueueSetNameplateStr(PlayerControl source, string nameplate, byte seqid)
 		{
-			source.SetVisor(nameplate, source.Data.DefaultOutfit.ColorId);
+			if(AmTarget)
+			{
+				source.SetNamePlate(nameplate);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -233,7 +250,10 @@ namespace HydraMenu.network
 
 		public void QueueSetRole(PlayerControl source, RoleTypes role, bool canOverride = false)
 		{
-			source.StartCoroutine(source.CoSetRole(role, canOverride));
+			if(AmTarget)
+			{
+				source.StartCoroutine(source.CoSetRole(role, canOverride));
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);
@@ -245,7 +265,10 @@ namespace HydraMenu.network
 
 		public void QueueShapeshift(PlayerControl source, PlayerControl target, bool shouldAnimate)
 		{
-			source.Shapeshift(target, shouldAnimate);
+			if(AmTarget)
+			{
+				source.Shapeshift(target, shouldAnimate);
+			}
 
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);
 			writer.WritePacked(source.NetId);

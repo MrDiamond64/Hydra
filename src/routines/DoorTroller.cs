@@ -30,7 +30,7 @@ namespace HydraMenu.routines
 			timeElapsed = 0;
 		}
 
-		public override void OnEnable()
+		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
