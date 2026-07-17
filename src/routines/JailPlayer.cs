@@ -93,7 +93,7 @@ namespace HydraMenu.routines
 			}
 		}
 
-		public override void OnEnable()
+		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
@@ -103,7 +103,7 @@ namespace HydraMenu.routines
 			}
 		}
 
-		public override void OnDisable()
+		protected override void OnDisable()
 		{
 			targets.Clear();
 		}

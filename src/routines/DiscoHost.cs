@@ -53,7 +53,7 @@ namespace HydraMenu.routines
 			get { return targets.Count == 1 && targets.Contains(int.MaxValue); }
 		}
 
-		public override void OnEnable()
+		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null)
 			{
@@ -70,7 +70,7 @@ namespace HydraMenu.routines
 			}
 		}
 
-		public override void OnDisable()
+		protected override void OnDisable()
 		{
 			targets.Clear();
 		}

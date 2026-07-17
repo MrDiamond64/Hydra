@@ -27,7 +27,7 @@ namespace HydraMenu.routines
 			PlayerControl.LocalPlayer.RpcStartMeeting(player.Data);
 		}
 
-		public override void OnEnable()
+		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{

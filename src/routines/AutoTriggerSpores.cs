@@ -24,7 +24,7 @@ namespace HydraMenu.routines
 			}
 		}
 
-		public override void OnEnable()
+		protected override void OnEnable()
 		{
 			if(ShipStatus.Instance == null)
 			{
