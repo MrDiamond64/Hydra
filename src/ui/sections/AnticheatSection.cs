@@ -5,7 +5,15 @@ namespace HydraMenu.ui.sections
 {
 	internal class AnticheatSection : ISection
 	{
-		public AnticheatSection() : base("Anticheat") { }
+		public AnticheatSection() : base("Anticheat") 
+		{
+			AddFeature("Enable Hydra Anticheat", () => { });
+			AddFeature("Flag Spoofed Platform Data", () => { });
+			AddFeature("RPC Checks", () => { });
+			AddFeature("Notification Settings", () => { });
+			AddFeature("Discard RPC", () => { });
+			AddFeature("Punishment Settings", () => { });
+		}
 
 		public override void Render()
 		{

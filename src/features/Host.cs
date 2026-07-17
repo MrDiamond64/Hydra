@@ -11,6 +11,9 @@ namespace HydraMenu.features
 	internal class Host
 	{
 		private static bool isSkeldFlipped = false;
+		public static bool CustomImpostorAmountEnabled { get => HydraMenu.ui.Settings.Config.Features.CustomImpostorAmountEnabled; set => HydraMenu.ui.Settings.Config.Features.CustomImpostorAmountEnabled = value; }
+		public static int CustomImpostorAmount { get => HydraMenu.ui.Settings.Config.Features.CustomImpostorAmount; set => HydraMenu.ui.Settings.Config.Features.CustomImpostorAmount = value; }
+
 		public static bool FlippedSkeld
 		{
 			get { return isSkeldFlipped; }
@@ -35,7 +38,7 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.ReportDeadBody))]
 		public static class DisableMeetings
 		{
-			public static bool Enabled { get; set; } = false;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.DisableMeetings; set => HydraMenu.ui.Settings.Config.Features.DisableMeetings = value; }
 
 			static bool Prefix()
 			{
@@ -46,7 +49,7 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(SabotageSystemType), nameof(SabotageSystemType.UpdateSystem))]
 		public static class DisableSabotages
 		{
-			public static bool Enabled { get; set; } = false;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.DisableSabotages; set => HydraMenu.ui.Settings.Config.Features.DisableSabotages = value; }
 
 			static bool Prefix()
 			{
@@ -57,7 +60,7 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CloseDoorsOfType))]
 		public static class DisableCloseDoors
 		{
-			public static bool Enabled { get; set; } = false;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.DisableCloseDoors; set => HydraMenu.ui.Settings.Config.Features.DisableCloseDoors = value; }
 
 			static bool Prefix()
 			{
@@ -108,6 +111,20 @@ namespace HydraMenu.features
 			}
 		}
 
+		[HarmonyPatch(typeof(IGameOptions), "get_NumImpostors")]
+		public static class CustomImpostorAmountPatch
+		{
+			public static bool Enabled { get; set; } = false;
+
+			static bool Prefix(ref int __result)
+			{
+				if(!CustomImpostorAmountEnabled) return true;
+
+				__result = CustomImpostorAmount;
+				return false;
+			}
+		}
+
 		// It is not possible to watch security cameras when the comms sabotage is active. We can abuse this to disable security cameras
 		// When a player starts to watch security cameras, sabotage comms for that player, when the player stops watching cameras, fix comms sabotage for that player
 		[HarmonyPatch(typeof(SecurityCameraSystemType), nameof(SecurityCameraSystemType.UpdateSystem))]
@@ -150,7 +167,7 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(GameManager), nameof(GameManager.RpcEndGame))]
 		public static class DisableGameEnd
 		{
-			public static bool Enabled { get; set; } = false;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.DisableGameEnd; set => HydraMenu.ui.Settings.Config.Features.DisableGameEnd = value; }
 
 			static bool Prefix()
 			{
@@ -220,7 +237,7 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetKillTimer))]
 		public static class NoKillCooldown
 		{
-			public static bool Enabled { get; set; } = false;
+			public static bool Enabled { get => HydraMenu.ui.Settings.Config.Features.NoKillCooldown; set => HydraMenu.ui.Settings.Config.Features.NoKillCooldown = value; }
 
 			static void Prefix(PlayerControl __instance, ref float time)
 			{

@@ -27,16 +27,43 @@ namespace HydraMenu.ui
 			{ UIColors.Violet, new Color(0.5f, 0f, 1f) } // #7F00FF
 		};
 
-		public static float menuOpacity = 0.85f;
-		public static UIColors primaryColor = UIColors.Azure;
+		public static float menuOpacity { get => HydraMenu.ui.Settings.Config.General.MenuOpacity; set => HydraMenu.ui.Settings.Config.General.MenuOpacity = value; }
+		public static UIColors primaryColor { get => (UIColors)HydraMenu.ui.Settings.Config.General.PrimaryColorIndex; set => HydraMenu.ui.Settings.Config.General.PrimaryColorIndex = (int)value; }
 
 		private static Dictionary<string, Texture2D> CachedTextures = new Dictionary<string, Texture2D>();
+		private static Dictionary<string, GUIStyle> CachedStyles = new Dictionary<string, GUIStyle>();
+
+		public static void ClearCache()
+		{
+			if (UnityEngine.Resources.UnloadUnusedAssets == null) return;
+
+			foreach(Texture2D texture in CachedTextures.Values)
+			{
+				if (texture != null)
+				{
+					UnityEngine.Object.Destroy(texture);
+				}
+			}
+			CachedTextures.Clear();
+			CachedStyles.Clear();
+		}
+
+		public static bool IsCacheValid()
+		{
+			foreach(var texture in CachedTextures.Values)
+			{
+				if(texture == null) return false;
+			}
+			return true;
+		}
 
 		public static GUIStyle MainBox
 		{
 			get
 			{
-				GUIStyle style = new GUIStyle();
+				if (CachedStyles.TryGetValue("MainBox", out var style)) return style;
+
+				style = new GUIStyle();
 
 				Texture2D background = CreateColoredTexture("MainBox", ColorValues[UIColors.Carbon], menuOpacity);
 				style.normal.background = background;
@@ -49,6 +76,7 @@ namespace HydraMenu.ui
 				// however this is rather insignificant as the font size would be at most one unit off
 				style.fontSize = (int)(13 * MainUI.scale);
 
+				CachedStyles["MainBox"] = style;
 				return style;
 			}
 		}
@@ -57,7 +85,9 @@ namespace HydraMenu.ui
 		{
 			get
 			{
-				GUIStyle style = new GUIStyle();
+				if (CachedStyles.TryGetValue("SectionBox", out var style)) return style;
+
+				style = new GUIStyle();
 
 				style.normal.textColor = ColorValues[UIColors.White];
 				style.alignment = TextAnchor.MiddleLeft;
@@ -65,6 +95,7 @@ namespace HydraMenu.ui
 				style.padding.left = (int)(8 * MainUI.scale);
 				style.fontSize = (int)(14 * MainUI.scale);
 
+				CachedStyles["SectionBox"] = style;
 				return style;
 			}
 		}
@@ -73,7 +104,9 @@ namespace HydraMenu.ui
 		{
 			get
 			{
-				GUIStyle style = new GUIStyle();
+				if (CachedStyles.TryGetValue("SectionBoxActive", out var style)) return style;
+
+				style = new GUIStyle();
 
 				Texture2D background = CreateColoredTexture("SectionBoxActive", ColorValues[primaryColor]);
 				style.normal.background = background;
@@ -84,6 +117,29 @@ namespace HydraMenu.ui
 				style.padding.left = (int)(13 * MainUI.scale);
 				style.fontSize = (int)(MainUI.scale * 14);
 
+				CachedStyles["SectionBoxActive"] = style;
+				return style;
+			}
+		}
+
+		public static GUIStyle SearchBoxActive
+		{
+			get
+			{
+				if (CachedStyles.TryGetValue("SearchBoxActive", out var style)) return style;
+
+				style = new GUIStyle();
+
+				Texture2D background = CreateColoredTexture("SearchBoxActive", ColorValues[primaryColor]);
+				style.normal.background = background;
+
+				style.normal.textColor = ColorValues[UIColors.White];
+				style.alignment = TextAnchor.MiddleLeft;
+				style.padding.bottom = 1;
+				style.padding.left = (int)(8 * MainUI.scale);
+				style.fontSize = (int)(14 * MainUI.scale);
+
+				CachedStyles["SearchBoxActive"] = style;
 				return style;
 			}
 		}
@@ -92,7 +148,9 @@ namespace HydraMenu.ui
 		{
 			get
 			{
-				GUIStyle style = new GUIStyle();
+				if (CachedStyles.TryGetValue("PlayerBox", out var style)) return style;
+
+				style = new GUIStyle();
 
 				style.normal.textColor = ColorValues[UIColors.White];
 				style.alignment = TextAnchor.MiddleLeft;
@@ -101,6 +159,7 @@ namespace HydraMenu.ui
 				style.richText = true;
 				style.fontSize = (int)(13 * MainUI.scale);
 
+				CachedStyles["PlayerBox"] = style;
 				return style;
 			}
 		}
@@ -109,7 +168,9 @@ namespace HydraMenu.ui
 		{
 			get
 			{
-				GUIStyle style = new GUIStyle();
+				if (CachedStyles.TryGetValue("PlayerBoxActive", out var style)) return style;
+
+				style = new GUIStyle();
 
 				Texture2D background = CreateColoredTexture("SectionBoxActive", ColorValues[primaryColor]);
 				style.normal.background = background;
@@ -121,6 +182,7 @@ namespace HydraMenu.ui
 				style.richText = true;
 				style.fontSize = (int)(13 * MainUI.scale);
 
+				CachedStyles["PlayerBoxActive"] = style;
 				return style;
 			}
 		}
@@ -143,20 +205,22 @@ namespace HydraMenu.ui
 			Hydra.Log.LogInfo($"Cache lookup for texture {textureName} returned a miss, creating the required texture...");
 
 			background = new Texture2D(1, 1);
-			background.SetPixel(0, 0, color.SetAlpha(opacity));
+			Color finalColor = color;
+			finalColor.a = Mathf.Clamp01(opacity);
+			background.SetPixel(0, 0, finalColor);
 			background.Apply();
 
 			CachedTextures[textureName] = background;
 			return background;
 		}
+	}
 
-		public static void ClearCache()
+	[HarmonyLib.HarmonyPatch(typeof(UnityEngine.Resources), nameof(UnityEngine.Resources.UnloadUnusedAssets))]
+	public static class Resources_UnloadUnusedAssets_Patch
+	{
+		public static void Postfix()
 		{
-			foreach(Texture2D texture in CachedTextures.Values)
-			{
-				Texture2D.Destroy(texture);
-			}
-			CachedTextures.Clear();
+			Styles.ClearCache();
 		}
 	}
 }

@@ -6,7 +6,13 @@ namespace HydraMenu.ui.sections
 {
 	internal class MovementSection : ISection
 	{
-		public MovementSection() : base("Movement") { }
+		public MovementSection() : base("Movement") 
+		{
+			AddFeature("Noclip", () => { });
+			AddFeature("Speed Modifier", () => { });
+			AddFeature("Use SnapTo RPC For Teleports", () => { });
+			AddFeature("Teleport To Location", () => { });
+		}
 
 		public override void Render()
 		{

@@ -5,9 +5,9 @@ namespace HydraMenu.features
 {
 	internal class Roles : MonoBehaviour
 	{
-		public static bool DisableShapeshiftAnimation { get; set; } = false;
+		public static bool DisableShapeshiftAnimation { get => HydraMenu.ui.Settings.Config.Features.DisableShapeshiftAnimation; set => HydraMenu.ui.Settings.Config.Features.DisableShapeshiftAnimation = value; }
 		// public static bool DisablePhantomEndAnimation { get; set; } = false;
-		public static bool AllowVentingForCrewmates { get; set; } = true;
+		public static bool AllowVentingForCrewmates { get => HydraMenu.ui.Settings.Config.Features.AllowVentingForCrewmates; set => HydraMenu.ui.Settings.Config.Features.AllowVentingForCrewmates = value; }
 
 		public void Update()
 		{
@@ -55,8 +55,8 @@ namespace HydraMenu.features
 		[HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.DoClick))]
 		public static class SkipSabotageChecks
 		{
-			public static bool SabotageAsCrewmate { get; set; } = false;
-			public static bool SabotageInVents { get; set; } = false;
+			public static bool SabotageAsCrewmate { get => HydraMenu.ui.Settings.Config.Features.SabotageAsCrewmate; set => HydraMenu.ui.Settings.Config.Features.SabotageAsCrewmate = value; }
+			public static bool SabotageInVents { get => HydraMenu.ui.Settings.Config.Features.SabotageInVents; set => HydraMenu.ui.Settings.Config.Features.SabotageInVents = value; }
 
 			static bool Prefix()
 			{
@@ -111,7 +111,7 @@ namespace HydraMenu.features
 			}
 		}
 
-		public static bool NoKillChecks { get; set; } = false;
+		public static bool NoKillChecks { get => HydraMenu.ui.Settings.Config.Features.NoKillChecks; set => HydraMenu.ui.Settings.Config.Features.NoKillChecks = value; }
 
 		[HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.IsValidTarget))]
 		class NoNormalKillChecks

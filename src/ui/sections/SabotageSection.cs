@@ -5,7 +5,47 @@ namespace HydraMenu.ui.sections
 {
 	internal class SabotageSection : ISection
 	{
-		public SabotageSection() : base("Sabotage") { }
+		public SabotageSection() : base("Sabotage") 
+		{
+			AddFeature("Update Sabotage Systems Directly", () => {
+				Sabotage.UpdateSystemsDirectly = GUILayout.Toggle(Sabotage.UpdateSystemsDirectly, "Update Sabotage Systems Directly");
+			});
+			AddFeature("Sabotage All", () => {
+				if(GUILayout.Button("Sabotage All"))
+				{
+					Sabotage.SabotageAll();
+					Hydra.notifications.Send("Sabotage", "All sabotages have been enabled.", 5);
+				}
+			});
+			AddFeature("Close All Doors", () => {
+				if(GUILayout.Button("Close All Doors"))
+				{
+					Sabotage.LockAll();
+					Hydra.notifications.Send("Sabotage", "All doors have been closed.", 5);
+				}
+			});
+			AddFeature("Fix All Sabotages", () => {
+				if(GUILayout.Button("Fix All Sabotages"))
+				{
+					Sabotage.FixAllSabotages();
+					Hydra.notifications.Send("Sabotage", "All sabotages have been repaired.", 5);
+				}
+			});
+			AddFeature("Unlock All Doors", () => {
+				if(GUILayout.Button("Unlock All Doors"))
+				{
+					if(Sabotage.CanUnlockDoors())
+					{
+						Sabotage.UnlockAll();
+						Hydra.notifications.Send("Sabotage", "All doors have been unlocked.", 5);
+					}
+					else
+					{
+						Hydra.notifications.Send("Sabotage", "The map you are currently on does not support unlocking doors.", 10);
+					}
+				}
+			});
+		}
 
 		public override void Render()
 		{
@@ -14,48 +54,11 @@ namespace HydraMenu.ui.sections
 				GUILayout.Label("You are not currently in a game, or the game has not started yet. These options will not work.");
 			}
 
-			Sabotage.UpdateSystemsDirectly = GUILayout.Toggle(Sabotage.UpdateSystemsDirectly, "Update Sabotage Systems Directly");
-
-			Dictionary<string, SystemTypes> sabotages = Sabotage.GetSabotages();
-			Dictionary<string, SystemTypes> doors = Sabotage.GetDoors();
-
-			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Sabotage All"))
-			{
-				Sabotage.SabotageAll();
-				Hydra.notifications.Send("Sabotage", "All sabotages have been enabled.", 5);
-			}
-
-			if(GUILayout.Button("Close All Doors"))
-			{
-				Sabotage.LockAll();
-				Hydra.notifications.Send("Sabotage", "All doors have been closed.", 5);
-			}
-			GUILayout.EndHorizontal();
-
-			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Fix All Sabotages"))
-			{
-				Sabotage.FixAllSabotages();
-				Hydra.notifications.Send("Sabotage", "All sabotages have been repaired.", 5);
-			}
-
-			if(GUILayout.Button("Unlock All Doors"))
-			{
-				if(Sabotage.CanUnlockDoors())
-				{
-					Sabotage.UnlockAll();
-					Hydra.notifications.Send("Sabotage", "All doors have been unlocked.", 5);
-				}
-				else
-				{
-					Hydra.notifications.Send("Sabotage", "The map you are currently on does not support unlocking doors.", 10);
-				}
-			}
-			GUILayout.EndHorizontal();
+			RenderTopActionButtons();
 
 			GUILayout.Space(5);
 			GUILayout.Label("Sabotages:");
+			Dictionary<string, SystemTypes> sabotages = Sabotage.GetSabotages();
 			foreach(var (key, value) in sabotages)
 			{
 				if(GUILayout.Button(key))
@@ -65,6 +68,7 @@ namespace HydraMenu.ui.sections
 			}
 
 			GUILayout.Label("Close Doors:");
+			Dictionary<string, SystemTypes> doors = Sabotage.GetDoors();
 			if(doors.Count == 0)
 			{
 				GUILayout.Label("This map has no doors that can be closed.");
@@ -73,6 +77,28 @@ namespace HydraMenu.ui.sections
 			{
 				Controls.DrawButtonCell(doors, HandleCloseDoor, 2);
 			}
+		}
+
+		private void RenderTopActionButtons()
+		{
+			if(Features.Count == 0) return;
+
+			Features[0].RenderAction();
+
+			if(Features.Count <= 1) return;
+
+			GUILayout.BeginHorizontal();
+			Features[1].RenderAction();
+			Features[2].RenderAction();
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			Features[3].RenderAction();
+			if(Features.Count > 4)
+			{
+				Features[4].RenderAction();
+			}
+			GUILayout.EndHorizontal();
 		}
 
 		private void HandleSabotage(SystemTypes system)

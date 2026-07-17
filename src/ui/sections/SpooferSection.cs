@@ -8,7 +8,16 @@ namespace HydraMenu.ui.sections
 {
 	internal class SpooferSection : ISection
 	{
-		public SpooferSection() : base("Spoofer") { }
+		public SpooferSection() : base("Spoofer") 
+		{
+			AddFeature("Version Spoofing", () => { });
+			AddFeature("Level Spoofing", () => { });
+			AddFeature("Modded Protocol", () => { });
+			AddFeature("Platform Spoofing", () => { });
+			AddFeature("Avoid Penalties", () => {
+				Spoofer.avoidPenalties = GUILayout.Toggle(Spoofer.avoidPenalties, "Avoid Penalties");
+			});
+		}
 
 		public readonly Dictionary<string, int> versions = new Dictionary<string, int>()
 		{
@@ -78,6 +87,10 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Label($"Spoofed Platform: {Spoofer.spoofedPlatform}");
 			Spoofer.spoofedPlatform = (Platforms)GUILayout.HorizontalSlider((float)Spoofer.spoofedPlatform, 0, 10);
+
+			GUILayout.Space(5);
+			GUILayout.Label("Penalty Bypass:");
+			Spoofer.avoidPenalties = GUILayout.Toggle(Spoofer.avoidPenalties, "Avoid Disconnect Penalties");
 		}
 
 		private void ClampSelectedLevel(uint newLevel)

@@ -1,6 +1,7 @@
 ﻿using HydraMenu.ui.sections;
 using System;
 using UnityEngine;
+using HydraMenu.features;
 
 namespace HydraMenu.ui
 {
@@ -31,17 +32,22 @@ namespace HydraMenu.ui
 		}
 
 		// UI Section Pane
-		private readonly ISection[] sections = { new GeneralSection(), new SelfSection(), new TrollSection(), new SabotageSection(), new HostSection(), new RolesSection(), new PlayersSection(), new MovementSection(), new VisualSection(), new ProtectionsSection(), new AnticheatSection(), new SpooferSection(), new MenuSection() };
+		private readonly ISection[] sections = { new GeneralSection(), new SelfSection(), new TrollSection(), new SabotageSection(), new HostSection(), new RolesSection(), new PlayersSection(), new MovementSection(), new VisualSection(), new ProtectionsSection(), new AnticheatSection(), new SpooferSection(), new KeybindsSection(), new MenuSection() };
+		private SearchSection searchSection = new SearchSection();
+		private bool searchFocused = false;
 		public byte activeTab = 0;
+
+		private bool _initialProtection = true;
+		private float _openProtectionTimer = 0f;
 
 		public static Vector2 SectionListSize
 		{
-			get { return new Vector2(100 * scale, WindowSize.y - HeaderSize.y); }
+			get { return new Vector2(100 * scale, WindowSize.y - HeaderSize.y - (25 * scale)); }
 		}
 
 		public static Vector2 SectionListPosition
 		{
-			get { return new Vector2(windowPosition.x, windowPosition.y + HeaderSize.y); }
+			get { return new Vector2(windowPosition.x, windowPosition.y + HeaderSize.y + (25 * scale)); }
 		}
 
 		public static Vector2 SectionButtonSize
@@ -52,17 +58,33 @@ namespace HydraMenu.ui
 		// Feature Pane
 		public static Vector2 FeaturePaneSize
 		{
-			get { return new Vector2(WindowSize.x - SectionListSize.x, WindowSize.y - HeaderSize.y); }
+			get { return new Vector2(WindowSize.x - SectionListSize.x, WindowSize.y - HeaderSize.y - (25 * scale)); }
 		}
 
 		public static Vector2 FeaturePanePosition
 		{
-			get { return new Vector2(SectionListPosition.x + SectionListSize.x, HeaderPosition.y + HeaderSize.y); }
+			get { return new Vector2(SectionListPosition.x + SectionListSize.x, HeaderPosition.y + HeaderSize.y + (25 * scale)); }
 		}
 
 		public void Update()
 		{
-			if(Input.GetKeyDown(KeyCode.Insert)) visible = !visible;
+			if(Input.GetKeyDown(KeyCode.Insert) || Input.GetKeyDown(Settings.Config.Binds.ToggleMenu) || (Settings.Config.General.AltF9ToggleEnabled && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.F9))) visible = !visible;
+
+			if (visible && _openProtectionTimer <= 0 && _initialProtection)
+			{
+				_openProtectionTimer = 30f;
+				_initialProtection = false;
+			}
+
+			if (_openProtectionTimer > 0)
+			{
+				_openProtectionTimer -= Time.deltaTime;
+			}
+
+			if ((_initialProtection || _openProtectionTimer > 0) && !Styles.IsCacheValid())
+			{
+				Styles.ClearCache();
+			}
 
 			// Tool to test the notifications system
 			if(Input.GetKeyDown(KeyCode.F6))
@@ -88,6 +110,47 @@ namespace HydraMenu.ui
 				sections[activeTab].HandleSubsectionMove(offset);
 			}
 
+			// Keybind Triggers
+			if(Settings.Config.Binds.NoClip != KeyCode.None && Input.GetKeyDown(Settings.Config.Binds.NoClip))
+			{
+				PlayerControl.LocalPlayer.Collider.enabled = !PlayerControl.LocalPlayer.Collider.enabled;
+				Hydra.notifications.Send("NoClip", $"NoClip is now {(PlayerControl.LocalPlayer.Collider.enabled ? "Disabled" : "Enabled")}");
+			}
+
+			if(Settings.Config.Binds.KillAll != KeyCode.None && Input.GetKeyDown(Settings.Config.Binds.KillAll))
+			{
+				// This is a host feature
+				// We can't call the private method directly, but can use reflection or move the logic to a feature class.
+				// For now trigger the logic if the user is host.
+				if(AmongUsClient.Instance.AmHost)
+				{
+					// Since KillAllPlayers is private, use reflection to call it.
+					var method = typeof(HostSection).GetMethod("KillAllPlayers", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+					method?.Invoke(null, null);
+					Hydra.notifications.Send("Kill All", "Murdered all players!");
+				}
+				else
+				{
+					Hydra.notifications.Send("Kill All", "You must be host to use this feature.");
+				}
+			}
+
+			if(Settings.Config.Binds.CloseAllDoors != KeyCode.None && Input.GetKeyDown(Settings.Config.Binds.CloseAllDoors))
+			{
+				if(AmongUsClient.Instance.AmHost)
+				{
+					foreach(var door in Sabotage.GetDoors().Values)
+					{
+						Sabotage.LockDoor(door);
+					}
+					Hydra.notifications.Send("Close Doors", "Closed all doors!");
+				}
+				else
+				{
+					Hydra.notifications.Send("Close Doors", "You must be host to close all doors.");
+				}
+			}
+
 			HandleBoxMovement();
 		}
 
@@ -96,28 +159,105 @@ namespace HydraMenu.ui
 			// https://docs.unity3d.com/6000.3/Documentation/Manual/GUIScriptingGuide.html
 			if(!visible) return;
 
-			GUI.skin.label.fontSize = (int)(13 * scale);
-
-			// Render UI box
-			GUI.Box(new Rect(windowPosition.x, windowPosition.y, WindowSize.x, WindowSize.y), $"{MyPluginInfo.PLUGIN_NAME} - {MyPluginInfo.PLUGIN_VERSION}", Styles.MainBox);
-
-			for(byte i = 0; i < sections.Length; i++)
+			try
 			{
-				ISection section = sections[i];
+				GUI.skin.label.fontSize = (int)(13 * scale);
 
-				// Add the tab to the left-pane
-				RenderTab(i, section);
+				// Render UI box
+				GUI.Box(new Rect(windowPosition.x, windowPosition.y, WindowSize.x, WindowSize.y), $"{MyPluginInfo.PLUGIN_NAME} - {MyPluginInfo.PLUGIN_VERSION}", Styles.MainBox);
 
-				if(i == activeTab)
+				// Search Bar
+				Rect searchRect = new Rect(windowPosition.x + 10, windowPosition.y + 25, 140 * scale, 20 * scale);
+				Event e = Event.current;
+
+				if (e.type == EventType.MouseDown && searchRect.Contains(e.mousePosition))
 				{
+					searchFocused = true;
+				}
+				else if (e.type == EventType.MouseDown)
+				{
+					searchFocused = false;
+				}
+
+				if (searchFocused && e.type == EventType.KeyDown)
+				{
+					if (e.keyCode == KeyCode.Backspace && searchSection.SearchQuery.Length > 0)
+					{
+						searchSection.SearchQuery = searchSection.SearchQuery.Substring(0, searchSection.SearchQuery.Length - 1);
+						e.Use();
+					}
+					else if (e.character != 0)
+					{
+						searchSection.SearchQuery += (char)e.character;
+						e.Use();
+					}
+				}
+
+				string searchDisplay = "";
+				if (!searchFocused && string.IsNullOrEmpty(searchSection.SearchQuery))
+				{
+					searchDisplay = "Search...";
+				}
+				else
+				{
+					searchDisplay = searchSection.SearchQuery;
+				}
+
+				if (searchFocused && (Time.frameCount % 60 < 30))
+				{
+					searchDisplay += "|";
+				}
+
+				GUI.Box(searchRect, searchDisplay, searchFocused ? Styles.SearchBoxActive : Styles.SectionBox);
+
+				if (!string.IsNullOrEmpty(searchSection.SearchQuery))
+				{
+					searchSection.UpdateResults(sections, activeTab, (tab) => { activeTab = tab; });
+				}
+
+				if (!string.IsNullOrEmpty(searchSection.SearchQuery))
+				{
+					activeTab = 255; // Special index for search results
 					GUILayout.BeginArea(new Rect(FeaturePanePosition.x, FeaturePanePosition.y, FeaturePaneSize.x, FeaturePaneSize.y));
-					section.scrollVector = GUILayout.BeginScrollView(section.scrollVector);
-
-					section.Render();
-
+					searchSection.scrollVector = GUILayout.BeginScrollView(searchSection.scrollVector);
+					searchSection.Render();
 					GUILayout.EndScrollView();
 					GUILayout.EndArea();
 				}
+
+				for(byte i = 0; i < sections.Length; i++)
+				{
+					ISection section = sections[i];
+
+					// Add the tab to the left-pane
+					RenderTab(i, section);
+
+					if(i == activeTab)
+					{
+						GUILayout.BeginArea(new Rect(FeaturePanePosition.x, FeaturePanePosition.y, FeaturePaneSize.x, FeaturePaneSize.y));
+						section.scrollVector = GUILayout.BeginScrollView(section.scrollVector);
+
+						section.Render();
+
+						GUILayout.EndScrollView();
+						GUILayout.EndArea();
+					}
+				}
+
+				// Render Search Results if active
+				if (!string.IsNullOrEmpty(searchSection.SearchQuery))
+				{
+					activeTab = 255; // Special index for search results
+					GUILayout.BeginArea(new Rect(FeaturePanePosition.x, FeaturePanePosition.y, FeaturePaneSize.x, FeaturePaneSize.y));
+					searchSection.scrollVector = GUILayout.BeginScrollView(searchSection.scrollVector);
+					searchSection.Render();
+					GUILayout.EndScrollView();
+					GUILayout.EndArea();
+				}
+			}
+			finally
+			{
+				// This ensures that if an ExitGUIException occurs it don't leave the GUI state unbalanced
 			}
 		}
 
@@ -173,6 +313,7 @@ namespace HydraMenu.ui
 			if(GUI.Button(rect, section.name, style))
 			{
 				activeTab = position;
+				searchSection.SearchQuery = string.Empty;
 			}
 		}
 	}

@@ -5,7 +5,19 @@ namespace HydraMenu.ui.sections
 {
 	internal class ProtectionsSection : ISection
 	{
-		public ProtectionsSection() : base("Protections") { }
+		public ProtectionsSection() : base("Protections") 
+		{
+			AddFeature("Force enable DTLS", () => { });
+			AddFeature("Block position updates from server", () => { });
+			AddFeature("Block unauthorized system updates", () => { });
+			AddFeature("Block large game messages", () => { });
+			AddFeature("Block invalid game data messages", () => { });
+			AddFeature("Use hardened packed int deserializer", () => { });
+			AddFeature("Protect against VotingComplete overloads", () => { });
+			AddFeature("Bypass ratelimits for Shapeshift RPC", () => { });
+			AddFeature("Prevent being votekicked as host", () => { });
+			AddFeature("Protect against non-host kick exploit", () => { });
+		}
 		public override void Render()
 		{
 			// Network

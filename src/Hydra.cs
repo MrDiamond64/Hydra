@@ -19,17 +19,21 @@ internal class Hydra : BasePlugin
 
 	public override void Load()
 	{
+		Log = base.Log;
+		Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} has loaded!");
+
+		Settings.Load();
+		MainUI.scale = Settings.Config.General.UIScale;
+
 		Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 		harmony.PatchAll();
 
 		AddComponent<MainUI>();
 		AddComponent<Roles>();
+		AddComponent<VisualsRenderer>();
 
 		notifications = AddComponent<NotificationManager>();
 		routines = AddComponent<RoutineManager>();
-
-		Log = base.Log;
-		Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} has loaded!");
 	}
 
 	[HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Awake))]

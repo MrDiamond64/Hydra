@@ -1,28 +1,55 @@
 ﻿using AmongUs.GameOptions;
 using HydraMenu.features;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
 	internal class RolesSection : ISection
 	{
-		public RolesSection() : base("Roles") { }
+		public RolesSection() : base("Roles") 
+		{
+			AddFeature("Vent As Crewmate", () => {
+				Roles.AllowVentingForCrewmates = GUILayout.Toggle(Roles.AllowVentingForCrewmates, "Vent As Crewmate");
+			});
+			AddFeature("Move In Vents", () => {
+				Roles.MoveModifier.MoveInVents = GUILayout.Toggle(Roles.MoveModifier.MoveInVents, "Move In Vents");
+			});
+			AddFeature("Sabotage As Crewmate", () => {
+				Roles.SkipSabotageChecks.SabotageAsCrewmate = GUILayout.Toggle(Roles.SkipSabotageChecks.SabotageAsCrewmate, "Sabotage As Crewmate");
+			});
+			AddFeature("Allow Sabotaging In Vents As Imposter", () => {
+				Roles.SkipSabotageChecks.SabotageInVents = GUILayout.Toggle(Roles.SkipSabotageChecks.SabotageInVents, "Allow Sabotaging In Vents As Imposter");
+			});
+			AddFeature("Disable Shapeshift Animation", () => {
+				Roles.DisableShapeshiftAnimation = GUILayout.Toggle(Roles.DisableShapeshiftAnimation, "Disable Shapeshift Animation");
+			});
+			AddFeature("No Kill Checks", () => {
+				Roles.NoKillChecks = GUILayout.Toggle(Roles.NoKillChecks, "No Kill Checks");
+			});
+			AddFeature("Show Kill Cooldown", () => {
+				Visuals.ShowKillCooldown = GUILayout.Toggle(Visuals.ShowKillCooldown, "Show Kill Cooldown");
+			});
+			AddFeature("Show Imposter", () => {
+				Visuals.ShowImpostors = GUILayout.Toggle(Visuals.ShowImpostors, "Show Imposter");
+			});
+			AddFeature("Reveal All Roles", () => {
+				Visuals.RevealRoles = GUILayout.Toggle(Visuals.RevealRoles, "Reveal All Roles");
+			});
+		}
 
 		private RoleTypes selectedRole = RoleTypes.Crewmate;
 
 		public override void Render()
 		{
-			Roles.AllowVentingForCrewmates = GUILayout.Toggle(Roles.AllowVentingForCrewmates, "Vent As Crewmate");
-			Roles.MoveModifier.MoveInVents = GUILayout.Toggle(Roles.MoveModifier.MoveInVents, "Move In Vents");
+			foreach (var feature in Features)
+			{
+				feature.RenderAction();
+			}
 
-			Roles.SkipSabotageChecks.SabotageAsCrewmate = GUILayout.Toggle(Roles.SkipSabotageChecks.SabotageAsCrewmate, "Sabotage As Crewmate");
-			Roles.SkipSabotageChecks.SabotageInVents = GUILayout.Toggle(Roles.SkipSabotageChecks.SabotageInVents, "Allow Sabotaging In Vents As Imposter");
-
-			Roles.DisableShapeshiftAnimation = GUILayout.Toggle(Roles.DisableShapeshiftAnimation, "Disable Shapeshift Animation");
-			// Roles.DisablePhantomEndAnimation = GUILayout.Toggle(Roles.DisablePhantomEndAnimation, "Disable Phantom End Animation");
-
-			Roles.NoKillChecks = GUILayout.Toggle(Roles.NoKillChecks, "No Kill Checks");
-
+			GUILayout.Space(10);
 			GUILayout.Label($"Change role to: {selectedRole}");
 			GUILayout.BeginHorizontal();
 			selectedRole = Controls.HorizontalRoleSlider(selectedRole);

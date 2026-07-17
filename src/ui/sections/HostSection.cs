@@ -11,7 +11,35 @@ namespace HydraMenu.ui.sections
 {
 	internal class HostSection : ISection
 	{
-		public HostSection() : base("Host") { }
+		public HostSection() : base("Host") 
+		{
+			AddFeature("Ban Mid Game", () => { });
+			AddFeature("Flipped Skeld Map", () => { });
+			AddFeature("Disable Sabotages", () => { });
+			AddFeature("Disable Close Doors", () => { });
+			AddFeature("Disable Security Cameras", () => { });
+			AddFeature("Disable Game End", () => { });
+			AddFeature("No Kill Cooldown", () => { });
+			AddFeature("Block Low Levels", () => { });
+			AddFeature("Force Start Game", () => { });
+			AddFeature("Kill Everyone", () => { });
+			AddFeature("Custom Impostor Amount", () => { });
+			AddFeature("Force Crewmate Victory", () => { });
+			AddFeature("Force Imposter Victory", () => { });
+			AddFeature("Map Spawner", () => { });
+			AddFeature("Despawn Map", () => { });
+			AddFeature("Spawn Map", () => { });
+			AddFeature("Despawn Lobby", () => { });
+			AddFeature("Spawn Lobby", () => { });
+			AddFeature("Always Imposter", () => { });
+			AddFeature("Disable Meetings", () => { });
+			AddFeature("Spam Report Bodies", () => { });
+			AddFeature("Close Meeting", () => { });
+			AddFeature("Shapeshift Everyone Into Me", () => { });
+			AddFeature("Shapeshift Everyone Into Random", () => { });
+			AddFeature("Revert All Shapeshifts", () => { });
+			AddFeature("Disco Party", () => { });
+		}
 
 		private byte selectedMap = 0;
 
@@ -50,6 +78,12 @@ namespace HydraMenu.ui.sections
 			{
 				KillAllPlayers();
 			}
+
+			GUILayout.Space(5);
+			GUILayout.Label("Custom Impostor Amount:");
+			Host.CustomImpostorAmountEnabled = GUILayout.Toggle(Host.CustomImpostorAmountEnabled, "Enabled");
+			Host.CustomImpostorAmount = (int)GUILayout.HorizontalSlider(Host.CustomImpostorAmount, 1, 15);
+			GUILayout.Label($"Amount: {Host.CustomImpostorAmount}");
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Force Crewmate Victory"))

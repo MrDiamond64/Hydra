@@ -12,7 +12,27 @@ namespace HydraMenu.ui.sections
 {
 	internal class PlayersSection : ISection
 	{
-		public PlayersSection() : base("Players") { }
+		public PlayersSection() : base("Players") 
+		{
+			AddFeature("Player List", () => { });
+			AddFeature("Follow Player", () => { });
+			AddFeature("Jail Player", () => { });
+			AddFeature("Teleport", () => { });
+			AddFeature("Murder Player", () => { });
+			AddFeature("Copy Avatar", () => { });
+			AddFeature("Report Body", () => { });
+			AddFeature("Kick Player", () => { });
+			AddFeature("Teleport to Vent", () => { });
+			AddFeature("Auto Report Bodies", () => { });
+			AddFeature("Disco Mode", () => { });
+			AddFeature("Force Meeting", () => { });
+			AddFeature("Force All Votes", () => { });
+			AddFeature("Eject Player", () => { });
+			AddFeature("Frame Shapeshift", () => { });
+			AddFeature("Frame for Killing All", () => { });
+			AddFeature("Flood Tasks", () => { });
+			AddFeature("Clear Tasks", () => { });
+		}
 
 		public static Vector2 PlayerPaneSize
 		{
@@ -98,9 +118,11 @@ namespace HydraMenu.ui.sections
 			string playerName = player.Data.PlayerName;
 			playerName += $"\n<color=\"{GetRoleColor(player.Data.RoleType)}\">{player.Data.RoleType}</color>";
 
-			GUIStyle style = player == selectedPlayer ? Styles.PlayerBoxActive : Styles.PlayerBox;
+			GUIStyle style = new GUIStyle(player == selectedPlayer ? Styles.PlayerBoxActive : Styles.PlayerBox);
 
-			if(player.OwnerId == AmongUsClient.Instance.HostId)
+			// Check if player is host by comparing their ClientData.Id with HostId
+			ClientData clientData = AmongUsClient.Instance.GetClientFromCharacter(player);
+			if(clientData != null && clientData.Id == AmongUsClient.Instance.HostId)
 			{
 				style.normal.textColor = new Color(1.0f, 0.84f, 0.0f); // #FFD700
 			}
@@ -148,7 +170,7 @@ namespace HydraMenu.ui.sections
 					$"\nPUID: " + (streamerMode ? "REDACTED" : target.Data.Puid) +
 					$"\nLevel: {target.Data.PlayerLevel + 1}" +
 					$"\nDevice: {platform.Platform}" +
-					(target.OwnerId == AmongUsClient.Instance.HostId ? "\nHost: true" : "");
+					(clientData.Id == AmongUsClient.Instance.HostId ? "\nHost: true" : "");
 			}
 
 			GUILayout.Label(playerInfo);

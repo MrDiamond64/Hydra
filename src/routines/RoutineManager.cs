@@ -35,6 +35,8 @@ namespace HydraMenu.routines
 		{
 			static void Prefix()
 			{
+				if (Hydra.routines == null) return;
+
 				Hydra.Log.LogInfo("Player disconnected from the lobby, disabling relevant routines");
 
 				foreach(IRoutine routine in Hydra.routines.routineList)
