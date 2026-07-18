@@ -231,7 +231,7 @@ namespace HydraMenu.ui.sections
 				Utilities.KickPlayer(target);
 			}
 
-			if(GUILayout.Button("Votekick Target"))
+			if(GUILayout.Button("Votekick"))
 			{
 				VotekickTarget(target);
 			}
