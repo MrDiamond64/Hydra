@@ -91,7 +91,7 @@ namespace HydraMenu.features
 			}
 		}
 
-		[HarmonyPatch(typeof(LogicOptionsHnS), nameof(LogicOptionsHns.GetCrewmateLeadTime))]
+		[HarmonyPatch(typeof(LogicOptionsHnS), nameof(LogicOptionsHnS.GetCrewmateLeadTime))]
 		public static class NoSeekerAnimationPatch
 		{
 			 public static bool Enabled { get; set; } = true;
