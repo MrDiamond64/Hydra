@@ -90,24 +90,44 @@ namespace HydraMenu.features
 				}
 			}
 		}
-[HarmonyPatch(typeof(LogicOptionsHnS), nameof(LogicOptionsHnS.GetCrewmateLeadTime))]
- public static class NoSeekerAnimationPatch
- {
-     public static bool Enabled { get; set; } = true;
-	 
-     public static bool Prefix(ref int __result)
-     {
-         if (Enabled)
-         {
-             __result = 0;     
-             return false;
-         }
-		 else
+
+		[HarmonyPatch(typeof(LogicOptionsHnS), nameof(LogicOptionsHns.GetCrewmateLeadTime))]
+		public static class NoSeekerAnimationPatch
+		{
+			 public static bool Enabled { get; set; } = true;
+			
+			 public static bool Prefix(ref int __result)
+			 {
+				 if (Enabled)
+				 {
+					 __result = 0;
+					 return false;
+				 }
+				 else
+				 {
+					 return true;
+				 } 
+			 }
+		}
+
+		[HarmonyPatch(typeof(KillOverlay), "ShowKillAnimation")]
+		[HarmonyPatch(new[] { typeof(NetworkedPlayerInfo), typeof(NetworkedPlayerInfo) })]
+		 public static class SkipKillAnimationPatch
 		 {
-         return true;
+			 public static bool Enabled { get; set; } = true;
+			 [HarmonyPrefix]
+			 public static bool Prefix(NetworkedPlayerInfo killer, NetworkedPlayerInfo victim)
+			 {
+				 if (!Enabled)
+				 {
+					  return true;   // Show normal animation
+				 }
+				 else
+				 {
+					 return false; //skip kill/Death animation
+				 }
+			 }
 		 }
-     }
- }
 
 		// PlayerControl::FixedUpdate sets PlayerControl::set_Visible to false if the player is dead, or true if the player is alive
 		// The set_Visible function runs CosmeticsLayer::set_Visible in order to hide or show the player's cosmetics
