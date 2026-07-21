@@ -11,7 +11,6 @@ namespace HydraMenu.ui.sections
 		{
 			Visuals.SkipShhhAnimation.Enabled = GUILayout.Toggle(Visuals.SkipShhhAnimation.Enabled, "Skip Shhh Animation");
 			Visuals.NoSeekerAnimationPatch.Enabled = GUILayout.Toggle(Visuals.NoSeekerAnimationPatch.Enabled, "Skip Seeker Animation");
-			Visuals.SkipKillAnimationPatch.Enabled = GUILayout.Toggle(Visuals.SkipKillAnimationPatch.Enabled, "Skip Kill Animation");
 			Visuals.AccurateDisconnectReasons.Enabled = GUILayout.Toggle(Visuals.AccurateDisconnectReasons.Enabled, "Use more accurate disconnection reasons");
 
 			Visuals.Fullbright.Enabled = GUILayout.Toggle(Visuals.Fullbright.Enabled, "Fullbright");

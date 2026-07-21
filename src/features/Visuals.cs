@@ -110,25 +110,6 @@ namespace HydraMenu.features
 			 }
 		}
 
-		[HarmonyPatch(typeof(KillOverlay), "ShowKillAnimation")]
-		[HarmonyPatch(new[] { typeof(NetworkedPlayerInfo), typeof(NetworkedPlayerInfo) })]
-		 public static class SkipKillAnimationPatch
-		 {
-			 public static bool Enabled { get; set; } = true;
-			 [HarmonyPrefix]
-			 public static bool Prefix(NetworkedPlayerInfo killer, NetworkedPlayerInfo victim)
-			 {
-				 if (!Enabled)
-				 {
-					  return true;   // Show normal animation
-				 }
-				 else
-				 {
-					 return false; //skip kill/Death animation
-				 }
-			 }
-		 }
-
 		// PlayerControl::FixedUpdate sets PlayerControl::set_Visible to false if the player is dead, or true if the player is alive
 		// The set_Visible function runs CosmeticsLayer::set_Visible in order to hide or show the player's cosmetics
 		// If we want to show ghosts even if we are alive, then we can reimplement PlayerControl::set_Visible and make it so player cosmetics are always visible
