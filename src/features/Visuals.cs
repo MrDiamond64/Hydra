@@ -98,7 +98,7 @@ namespace HydraMenu.features
 			
 			 public static bool Prefix(ref int __result)
 			 {
-				 if (Enabled)
+				 if(Enabled)
 				 {
 					 __result = 0;
 					 return false;
