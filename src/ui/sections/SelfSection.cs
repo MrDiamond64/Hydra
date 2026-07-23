@@ -30,6 +30,7 @@ namespace HydraMenu.ui.sections
 			Self.AlwaysShowTaskAnimations = GUILayout.Toggle(Self.AlwaysShowTaskAnimations, "Always Show Task Animations");
 			Self.NoLadderCooldown.Enabled = GUILayout.Toggle(Self.NoLadderCooldown.Enabled, "No Ladder Cooldown");
 			Self.UnlimitedMeetings.enabled = GUILayout.Toggle(Self.UnlimitedMeetings.enabled, "Unlimited Meetings");
+			Self.NoZiplineCooldown.Enabled = GUILayout.Toggle(Self.NoZiplineCooldown.Enabled, "No Zipline Cooldown");
 
 			if(GUILayout.Button("Call Meeting"))
 			{
