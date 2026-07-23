@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using HydraMenu.network;
+using UnityEngine;
 
 namespace HydraMenu.routines
 {
@@ -6,7 +7,7 @@ namespace HydraMenu.routines
 	{
 		public AutoTriggerSporesRoutine() : base("AutoTriggerSpores") { }
 
-		public readonly float SPORE_TRIGGER_LENGTH = 5.0f;
+		public readonly float SPORE_TRIGGER_DURATION = 5.0f;
 		private float timeElapsed = 0f;
 
 		public override void Run()
@@ -14,14 +15,19 @@ namespace HydraMenu.routines
 			if(ShipStatus.Instance == null) return;
 
 			timeElapsed += Time.deltaTime;
-			if(timeElapsed < SPORE_TRIGGER_LENGTH) return;
+			if(timeElapsed < SPORE_TRIGGER_DURATION) return;
 			timeElapsed = 0f;
 
 			FungleShipStatus shipStatus = ShipStatus.Instance.Cast<FungleShipStatus>();
+
+			BatchedMessage batch = new BatchedMessage();
+
 			foreach(Mushroom mushroom in shipStatus.sporeMushrooms.Values)
 			{
-				PlayerControl.LocalPlayer.RpcTriggerSpores(mushroom);
+				batch.QueueTriggerSpore(PlayerControl.LocalPlayer, mushroom);
 			}
+
+			batch.FinishBatch();
 		}
 
 		protected override void OnEnable()
