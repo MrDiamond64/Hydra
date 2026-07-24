@@ -1,4 +1,4 @@
-﻿using AmongUs.Data;
+using AmongUs.Data;
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HydraMenu.features;
@@ -6,6 +6,7 @@ using HydraMenu.network;
 using InnerNet;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
@@ -49,6 +50,9 @@ namespace HydraMenu.ui.sections
 
 		private Controls.PlayerColors selectedColor = Controls.PlayerColors.Red;
 		private int selectedVent = 0;
+
+		private static Dictionary<int, int> _voteCounts = new Dictionary<int, int>();
+		private static Dictionary<int, float> _voteTimers = new Dictionary<int, float>();
 
 		public override void HandleSubsectionMove(int offset)
 		{
@@ -117,6 +121,42 @@ namespace HydraMenu.ui.sections
 		private string GetRoleColor(RoleTypes role)
 		{
 			return RoleManager.IsImpostorRole(role) ? "red" : "#8afcfc";
+		}
+
+		public static void VotekickTarget(PlayerControl target)
+		{
+			if (target == null || target.Data == null)
+			{
+				Hydra.notifications.Send("Votekick", "No player selected.");
+				return;
+			}
+			if (VoteBanSystem.Instance == null)
+			{
+				Hydra.notifications.Send("Votekick", "VoteBanSystem isn't available.");
+				return;
+			}
+			int targetClientId = target.OwnerId;
+			if (targetClientId == AmongUsClient.Instance.ClientId)
+			{
+				Hydra.notifications.Send("Votekick", "You cannot votekick yourself.");
+				return;
+			}
+			VoteBanSystem.Instance.CmdAddVote(targetClientId);
+			if (!_voteCounts.ContainsKey(targetClientId))
+			{
+				_voteCounts[targetClientId] = 0;
+			}
+			_voteCounts[targetClientId]++;
+			_voteTimers[targetClientId] = Time.time + 10f;
+			int currentVotes = _voteCounts[targetClientId];
+			Hydra.notifications.Send("Votekick", $"Vote sent to {target.Data.PlayerName} ({currentVotes}/{3} votes)");
+			if (currentVotes >= 3)
+			{
+				Hydra.notifications.Send("Votekick", "Player " + target.Data.PlayerName + " has been kicked!");
+				_voteCounts.Remove(targetClientId);
+				_voteTimers.Remove(targetClientId);
+			}
+			Hydra.Log.LogInfo($"[Votekick] Voted to kick {target.Data.PlayerName} - Votes: {currentVotes}/{3}");
 		}
 
 		private void RenderPlayerControls(PlayerControl target)
@@ -190,10 +230,17 @@ namespace HydraMenu.ui.sections
 				Utilities.AttemptStartMeeting(PlayerControl.LocalPlayer, target.Data);
 			}
 
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Kick Player"))
 			{
 				Utilities.KickPlayer(target);
 			}
+
+			if(GUILayout.Button("Votekick"))
+			{
+				VotekickTarget(target);
+			}
+			GUILayout.EndHorizontal();
 
 			GUILayout.Label($"Teleport player to vent: {selectedVent}");
 			selectedVent = (int)GUILayout.HorizontalSlider(selectedVent, 0, ShipStatus.Instance != null ? ShipStatus.Instance.AllVents.Count - 1 : 10);
