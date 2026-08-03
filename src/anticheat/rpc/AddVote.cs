@@ -6,7 +6,7 @@ namespace HydraMenu.anticheat.rpc
 {
 	internal class AddVote : RpcCheck
 	{
-		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			int source = reader.ReadInt32();
 			int target = reader.ReadInt32();
@@ -15,8 +15,7 @@ namespace HydraMenu.anticheat.rpc
 			if(client == null || client.Character == null)
 			{
 				Hydra.Log.LogInfo($"An unknown client id ({source}) attempted to votekick {target}");
-				blockRpc = true;
-				return;
+				return false;
 			}
 
 			player = client.Character;
@@ -24,16 +23,16 @@ namespace HydraMenu.anticheat.rpc
 			if(player.Data.IsDead)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to votekick a player while dead.");
-				blockRpc = true;
-				return;
+				return false;
 			}
 
 			if(MeetingHud.Instance == null)
 			{
-				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to votekick a player outside of a meeting.");
-				blockRpc = true;
-				return;
+				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to votekick a player outside of a meeting."); ;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override RpcCalls GetRpcCall()

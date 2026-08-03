@@ -7,7 +7,10 @@ namespace HydraMenu.anticheat
 	{
 		public bool Enabled { get; set; } = true;
 
-		public virtual void Validate(MessageReader reader, ref bool blockMessage) { }
+		public virtual bool Validate(MessageReader reader)
+		{
+			return true;
+		}
 
 		public abstract GameDataTypes GetGameDataType();
 	}

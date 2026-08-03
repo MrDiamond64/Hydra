@@ -19,8 +19,7 @@ internal class Hydra : BasePlugin
 
 	public override void Load()
 	{
-		Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
-		harmony.PatchAll();
+		Log = base.Log;
 
 		AddComponent<MainUI>();
 		AddComponent<Roles>();
@@ -28,7 +27,17 @@ internal class Hydra : BasePlugin
 		notifications = AddComponent<NotificationManager>();
 		routines = AddComponent<RoutineManager>();
 
-		Log = base.Log;
+		try
+		{
+			Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
+			harmony.PatchAll();
+		}
+		catch
+		{
+			notifications.Send("Fatal Error", "Harmony patches failed to load, you are likely using an unsupported version. Check https://github.com/MrDiamond64/Hydra for more information.", 9999);
+			throw;
+		}
+
 		Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} has loaded!");
 	}
 

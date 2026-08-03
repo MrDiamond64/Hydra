@@ -4,27 +4,29 @@ namespace HydraMenu.anticheat.rpc
 {
 	internal class PlayAnimation : RpcCheck
 	{
-		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			TaskTypes animation = (TaskTypes)reader.ReadByte();
 
 			if(LobbyBehaviour.Instance)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} inside the lobby.");
-				blockRpc = true;
+				return false;
 			}
 
 			if(RoleManager.IsImpostorRole(player.Data.RoleType))
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} when they are an imposter.");
-				blockRpc = true;
+				return false;
 			}
 
 			if(!GameManager.Instance.LogicOptions.GetVisualTasks())
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the PlayAnimation RPC for task {animation} when visual tasks are off.");
-				blockRpc = true;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override RpcCalls GetRpcCall()

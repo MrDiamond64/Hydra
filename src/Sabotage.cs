@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Il2CppInterop.Runtime;
+using System.Collections.Generic;
 
 namespace HydraMenu
 {
@@ -280,16 +281,20 @@ namespace HydraMenu
 
 			door.SetDoorway(true);
 
-			MapNames currentMap = Utilities.GetCurrentMap();
-			if(currentMap == MapNames.Skeld)
+			Il2CppSystem.Type doorType = door.GetIl2CppType();
+			if(doorType == Il2CppType.From(typeof(AutoOpenDoor)))
 			{
 				AutoDoorsSystemType doorSystem = ShipStatus.Instance.Systems[SystemTypes.Doors].Cast<AutoDoorsSystemType>();
 				doorSystem.dirtyBits |= 1U << index;
 			}
-			else
+			else if(doorType == Il2CppType.From(typeof(PlainDoor)))
 			{
 				DoorsSystemType doorSystem = ShipStatus.Instance.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
 				doorSystem.IsDirty = true;
+			}
+			else
+			{
+				Hydra.Log.LogError($"Door type {doorType.FullName} is unknown, cannot mark it dirty");
 			}
 		}
 

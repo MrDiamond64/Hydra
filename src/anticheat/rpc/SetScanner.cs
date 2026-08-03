@@ -4,7 +4,7 @@ namespace HydraMenu.anticheat.rpc
 {
 	internal class SetScanner : RpcCheck
 	{
-		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			bool scanning = reader.ReadBoolean();
 			// byte seqId = reader.ReadByte();
@@ -15,7 +15,7 @@ namespace HydraMenu.anticheat.rpc
 			if(ShipStatus.Instance == null && scanning)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC while the map has not spawned in yet.");
-				blockRpc = true;
+				return false;
 			}
 
 			// When a player gets killed, a SetScanner RPC with the scanning value sent to false is sent
@@ -23,13 +23,13 @@ namespace HydraMenu.anticheat.rpc
 			if(RoleManager.IsImpostorRole(player.Data.RoleType) && scanning)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC when they are an imposter.");
-				blockRpc = true;
+				return false;
 			}
 
 			if(!GameManager.Instance.LogicOptions.GetVisualTasks())
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC while visual tasks were disabled.");
-				blockRpc = true;
+				return false;
 			}
 
 			bool hasMedbayScanTask = false;
@@ -45,8 +45,10 @@ namespace HydraMenu.anticheat.rpc
 			if(!hasMedbayScanTask && scanning)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent the SetScanner RPC without being assigned the medbay scan task.");
-				blockRpc = true;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override RpcCalls GetRpcCall()

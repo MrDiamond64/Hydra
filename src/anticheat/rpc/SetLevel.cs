@@ -7,7 +7,7 @@ namespace HydraMenu.anticheat.rpc
 		public readonly uint MAX_PLAYER_LEVEL = 10000;
 
 		// We should not block SetLevel RPCs
-		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			uint level = reader.ReadPackedUInt32();
 
@@ -16,16 +16,18 @@ namespace HydraMenu.anticheat.rpc
 			if(level > MAX_PLAYER_LEVEL)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent SetLevel RPC with a level that is too high ({level}).");
-				blockRpc = true;
-
 				player.SetLevel(MAX_PLAYER_LEVEL);
+				return false;
 			}
 
 			// The SetLevel RPC should only be sent when a player joins the game in the lobby
 			if(ShipStatus.Instance)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} sent SetLevel RPC when the game has already started.");
+				return false;
 			}
+
+			return true;
 		}
 
 		public override RpcCalls GetRpcCall()

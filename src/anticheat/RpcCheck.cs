@@ -7,7 +7,10 @@ namespace HydraMenu.anticheat
 	{
 		public virtual bool Enabled { get; set; } = true;
 
-		public virtual void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc) { }
+		public virtual bool Validate(PlayerControl player, MessageReader reader)
+		{
+			return true;
+		}
 
 		public abstract RpcCalls GetRpcCall();
 

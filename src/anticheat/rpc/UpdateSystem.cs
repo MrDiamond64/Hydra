@@ -17,7 +17,7 @@ namespace HydraMenu.anticheat.rpc
 			SystemTypes.Ventilation
 		};
 
-		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			SystemTypes system = (SystemTypes)reader.ReadByte();
 			player = reader.ReadNetObject<PlayerControl>();
@@ -25,65 +25,66 @@ namespace HydraMenu.anticheat.rpc
 			if(!ShipStatus.Instance.Systems.ContainsKey(system))
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to update system {system} when the current map has no such system.");
-				blockRpc = true;
-				return;
+				return false;
 			}
 
 			if(player.Data.IsDead && !SystemsThatCanBeUpdatedWhenDead.Contains(system))
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to update system {system} while dead.");
-				blockRpc = true;
-				return;
+				return false;
 			}
 
 			switch(system)
 			{
 				case SystemTypes.Electrical:
-					ValidateSwitchSystem(player, reader, ref blockRpc);
-					break;
+					return ValidateSwitchSystem(player, reader);
 
 				case SystemTypes.MushroomMixupSabotage:
-					ValidateMushroomMixupSystem(player, reader, ref blockRpc);
-					break;
+					return ValidateMushroomMixupSystem(player, reader);
 
 				case SystemTypes.Reactor:
 				case SystemTypes.Laboratory:
 				case SystemTypes.HeliSabotage:
-					ValidateReactorSystem(player, reader, ref blockRpc);
-					break;
+					return ValidateReactorSystem(player, reader);
 
 				case SystemTypes.Sabotage:
-					ValidateSabotageSystem(player, reader, ref blockRpc);
-					break;
+					return ValidateSabotageSystem(player, reader);
+
+				default:
+					return true;
 			}
 		}
 
 		// The Mushroom Mixup system is only updated in the SabotageSystemType::Update function by the host. It should never be sent by a player
-		private static void ValidateMushroomMixupSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		private static bool ValidateMushroomMixupSystem(PlayerControl player, MessageReader reader)
 		{
 			MushroomMixupSabotageSystem.Operation operation = (MushroomMixupSabotageSystem.Operation)reader.ReadByte();
 
 			Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to update Mushroom Mixup system with operation {operation}.");
-			blockRpc = true;
+			return false;
 		}
 
-		private static void ValidateReactorSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		private static bool ValidateReactorSystem(PlayerControl player, MessageReader reader)
 		{
 			byte operation = reader.ReadByte();
 
-			if(operation == 16)
+			switch(operation)
 			{
-				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to forcefully fix the Reactor sabotage");
-				blockRpc = true;
+				case 16:
+					Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to forcefully fix the Reactor sabotage");
+					return false;
+
+				case 128:
+					Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to force call the Reactor sabotage");
+					return false;
+
+				default:
+					return true;
 			}
-			else if(operation == 128)
-			{
-				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to force call the Reactor sabotage");
-				blockRpc = true;
-			}
+
 		}
 
-		private static void ValidateSabotageSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		private static bool ValidateSabotageSystem(PlayerControl player, MessageReader reader)
 		{
 			SystemTypes system = (SystemTypes)reader.ReadByte();
 
@@ -91,35 +92,38 @@ namespace HydraMenu.anticheat.rpc
 			if(!validSabotages.ContainsValue(system))
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to sabotage an invalid system: {system}.");
-				blockRpc = true;
+				return false;
 			}
 
 			if(!RoleManager.IsImpostorRole(player.Data.RoleType))
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to sabotage {system} when they are not an imposter.");
-				blockRpc = true;
+				return false;
 			}
 
 			if(GameManager.Instance.IsHideAndSeek())
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to sabotage {system} while in Hide and Seek.");
-				blockRpc = true;
+				return false;
 			}
+
+			return true;
 		}
 
-		private static void ValidateSwitchSystem(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		private static bool ValidateSwitchSystem(PlayerControl player, MessageReader reader)
 		{
 			byte switches = reader.ReadByte();
 
 			if(switches.HasBit(128))
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to bulk-update switches: {switches}.");
-				blockRpc = true;
+				return false;
 			}
-			else if(switches > 5)
+
+			if(switches > 5)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to toggle an invalid switch: {switches}.");
-				blockRpc = true;
+				return false;
 			}
 
 			// Block light switch updates when lights are currently not sabotaged
@@ -130,7 +134,7 @@ namespace HydraMenu.anticheat.rpc
 			if(system.ExpectedSwitches == system.ActualSwitches)
 			{
 				Hydra.Log.LogInfo($"Blocked switch update from {player.Data.PlayerName} as lights are not currently sabotaged");
-				blockRpc = true;
+				return false;
 			}
 
 			// False positives may be possible if a player is toggling light switches before their client receives the StartMeeting RPC so we silent flag
@@ -138,8 +142,10 @@ namespace HydraMenu.anticheat.rpc
 			if(MeetingHud.Instance)
 			{
 				Hydra.Log.LogInfo($"Blocked switch update from {player.Data.PlayerName} as there is a currently active meeting");
-				blockRpc = true;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override RpcCalls GetRpcCall()

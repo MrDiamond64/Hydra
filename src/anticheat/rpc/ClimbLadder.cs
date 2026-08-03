@@ -5,21 +5,19 @@ namespace HydraMenu.anticheat.rpc
 {
 	internal class ClimbLadder : RpcCheck
 	{
-		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			if(ShipStatus.Instance == null)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to climb a ladder when there is no instance of ShipStatus.");
-				blockRpc = true;
-				return;
+				return false;
 			}
 
 			MapNames map = Utilities.GetCurrentMap();
 			if(map != MapNames.Airship && map != MapNames.Fungle)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to climb a ladder outside of the proper map.");
-				blockRpc = true;
-				return;
+				return false;
 			}
 
 			// Check if the player vents if their role does not support venting (if they are not engineer or non-ghost imposter)
@@ -28,9 +26,10 @@ namespace HydraMenu.anticheat.rpc
 			if(player.Data.IsDead)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to climb a ladder while dead.");
-				blockRpc = true;
-				return;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override RpcCalls GetRpcCall()

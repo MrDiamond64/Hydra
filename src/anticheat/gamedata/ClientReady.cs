@@ -6,7 +6,7 @@ namespace HydraMenu.anticheat.gamedata
 {
 	internal class ClientReady : GameDataCheck
 	{
-		public override void Validate(MessageReader reader, ref bool blockMessage)
+		public override bool Validate(MessageReader reader)
 		{
 			int clientId = reader.ReadPackedInt32();
 
@@ -14,16 +14,16 @@ namespace HydraMenu.anticheat.gamedata
 			if(client == null)
 			{
 				Anticheat.Flag($"Received ClientReady message for unknown client: {clientId}.");
-				blockMessage = true;
-				return;
+				return false;
 			}
 
 			if(client.IsReady)
 			{
 				Anticheat.Flag(client.Character, $"{client.Character.Data.PlayerName} sent a ClientReady message while already ready.");
-				blockMessage = true;
-				return;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override GameDataTypes GetGameDataType()

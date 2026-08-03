@@ -6,15 +6,17 @@ namespace HydraMenu.anticheat.rpc
 	internal class CloseDoorsOfType : RpcCheck
 	{
 		// Player is null here as we cannot determine who sent this RPC
-		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			// It would be nice if we could also add additional checks such as someone closing doors without being imposter
 			// however we are not able to determine who sent the CloseDoorsOfType RPC
 			if(GameManager.Instance.IsHideAndSeek())
 			{
 				Anticheat.Flag("Someone attempted to close doors while in Hide and Seek.");
-				blockRpc = true;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override RpcCalls GetRpcCall()

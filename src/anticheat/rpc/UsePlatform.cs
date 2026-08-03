@@ -4,29 +4,28 @@ namespace HydraMenu.anticheat.rpc
 {
 	internal class UsePlatform : RpcCheck
 	{
-		public override void Validate(PlayerControl player, MessageReader reader, ref bool blockRpc)
+		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			MapNames map = Utilities.GetCurrentMap();
 			if(map != MapNames.Airship)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to use a platform outside of the proper map.");
-				blockRpc = true;
-				return;
+				return false;
 			}
 
 			if(ShipStatus.Instance == null)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to use a platform when there is no instance of ShipStatus.");
-				blockRpc = true;
-				return;
+				return false;
 			}
 
 			if(GameManager.Instance.IsHideAndSeek())
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to use a platform while in Hide and Seek.");
-				blockRpc = true;
-				return;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override RpcCalls GetRpcCall()
