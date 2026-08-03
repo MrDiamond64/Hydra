@@ -1,0 +1,53 @@
+name: Sync and shi idk
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Sync
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git remote add upstream https://github.com/MrDiamond64/Hydra.git
+          git fetch upstream main
+          
+          git merge upstream/main --allow-unrelated-histories --no-edit || true
+          git push origin main || true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Build Hydra
+        run: |
+          dotnet restore
+          dotnet build -c Release --output ./build_output
+
+      - name: Publish 
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          
+          gh release delete "latest" --repo ${{ github.repository }} --yes || true
+          git tag -d "latest" || true
+          git push --delete origin "latest" || true
+          
+          gh release create latest ./build_output/*.dll \
+            --repo ${{ github.repository }} \
+            --title "Hydra Latest ($SHORT_SHA)" \
+            --notes "Automated build from commit $SHORT_SHA" \
+            --target main
