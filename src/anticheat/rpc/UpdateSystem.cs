@@ -19,6 +19,8 @@ namespace HydraMenu.anticheat.rpc
 
 		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
+			if (ShipStatus.Instance == null) return;
+		
 			SystemTypes system = (SystemTypes)reader.ReadByte();
 			player = reader.ReadNetObject<PlayerControl>();
 
