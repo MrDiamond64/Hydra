@@ -25,11 +25,6 @@ namespace HydraMenu.ui.sections
 			{
 				Styles.ClearCache();
 			}
-
-			if(GUILayout.Button("Eject"))
-			{
-				Hydra.Eject();
-			}
 		}
 	}
 }

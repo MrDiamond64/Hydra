@@ -30,7 +30,12 @@ namespace HydraMenu
 
 			// Some modded lobbies may have more than 18 players, which means there will not be enough unique colors for everyone
 			// so we should take that edge case into account
-			return colors.Count != 0 ? colors[rnd.Next(0, colors.Count)] : rnd.Next(0, 18);
+			if(colors.Count == 0)
+			{
+				return rnd.Next(0, 18);
+			}
+
+			return colors[rnd.Next(0, colors.Count)];
 		}
 
 		public static void RandomizePlayer(bool ingame = false)

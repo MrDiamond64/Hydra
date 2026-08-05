@@ -1,4 +1,4 @@
-﻿using HydraMenu.features;
+using HydraMenu.features;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
@@ -20,6 +20,16 @@ namespace HydraMenu.ui.sections
 
 			Visuals.ShowGhosts.Enabled = GUILayout.Toggle(Visuals.ShowGhosts.Enabled, "Show Ghosts");
 			Chat.OnChat.ShowMessagesByGhosts = GUILayout.Toggle(Chat.OnChat.ShowMessagesByGhosts, "Show messages by ghosts");
+
+			GUILayout.Space(5);
+			Visuals.CameraZoom.Enabled = GUILayout.Toggle(Visuals.CameraZoom.Enabled, "Camera Zoom-Out");
+			if(Visuals.CameraZoom.Enabled)
+			{
+				GUILayout.BeginHorizontal();
+				GUILayout.Label($"Zoom Scale: {Visuals.CameraZoom.ZoomFactor:F1}x");
+				Visuals.CameraZoom.ZoomFactor = GUILayout.HorizontalSlider(Visuals.CameraZoom.ZoomFactor, 0.5f, 5.0f);
+				GUILayout.EndHorizontal();
+			}
 		}
 	}
 }

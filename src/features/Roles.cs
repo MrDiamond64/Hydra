@@ -1,25 +1,34 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using UnityEngine;
+using AmongUs.GameOptions;
 
 namespace HydraMenu.features
 {
-	internal class Roles
+	internal class Roles : MonoBehaviour
 	{
 		public static bool DisableShapeshiftAnimation { get; set; } = false;
 		// public static bool DisablePhantomEndAnimation { get; set; } = false;
 		public static bool AllowVentingForCrewmates { get; set; } = true;
 
-		[HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-		class ShowButtons
-		{
-			static void Postfix()
-			{
-				// If PlayerControl::Data isn't null, then we know the player has fully loaded into the game
-				if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
+		public static bool EndlessShapeshiftDuration { get; set; } = false;
+		public static bool EndlessVentTime { get; set; } = false;
+		public static bool NoVentCooldown { get; set; } = false;
+		public static bool EndlessBattery { get; set; } = false;
+		public static bool NoVitalsCooldown { get; set; } = false;
+		public static bool EndlessTracking { get; set; } = false;
+		public static bool NoTrackingDelay { get; set; } = false;
+		public static bool NoTrackingCooldown { get; set; } = false;
+		public static bool TrackReach { get; set; } = false;
+		public static bool KillReach { get; set; } = false;
+		public static bool InterrogateReach { get; set; } = false;
 
-				if(SkipSabotageChecks.SabotageAsCrewmate) HudManager.Instance.SabotageButton.gameObject.SetActive(true);
-				if(AllowVentingForCrewmates) HudManager.Instance.ImpostorVentButton.gameObject.SetActive(true);
-			}
+		public void Update()
+		{
+			// If PlayerControl::Data isn't null, then we know the player has fully loaded into the game
+			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
+
+			if(SkipSabotageChecks.SabotageAsCrewmate) HudManager.Instance.SabotageButton.gameObject.SetActive(true);
+			if(AllowVentingForCrewmates) HudManager.Instance.ImpostorVentButton.gameObject.SetActive(true);
 		}
 
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdCheckShapeshift))]
@@ -152,6 +161,148 @@ namespace HydraMenu.features
 				{
 					return true;
 				}
+			}
+		}
+
+		[HarmonyPatch(typeof(EngineerRole), nameof(EngineerRole.FixedUpdate))]
+		class EngineerUpdate
+		{
+			static void Postfix(EngineerRole __instance)
+			{
+				if(__instance.Player.AmOwner)
+				{
+					if(EndlessVentTime)
+					{
+						__instance.inVentTimeRemaining = float.MaxValue;
+					}
+					if(NoVentCooldown && __instance.cooldownSecondsRemaining > 0f)
+					{
+						__instance.cooldownSecondsRemaining = 0f;
+						if(DestroyableSingleton<HudManager>.Instance != null && DestroyableSingleton<HudManager>.Instance.AbilityButton != null)
+						{
+							DestroyableSingleton<HudManager>.Instance.AbilityButton.ResetCoolDown();
+							DestroyableSingleton<HudManager>.Instance.AbilityButton.SetCooldownFill(0f);
+						}
+					}
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(ShapeshifterRole), nameof(ShapeshifterRole.FixedUpdate))]
+		class ShapeshifterUpdate
+		{
+			static void Postfix(ShapeshifterRole __instance)
+			{
+				if(__instance.Player.AmOwner)
+				{
+					if(EndlessShapeshiftDuration)
+					{
+						__instance.durationSecondsRemaining = float.MaxValue;
+					}
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(ScientistRole), nameof(ScientistRole.Update))]
+		class ScientistUpdate
+		{
+			static void Postfix(ScientistRole __instance)
+			{
+				if(__instance.Player.AmOwner)
+				{
+					if(NoVitalsCooldown)
+					{
+						__instance.currentCooldown = 0f;
+					}
+					if(EndlessBattery)
+					{
+						__instance.currentCharge = float.MaxValue;
+					}
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(TrackerRole), nameof(TrackerRole.FixedUpdate))]
+		class TrackerUpdate
+		{
+			static void Postfix(TrackerRole __instance)
+			{
+				if(__instance.Player.AmOwner)
+				{
+					if(NoTrackingCooldown)
+					{
+						__instance.cooldownSecondsRemaining = 0f;
+						__instance.delaySecondsRemaining = 0f;
+						if(DestroyableSingleton<HudManager>.Instance != null && DestroyableSingleton<HudManager>.Instance.AbilityButton != null)
+						{
+							DestroyableSingleton<HudManager>.Instance.AbilityButton.ResetCoolDown();
+							DestroyableSingleton<HudManager>.Instance.AbilityButton.SetCooldownFill(0f);
+						}
+					}
+					if(NoTrackingDelay && MapBehaviour.Instance != null)
+					{
+						MapBehaviour.Instance.trackedPointDelayTime = GameManager.Instance.LogicOptions.GetRoleFloat(FloatOptionNames.TrackerDelay);
+					}
+					if(EndlessTracking)
+					{
+						__instance.durationSecondsRemaining = float.MaxValue;
+					}
+				}
+			}
+		}
+
+		private static PlayerControl GetClosestTarget(RoleBehaviour role)
+		{
+			PlayerControl closest = null;
+			float minDistance = float.MaxValue;
+			if(PlayerControl.AllPlayerControls == null) return null;
+
+			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			{
+				if(player == null || player == PlayerControl.LocalPlayer || !player.Collider.enabled) continue;
+				if(role.IsValidTarget(player.Data))
+				{
+					float dist = Vector2.Distance(PlayerControl.LocalPlayer.Collider.bounds.center, player.transform.position);
+					if(dist < minDistance)
+					{
+						minDistance = dist;
+						closest = player;
+					}
+				}
+			}
+			return closest;
+		}
+
+		[HarmonyPatch(typeof(ImpostorRole), nameof(ImpostorRole.FindClosestTarget))]
+		class ImpostorReach
+		{
+			static bool Prefix(ImpostorRole __instance, ref PlayerControl __result)
+			{
+				if(!KillReach) return true;
+				__result = GetClosestTarget(__instance);
+				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(DetectiveRole), nameof(DetectiveRole.FindClosestTarget))]
+		class DetectiveReach
+		{
+			static bool Prefix(DetectiveRole __instance, ref PlayerControl __result)
+			{
+				if(!InterrogateReach) return true;
+				__result = GetClosestTarget(__instance);
+				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(TrackerRole), nameof(TrackerRole.FindClosestTarget))]
+		class TrackerReach
+		{
+			static bool Prefix(TrackerRole __instance, ref PlayerControl __result)
+			{
+				if(!TrackReach) return true;
+				__result = GetClosestTarget(__instance);
+				return false;
 			}
 		}
 	}

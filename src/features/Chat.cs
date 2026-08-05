@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 
 namespace HydraMenu.features
 {
@@ -15,6 +15,8 @@ namespace HydraMenu.features
 				if(sourcePlayer == null) return;
 
 				if(LogChatMessages) Hydra.Log.LogMessage($"[ChatLogger] {sourcePlayer.Data.PlayerName}: {chatText}");
+
+				GameLogger.LogChat(sourcePlayer.Data.PlayerName, chatText);
 
 				// This is kind of a hacky workaround to be able to see messages by ghosts
 				// The game has no easy way to show messages by ghosts, so we would have to completely reimplement the ChatController::AddChat function

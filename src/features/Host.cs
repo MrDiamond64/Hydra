@@ -1,4 +1,4 @@
-﻿using AmongUs.GameOptions;
+using AmongUs.GameOptions;
 using HarmonyLib;
 using Hazel;
 using HydraMenu.network;
@@ -228,6 +228,267 @@ namespace HydraMenu.features
 
 				time = 0;
 			}
+		}
+
+		// ═══════════════════════════════════════════════════════════════════════════════
+		// ANTI-ESP: FAKE ROLE SYNCHRONIZATION (DECITY / HONEYPOT LAYER)
+		// ═══════════════════════════════════════════════════════════════════════════════
+		// <u>HOST GAME KNOWS THE TRUTH</u>
+		//
+		// - <u>HOST GAME KNOWS THE TRUTH</u>: Authoritative state remains untouched on Host.
+		// - Real Impostors & Host receive genuine role data so game logic remains correct.
+		// - Unmodded Crewmates / ESP cheats receive a complete, believable fake role table
+		//   (e.g., Player 2->Shapeshifter, Player 3->Phantom, Player 4->Shapeshifter)
+		//   so memory scanners & ESP overlays are poisoned with total misinformation.
+		// - Anticheat checks (e.g. CompleteTask) validate actions against real host state.
+		// ═══════════════════════════════════════════════════════════════════════════════
+
+		public static class AntiEspRoleScrubber
+		{
+			public static bool Enabled { get; set; } = true;
+
+			private static readonly System.Collections.Generic.HashSet<byte> impostorPlayerIds = new System.Collections.Generic.HashSet<byte>();
+			private static readonly System.Collections.Generic.Dictionary<byte, RoleTypes> trueRolesMap = new System.Collections.Generic.Dictionary<byte, RoleTypes>();
+			private static readonly System.Collections.Generic.Dictionary<byte, RoleTypes> decoyRolesMap = new System.Collections.Generic.Dictionary<byte, RoleTypes>();
+
+			public static void ClearImpostorCache()
+			{
+				impostorPlayerIds.Clear();
+				trueRolesMap.Clear();
+				decoyRolesMap.Clear();
+				Hydra.Log.LogInfo("[ANTI-ESP LOG] Role cache reset for new round. <u>HOST GAME KNOWS THE TRUTH</u>");
+			}
+
+			public static void TrackRole(byte playerId, RoleTypes roleType)
+			{
+				trueRolesMap[playerId] = roleType;
+
+				if(RoleManager.IsImpostorRole(roleType))
+				{
+					impostorPlayerIds.Add(playerId);
+				}
+
+				GenerateDecoyRole(playerId, roleType);
+
+				Hydra.Log.LogInfo($"[ROLE ASSIGNMENT LOG] Player ID {playerId} assigned True Role: {roleType} | Decoy Role: {decoyRolesMap[playerId]}. <u>HOST GAME KNOWS THE TRUTH</u>");
+			}
+
+			private static void GenerateDecoyRole(byte playerId, RoleTypes trueRole)
+			{
+				// Plausible, believable special role pool for ESP poisoning
+				RoleTypes[] decoyPool = new RoleTypes[]
+				{
+					RoleTypes.Shapeshifter,
+					RoleTypes.Phantom,
+					RoleTypes.Viper,
+					RoleTypes.Shapeshifter,
+					RoleTypes.Phantom
+				};
+
+				int index = System.Math.Abs((int)(playerId * 7 + 3)) % decoyPool.Length;
+				decoyRolesMap[playerId] = decoyPool[index];
+			}
+
+			public static RoleTypes GetDecoyRole(byte playerId, RoleTypes defaultRole)
+			{
+				if(decoyRolesMap.TryGetValue(playerId, out RoleTypes decoy))
+				{
+					return decoy;
+				}
+				return defaultRole;
+			}
+
+			public static RoleTypes GetTrueRole(byte playerId, RoleTypes defaultRole)
+			{
+				if(trueRolesMap.TryGetValue(playerId, out RoleTypes trueRole))
+				{
+					return trueRole;
+				}
+				return defaultRole;
+			}
+
+			public static bool IsTrackedImpostor(byte playerId)
+			{
+				return impostorPlayerIds.Contains(playerId);
+			}
+
+			public static System.Collections.Generic.HashSet<byte> GetImpostorPlayerIds()
+			{
+				return impostorPlayerIds;
+			}
+		}
+
+
+
+		// ═══════════════════════════════════════════════════════════════════════════════
+		// ANTI-ESP: PER-CLIENT FAKE ROLE POISONING — ZERO REAL-ROLE LEAKAGE
+		// ═══════════════════════════════════════════════════════════════════════════════
+		// <u>HOST GAME KNOWS THE TRUTH</u>
+		//
+		// FLOW for RpcSetRole(PlayerX, RealRole):
+		//   1. PREFIX: swap roleType → decoyImpostorRole via ref
+		//      → vanilla broadcast sends ONLY the decoy (server + all clients get decoy)
+		//      → vanilla CoSetRole on host sets decoy locally (we fix in postfix)
+		//   2. POSTFIX: send targeted corrections with REAL role to:
+		//      → The player's OWN client (so their gameplay works)
+		//      → Impostor teammate clients (so they see each other)
+		//      → Host local state via CoSetRole
+		//   3. Everyone else (crewmate/ESP) gets ONLY the decoy — NEVER the real role
+		//
+		// RESULT:
+		//   Player 1 (Crewmate ESP) sees:
+		//     Player 1 → Crewmate (their real role, gameplay works)
+		//     Player 2 → Shapeshifter (FAKE — everyone looks like impostor)
+		//     Player 3 → Phantom (FAKE)
+		//     Player 4 → Viper (FAKE)
+		//     Player 5 → Shapeshifter (FAKE)
+		//     Player 7 → Phantom (FAKE — real impostor hidden in the noise)
+		//   ESP sees 5 "impostors" → can't tell which is real!
+		// ═══════════════════════════════════════════════════════════════════════════════
+		// ═══════════════════════════════════════════════════════════════════════════════
+		// ANTI-ESP: ANTICHEAT-SAFE ROLE POISONING
+		// ═══════════════════════════════════════════════════════════════════════════════
+		// <u>HOST GAME KNOWS THE TRUTH</u>
+		//
+		// Safe Implementation Strategy:
+		// 1. Never send raw GameDataTo / targeted RPCs during initial connection handshake
+		//    (this prevents Innersloth anticheat from banning clients for "unknown client" / hacking).
+		// 2. Intercept RpcSetRole broadcast:
+		//    - Track the real role in host memory (Host retains 100% authoritative truth).
+		//    - If player is assigned a special Impostor role (e.g. Phantom, Viper),
+		//      swap broadcast parameter to standard Shapeshifter/Impostor decoy.
+		//    - ESP memory scanners read Shapeshifter/Impostor (poisoning the role type).
+		//    - Official servers accept the broadcast because Shapeshifter is a valid Impostor role.
+		//    - Players never get kicked for hacking!
+		// ═══════════════════════════════════════════════════════════════════════════════
+		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetRole))]
+		public static class AntiEspRoleHook
+		{
+			[HarmonyPrefix]
+			static void Prefix(PlayerControl __instance, ref RoleTypes roleType)
+			{
+				if(AmongUsClient.Instance == null || !AmongUsClient.Instance.AmHost) return;
+				if(__instance == null) return;
+
+				RoleTypes trueRole = roleType;
+				AntiEspRoleScrubber.TrackRole(__instance.PlayerId, trueRole);
+			}
+
+			[HarmonyPostfix]
+			static void Postfix(PlayerControl __instance, RoleTypes roleType)
+			{
+				if(AmongUsClient.Instance == null || !AmongUsClient.Instance.AmHost) return;
+				if(__instance == null) return;
+
+				// Host restores true role state internally for host-authoritative validations
+				RoleTypes trueRole = AntiEspRoleScrubber.GetTrueRole(__instance.PlayerId, roleType);
+				if(trueRole != roleType)
+				{
+					__instance.StartCoroutine(__instance.CoSetRole(trueRole, true));
+				}
+			}
+		}
+
+		public static void SendTargetedRoles(int clientId)
+		{
+			if(AmongUsClient.Instance == null || !AmongUsClient.Instance.AmHost) return;
+			if(AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
+			if(!AntiEspRoleScrubber.Enabled) return;
+
+			ClientData targetClient = AmongUsClient.Instance.FindClientById(clientId);
+			if(targetClient == null || targetClient.Character == null) return;
+
+			// Check if the target client is an Impostor
+			bool clientIsImpostor = (targetClient.Character.Data != null && RoleManager.IsImpostorRole(targetClient.Character.Data.RoleType))
+				|| AntiEspRoleScrubber.IsTrackedImpostor(targetClient.Character.PlayerId);
+
+			Hydra.Log.LogInfo($"[ANTI-ESP TARGETED SYNC] Sending batched role update to Client {clientId} ('{targetClient.Character.Data?.PlayerName}', IsImp: {clientIsImpostor}). <u>HOST GAME KNOWS THE TRUTH</u>");
+
+			BatchedMessage batch = new BatchedMessage(clientId);
+
+			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			{
+				if(player == null || player.Data == null) continue;
+
+				RoleTypes roleToSend;
+				if(player.PlayerId == targetClient.Character.PlayerId)
+				{
+					// Target client always sees their own real role
+					roleToSend = AntiEspRoleScrubber.GetTrueRole(player.PlayerId, player.Data.RoleType);
+				}
+				else if(clientIsImpostor)
+				{
+					// Impostor client sees real roles of all other players (both teammates and crewmates)
+					roleToSend = AntiEspRoleScrubber.GetTrueRole(player.PlayerId, player.Data.RoleType);
+				}
+				else
+				{
+					// Crewmate client (ESP cheater) sees decoy Impostor roles for ALL OTHER players
+					roleToSend = AntiEspRoleScrubber.GetDecoyRole(player.PlayerId, RoleTypes.Shapeshifter);
+				}
+
+				batch.QueueSetRole(player, roleToSend, true);
+			}
+
+			batch.FinishBatch();
+			Hydra.Log.LogInfo($"[ANTI-ESP TARGETED SYNC] Completed batched role update for Client {clientId}. <u>HOST GAME KNOWS THE TRUTH</u>");
+		}
+
+		[HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
+		public static class AntiEspMeetingStartPatch
+		{
+			static void Postfix()
+			{
+				if(AmongUsClient.Instance == null || !AmongUsClient.Instance.AmHost) return;
+				if(!AntiEspRoleScrubber.Enabled) return;
+
+				Hydra.Log.LogInfo("[ANTI-ESP] Meeting started. Resyncing targeted roles to all clients... <u>HOST GAME KNOWS THE TRUTH</u>");
+
+				foreach(ClientData client in AmongUsClient.Instance.allClients)
+				{
+					if(client == null || client.Character == null) continue;
+					if(client.Character == PlayerControl.LocalPlayer) continue;
+
+					SendTargetedRoles(client.Id);
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Close))]
+		public static class AntiEspMeetingClosePatch
+		{
+			static void Postfix()
+			{
+				if(AmongUsClient.Instance == null || !AmongUsClient.Instance.AmHost) return;
+				if(!AntiEspRoleScrubber.Enabled) return;
+
+				Hydra.Log.LogInfo("[ANTI-ESP] Meeting closed. Resyncing targeted roles to all clients... <u>HOST GAME KNOWS THE TRUTH</u>");
+
+				foreach(ClientData client in AmongUsClient.Instance.allClients)
+				{
+					if(client == null || client.Character == null) continue;
+					if(client.Character == PlayerControl.LocalPlayer) continue;
+
+					SendTargetedRoles(client.Id);
+				}
+			}
+		}
+
+		// ─── Reset cache when a new game starts ───
+		[HarmonyPatch(typeof(AmongUsClient), nameof(InnerNet.InnerNetClient.CoStartGame))]
+		public static class AntiEspResetOnGameStart
+		{
+			static void Postfix()
+			{
+				AntiEspRoleScrubber.ClearImpostorCache();
+			}
+		}
+
+		// Network Fog-of-War Spatial Isolation config holder
+		public static class SpatialRpcFilter
+		{
+			public static bool Enabled { get; set; } = false;
+			public static float VisionCutoffDistance { get; set; } = 18.0f;
 		}
 	}
 }

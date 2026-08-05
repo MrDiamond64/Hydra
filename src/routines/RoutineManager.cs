@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -7,8 +7,14 @@ namespace HydraMenu.routines
 	{
 		public AutoTriggerSporesRoutine autoTriggerSpores = new AutoTriggerSporesRoutine();
 		public DiscoHostRoutine discoHost = new DiscoHostRoutine();
+		public DiscoSelfRoutine discoSelf = new DiscoSelfRoutine();
 		public DoorTrollerRoutine doorTroller = new DoorTrollerRoutine();
 		public JailPlayerRoutine jailPlayer = new JailPlayerRoutine();
+		public NoMeetingAirshipRoutine noMeetingAirship = new NoMeetingAirshipRoutine();
+		public NoMeetingFungleRoutine noMeetingFungle = new NoMeetingFungleRoutine();
+		public NoMeetingMiraRoutine noMeetingMira = new NoMeetingMiraRoutine();
+		public NoMeetingPolusRoutine noMeetingPolus = new NoMeetingPolusRoutine();
+		public NoMeetingSkeldRoutine noMeetingSkeld = new NoMeetingSkeldRoutine();
 		public PetPlayerRoutine petPlayer = new PetPlayerRoutine();
 		public PlayerFollowerRoutine playerFollower = new PlayerFollowerRoutine();
 		public ReportBodySpam reportBodySpam = new ReportBodySpam();
@@ -18,7 +24,7 @@ namespace HydraMenu.routines
 
 		public RoutineManager()
 		{
-			routineList = [ autoTriggerSpores, discoHost, doorTroller, jailPlayer, petPlayer, playerFollower, reportBodySpam, teleportSpammer ];
+			routineList = [ autoTriggerSpores, discoHost, discoSelf, doorTroller, jailPlayer, noMeetingAirship, noMeetingFungle, noMeetingMira, noMeetingPolus, noMeetingSkeld, petPlayer, playerFollower, reportBodySpam, teleportSpammer ];
 		}
 
 		public void Update()

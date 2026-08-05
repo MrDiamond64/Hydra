@@ -1,4 +1,4 @@
-﻿using Hazel;
+using Hazel;
 using HydraMenu.features;
 using HydraMenu.network;
 using UnityEngine;
@@ -21,6 +21,104 @@ namespace HydraMenu.ui.sections
 
 			Troll.AutoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies", PlayerControl.LocalPlayer, ref Troll.AutoReportBodies.source);
 			Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
+			Hydra.routines.discoSelf.Enabled = GUILayout.Toggle(Hydra.routines.discoSelf.Enabled, "Disco Mod (Non-Host)");
+			if(Hydra.routines.discoSelf.Enabled)
+			{
+				GUILayout.Label($"Disco Delay: {Hydra.routines.discoSelf.delay:F2}s");
+				Hydra.routines.discoSelf.delay = (float)System.Math.Round(GUILayout.HorizontalSlider(Hydra.routines.discoSelf.delay, 0.05f, 2.0f), 2);
+			}
+
+			bool prevHand = Hydra.routines.petPlayer.Enabled && Hydra.routines.petPlayer.manualControl;
+			bool newHand = GUILayout.Toggle(prevHand, "Control Petting Hand");
+			if(newHand != prevHand)
+			{
+				if(newHand)
+				{
+					Hydra.routines.petPlayer.target = null;
+					Hydra.routines.petPlayer.manualControl = true;
+					Hydra.routines.petPlayer.Enabled = true;
+				}
+				else
+				{
+					Hydra.routines.petPlayer.Enabled = false;
+				}
+			}
+			if(Hydra.routines.petPlayer.Enabled && Hydra.routines.petPlayer.manualControl)
+			{
+				GUILayout.Label($"Hand Speed: {Hydra.routines.petPlayer.speed:F1}");
+				Hydra.routines.petPlayer.speed = (float)System.Math.Round(GUILayout.HorizontalSlider(Hydra.routines.petPlayer.speed, 1.0f, 15.0f), 1);
+			}
+
+			if(ShipStatus.Instance != null && Utilities.GetCurrentMap() == MapNames.Skeld)
+			{
+				Hydra.routines.noMeetingSkeld.Enabled = GUILayout.Toggle(Hydra.routines.noMeetingSkeld.Enabled, "No meeting (Non-host) (The Skeld)");
+				if(Hydra.routines.noMeetingSkeld.Enabled)
+				{
+					GUILayout.Label($"Area Margin: +{Hydra.routines.noMeetingSkeld.extraMargin:F1}");
+					Hydra.routines.noMeetingSkeld.extraMargin = (float)System.Math.Round(GUILayout.HorizontalSlider(Hydra.routines.noMeetingSkeld.extraMargin, 0.0f, 2.5f), 1);
+				}
+			}
+			else
+			{
+				Hydra.routines.noMeetingSkeld.Enabled = false;
+			}
+
+			if(ShipStatus.Instance != null && Utilities.GetCurrentMap() == MapNames.MiraHQ)
+			{
+				Hydra.routines.noMeetingMira.Enabled = GUILayout.Toggle(Hydra.routines.noMeetingMira.Enabled, "No meeting (Non-host) (MiraHQ)");
+				if(Hydra.routines.noMeetingMira.Enabled)
+				{
+					GUILayout.Label($"Area Margin: +{Hydra.routines.noMeetingMira.extraMargin:F1}");
+					Hydra.routines.noMeetingMira.extraMargin = (float)System.Math.Round(GUILayout.HorizontalSlider(Hydra.routines.noMeetingMira.extraMargin, 0.0f, 2.5f), 1);
+				}
+			}
+			else
+			{
+				Hydra.routines.noMeetingMira.Enabled = false;
+			}
+
+			if(ShipStatus.Instance != null && Utilities.GetCurrentMap() == MapNames.Polus)
+			{
+				Hydra.routines.noMeetingPolus.Enabled = GUILayout.Toggle(Hydra.routines.noMeetingPolus.Enabled, "No meeting (Non-host) (Polus)");
+				if(Hydra.routines.noMeetingPolus.Enabled)
+				{
+					GUILayout.Label($"Area Margin: +{Hydra.routines.noMeetingPolus.extraMargin:F1}");
+					Hydra.routines.noMeetingPolus.extraMargin = (float)System.Math.Round(GUILayout.HorizontalSlider(Hydra.routines.noMeetingPolus.extraMargin, 0.0f, 2.5f), 1);
+				}
+			}
+			else
+			{
+				Hydra.routines.noMeetingPolus.Enabled = false;
+			}
+
+			if(ShipStatus.Instance != null && Utilities.GetCurrentMap() == MapNames.Airship)
+			{
+				Hydra.routines.noMeetingAirship.Enabled = GUILayout.Toggle(Hydra.routines.noMeetingAirship.Enabled, "No meeting (Non-host) (Airship)");
+				if(Hydra.routines.noMeetingAirship.Enabled)
+				{
+					GUILayout.Label($"Area Margin: +{Hydra.routines.noMeetingAirship.extraMargin:F1}");
+					Hydra.routines.noMeetingAirship.extraMargin = (float)System.Math.Round(GUILayout.HorizontalSlider(Hydra.routines.noMeetingAirship.extraMargin, 0.0f, 2.5f), 1);
+				}
+			}
+			else
+			{
+				Hydra.routines.noMeetingAirship.Enabled = false;
+			}
+
+			if(ShipStatus.Instance != null && Utilities.GetCurrentMap() == MapNames.Fungle)
+			{
+				Hydra.routines.noMeetingFungle.Enabled = GUILayout.Toggle(Hydra.routines.noMeetingFungle.Enabled, "No meeting (Non-host) (Fungle)");
+				if(Hydra.routines.noMeetingFungle.Enabled)
+				{
+					GUILayout.Label($"Area Margin: +{Hydra.routines.noMeetingFungle.extraMargin:F1}");
+					Hydra.routines.noMeetingFungle.extraMargin = (float)System.Math.Round(GUILayout.HorizontalSlider(Hydra.routines.noMeetingFungle.extraMargin, 0.0f, 2.5f), 1);
+				}
+			}
+			else
+			{
+				Hydra.routines.noMeetingFungle.Enabled = false;
+			}
+
 			Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
 			Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");
 

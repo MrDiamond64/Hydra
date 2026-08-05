@@ -1,4 +1,4 @@
-﻿using HydraMenu.ui.sections;
+using HydraMenu.ui.sections;
 using System;
 using UnityEngine;
 
@@ -93,6 +93,8 @@ namespace HydraMenu.ui
 
 		public void OnGUI()
 		{
+			DrawHandControlsHUD();
+
 			// https://docs.unity3d.com/6000.3/Documentation/Manual/GUIScriptingGuide.html
 			if(!visible) return;
 
@@ -173,6 +175,67 @@ namespace HydraMenu.ui
 			if(GUI.Button(rect, section.name, style))
 			{
 				activeTab = position;
+			}
+		}
+
+		private bool isJoystickDragging = false;
+
+		private void DrawHandControlsHUD()
+		{
+			if(Hydra.routines == null || Hydra.routines.petPlayer == null) return;
+			if(!Hydra.routines.petPlayer.Enabled || !Hydra.routines.petPlayer.manualControl) return;
+
+			// Dynamic 360-degree Joystick Dimensions
+			float baseCenterX = 75f;
+			float baseCenterY = Screen.height - 75f;
+			float baseRadius = 45f;
+			float knobRadius = 16f;
+
+			Vector2 joystickCenter = new Vector2(baseCenterX, baseCenterY);
+			Vector2 currentKnobPos = joystickCenter;
+
+			Event currentEvent = Event.current;
+			Vector2 mousePos = currentEvent.mousePosition;
+
+			if(currentEvent.type == EventType.MouseDown)
+			{
+				if(Vector2.Distance(mousePos, joystickCenter) <= baseRadius + 15f)
+				{
+					isJoystickDragging = true;
+				}
+			}
+			else if(currentEvent.type == EventType.MouseUp)
+			{
+				isJoystickDragging = false;
+			}
+
+			Vector2 joyVector = Vector2.zero;
+
+			if(isJoystickDragging)
+			{
+				Vector2 delta = mousePos - joystickCenter;
+				Vector2 clampedDelta = Vector2.ClampMagnitude(delta, baseRadius);
+				currentKnobPos = joystickCenter + clampedDelta;
+
+				// Invert Y because GUI y grows downwards
+				joyVector = new Vector2(clampedDelta.x / baseRadius, -clampedDelta.y / baseRadius);
+			}
+
+			// Hand vector is driven exclusively by on-screen virtual joystick mouse dragging
+			Hydra.routines.petPlayer.joystickVector = joyVector;
+
+			// Render Smooth Circular Joystick Base
+			Rect baseRect = new Rect(joystickCenter.x - baseRadius, joystickCenter.y - baseRadius, baseRadius * 2, baseRadius * 2);
+			GUI.Box(baseRect, "", Styles.JoystickBaseStyle);
+
+			// Render Smooth Circular Inner Steering Knob
+			Rect knobRect = new Rect(currentKnobPos.x - knobRadius, currentKnobPos.y - knobRadius, knobRadius * 2, knobRadius * 2);
+			GUI.Box(knobRect, "", Styles.JoystickKnobStyle);
+
+			// Render Quick Recenter Pill Button
+			if(GUI.Button(new Rect(joystickCenter.x - 30f, joystickCenter.y + baseRadius + 6f, 60f, 20f), "Center"))
+			{
+				Hydra.routines.petPlayer.handOffset = Vector2.zero;
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using UnityEngine;
 
 namespace HydraMenu.features
@@ -44,6 +44,8 @@ namespace HydraMenu.features
                 if(!Enabled) return true;
 
 				Hydra.Log.LogInfo($"[Disconnect Logger] {playerName} was disconnected with reason {reason}");
+
+				GameLogger.LogSystem(playerName, $"Disconnected. Reason: {reason}");
 
 				switch(reason) {
                     // GameData::ShowNotification already handles these disconnect messages
@@ -162,6 +164,21 @@ namespace HydraMenu.features
 
 						if(wasShadowsEnabled) HudManager.Instance.ShadowQuad.gameObject.SetActive(true);
 					}
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(FollowerCamera), nameof(FollowerCamera.Update))]
+		public static class CameraZoom
+		{
+			public static bool Enabled { get; set; } = false;
+			public static float ZoomFactor { get; set; } = 1.0f;
+
+			static void Postfix(FollowerCamera __instance)
+			{
+				if(Enabled && __instance.GetComponent<Camera>() != null)
+				{
+					__instance.GetComponent<Camera>().orthographicSize = 3.0f * ZoomFactor;
 				}
 			}
 		}

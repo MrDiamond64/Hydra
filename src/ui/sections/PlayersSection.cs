@@ -1,4 +1,4 @@
-﻿using AmongUs.Data;
+using AmongUs.Data;
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HydraMenu.features;
@@ -154,7 +154,19 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label(playerInfo);
 
 			Visuals.SpectatePlayer.Enabled = Controls.PlayerSpecificToggle("Spectate", target, ref Visuals.SpectatePlayer.target);
-			Hydra.routines.petPlayer.Enabled = Controls.PlayerSpecificToggle("Pet Player", target, ref Hydra.routines.petPlayer.target);
+			PlayerControl oldPetTarget = Hydra.routines.petPlayer.target;
+			bool isPettingThisPlayer = Hydra.routines.petPlayer.Enabled && !Hydra.routines.petPlayer.manualControl && oldPetTarget == target;
+			bool newPetToggleState = Controls.PlayerSpecificToggle("Pet Player", target, ref Hydra.routines.petPlayer.target);
+
+			if(isPettingThisPlayer && !newPetToggleState)
+			{
+				Hydra.routines.petPlayer.Enabled = false;
+			}
+			else if(!isPettingThisPlayer && newPetToggleState)
+			{
+				Hydra.routines.petPlayer.manualControl = false;
+				Hydra.routines.petPlayer.Enabled = true;
+			}
 			Hydra.routines.playerFollower.Enabled = Controls.PlayerSpecificToggle("Follow", target, ref Hydra.routines.playerFollower.following);
 			Hydra.routines.jailPlayer.Enabled = Controls.PlayerSpecificToggle("Place in Jail", target, ref Hydra.routines.jailPlayer.targets);
 

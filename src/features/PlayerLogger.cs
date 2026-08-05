@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using InnerNet;
 
 namespace HydraMenu.features
@@ -17,7 +17,9 @@ namespace HydraMenu.features
 
 				PlatformSpecificData platformData = clientData.PlatformData;
 
-				Hydra.Log.LogMessage($"[PlayerLogger] {clientData.PlayerName} ({__instance.NetId}) joined on {platformData.Platform}. Friendcode {clientData.FriendCode}, PUID {clientData.ProductUserId}");
+				Hydra.Log.LogMessage($"[PlayerLogger] {clientData.PlayerName} ({__instance.NetId}) joined on {platformData.Platform}. friendcode {clientData.FriendCode}, puid {clientData.ProductUserId}");
+
+				GameLogger.LogSystem(clientData.PlayerName, $"Joined on {platformData.Platform} (FC: {clientData.FriendCode}, PUID: {clientData.ProductUserId})");
 			}
 		}
 	}
