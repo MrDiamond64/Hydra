@@ -1,4 +1,4 @@
-﻿using AmongUs.GameOptions;
+using AmongUs.GameOptions;
 using HydraMenu.features;
 using UnityEngine;
 
@@ -9,20 +9,45 @@ namespace HydraMenu.ui.sections
 		public RolesSection() : base("Roles") { }
 
 		private RoleTypes selectedRole = RoleTypes.Crewmate;
+		private Vector2 scrollPosition;
 
 		public override void Render()
 		{
+			scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+
+			GUILayout.Label("General Role Cheats:");
 			Roles.AllowVentingForCrewmates = GUILayout.Toggle(Roles.AllowVentingForCrewmates, "Vent As Crewmate");
 			Roles.MoveModifier.MoveInVents = GUILayout.Toggle(Roles.MoveModifier.MoveInVents, "Move In Vents");
-
 			Roles.SkipSabotageChecks.SabotageAsCrewmate = GUILayout.Toggle(Roles.SkipSabotageChecks.SabotageAsCrewmate, "Sabotage As Crewmate");
 			Roles.SkipSabotageChecks.SabotageInVents = GUILayout.Toggle(Roles.SkipSabotageChecks.SabotageInVents, "Allow Sabotaging In Vents As Imposter");
-
-			Roles.DisableShapeshiftAnimation = GUILayout.Toggle(Roles.DisableShapeshiftAnimation, "Disable Shapeshift Animation");
-			// Roles.DisablePhantomEndAnimation = GUILayout.Toggle(Roles.DisablePhantomEndAnimation, "Disable Phantom End Animation");
-
 			Roles.NoKillChecks = GUILayout.Toggle(Roles.NoKillChecks, "No Kill Checks");
 
+			GUILayout.Space(10);
+			GUILayout.Label("Impostor & Shapeshifter:");
+			Roles.KillReach = GUILayout.Toggle(Roles.KillReach, "Infinite Kill Reach");
+			Roles.DisableShapeshiftAnimation = GUILayout.Toggle(Roles.DisableShapeshiftAnimation, "Disable Shapeshift Animation");
+			Roles.EndlessShapeshiftDuration = GUILayout.Toggle(Roles.EndlessShapeshiftDuration, "Endless Shapeshift Duration");
+
+			GUILayout.Space(10);
+			GUILayout.Label("Engineer:");
+			Roles.EndlessVentTime = GUILayout.Toggle(Roles.EndlessVentTime, "Endless Vent Time");
+			Roles.NoVentCooldown = GUILayout.Toggle(Roles.NoVentCooldown, "No Vent Cooldown");
+
+			GUILayout.Space(10);
+			GUILayout.Label("Scientist:");
+			Roles.EndlessBattery = GUILayout.Toggle(Roles.EndlessBattery, "Endless Vitals Battery");
+			Roles.NoVitalsCooldown = GUILayout.Toggle(Roles.NoVitalsCooldown, "No Vitals Cooldown");
+
+			GUILayout.Space(10);
+			GUILayout.Label("Tracker & Detective:");
+			Roles.EndlessTracking = GUILayout.Toggle(Roles.EndlessTracking, "Endless Tracking Duration");
+			Roles.NoTrackingDelay = GUILayout.Toggle(Roles.NoTrackingDelay, "No Track Delay");
+			Roles.NoTrackingCooldown = GUILayout.Toggle(Roles.NoTrackingCooldown, "No Track Cooldown");
+			Roles.TrackReach = GUILayout.Toggle(Roles.TrackReach, "Infinite Track Reach");
+			Roles.InterrogateReach = GUILayout.Toggle(Roles.InterrogateReach, "Infinite Interrogate Reach");
+
+			GUILayout.Space(10);
+			GUILayout.Label("Role Changer:");
 			GUILayout.Label($"Change role to: {selectedRole}");
 			GUILayout.BeginHorizontal();
 			selectedRole = Controls.HorizontalRoleSlider(selectedRole);
@@ -31,8 +56,9 @@ namespace HydraMenu.ui.sections
 			{
 				UpdateRole(selectedRole);
 			}
-
 			GUILayout.EndHorizontal();
+
+			GUILayout.EndScrollView();
 		}
 
 		public static void UpdateRole(RoleTypes role)

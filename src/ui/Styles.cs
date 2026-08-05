@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HydraMenu.ui
@@ -148,6 +148,112 @@ namespace HydraMenu.ui
 
 			CachedTextures[textureName] = background;
 			return background;
+		}
+
+		public static Texture2D GetJoystickBaseTexture(int size = 128)
+		{
+			string key = $"JoystickBase_{primaryColor}_{size}";
+			if(CachedTextures.TryGetValue(key, out Texture2D tex) && tex != null) return tex;
+
+			tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+			float center = size / 2f;
+			float outerRadius = center - 2f;
+			float ringWidth = 3f;
+			Color baseColor = new Color(0.08f, 0.08f, 0.12f, 0.70f);
+			Color ringColor = ColorValues.ContainsKey(primaryColor) ? ColorValues[primaryColor] : new Color(0f, 0.5f, 1f);
+			ringColor.a = 0.85f;
+
+			for(int y = 0; y < size; y++)
+			{
+				for(int x = 0; x < size; x++)
+				{
+					float dist = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
+					if(dist > outerRadius)
+					{
+						tex.SetPixel(x, y, Color.clear);
+					}
+					else if(dist >= outerRadius - ringWidth)
+					{
+						float edgeAlpha = Mathf.Clamp01(outerRadius - dist);
+						tex.SetPixel(x, y, Color.Lerp(baseColor, ringColor, edgeAlpha));
+					}
+					else if(dist >= outerRadius - ringWidth - 1.5f)
+					{
+						tex.SetPixel(x, y, ringColor * 0.9f);
+					}
+					else
+					{
+						float fillFactor = 1f - (dist / outerRadius);
+						Color fill = Color.Lerp(baseColor, baseColor * 1.3f, fillFactor);
+						tex.SetPixel(x, y, fill);
+					}
+				}
+			}
+			tex.Apply();
+			CachedTextures[key] = tex;
+			return tex;
+		}
+
+		public static Texture2D GetJoystickKnobTexture(int size = 64)
+		{
+			string key = $"JoystickKnob_{primaryColor}_{size}";
+			if(CachedTextures.TryGetValue(key, out Texture2D tex) && tex != null) return tex;
+
+			tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+			float center = size / 2f;
+			float outerRadius = center - 2f;
+			Color themeColor = ColorValues.ContainsKey(primaryColor) ? ColorValues[primaryColor] : new Color(0f, 0.5f, 1f);
+			Color coreColor = Color.Lerp(themeColor, Color.white, 0.35f);
+			Color shadowColor = themeColor * 0.5f;
+			shadowColor.a = 0.95f;
+
+			for(int y = 0; y < size; y++)
+			{
+				for(int x = 0; x < size; x++)
+				{
+					Vector2 pos = new Vector2(x, y);
+					float dist = Vector2.Distance(pos, new Vector2(center, center));
+					if(dist > outerRadius)
+					{
+						tex.SetPixel(x, y, Color.clear);
+					}
+					else if(dist >= outerRadius - 2f)
+					{
+						tex.SetPixel(x, y, new Color(1f, 1f, 1f, 0.85f));
+					}
+					else
+					{
+						Vector2 offset = new Vector2(x - (center - 4f), y - (center + 4f));
+						float lightDist = offset.magnitude / outerRadius;
+						Color knobColor = Color.Lerp(coreColor, shadowColor, Mathf.Clamp01(lightDist));
+						knobColor.a = 0.92f;
+						tex.SetPixel(x, y, knobColor);
+					}
+				}
+			}
+			tex.Apply();
+			CachedTextures[key] = tex;
+			return tex;
+		}
+
+		public static GUIStyle JoystickBaseStyle
+		{
+			get
+			{
+				GUIStyle style = new GUIStyle();
+				style.normal.background = GetJoystickBaseTexture(128);
+				return style;
+			}
+		}
+
+		public static GUIStyle JoystickKnobStyle
+		{
+			get
+			{
+				GUIStyle style = new GUIStyle();
+				style.normal.background = GetJoystickKnobTexture(64);
+				return style;
+			}
 		}
 
 		public static void ClearCache()
