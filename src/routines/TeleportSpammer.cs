@@ -40,7 +40,7 @@ namespace HydraMenu.routines
 
 		public override void OnDisconnect()
 		{
-			Hydra.notifications.Send("Teleport Spammerm", "Teleport Spammer was disabled as you left the game.", 10);
+			Hydra.notifications.Send("Teleport Spammer", "Teleport Spammer was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using Il2CppInterop.Runtime;
+﻿using HydraMenu.network;
+using Il2CppInterop.Runtime;
 using System.Collections.Generic;
 
 namespace HydraMenu
@@ -319,10 +320,15 @@ namespace HydraMenu
 		public static void LockAll()
 		{
 			Dictionary<string, SystemTypes> doors = GetDoors();
+
+			BatchedMessage batch = new BatchedMessage();
+
 			foreach(SystemTypes door in doors.Values)
 			{
-				LockDoor(door);
+				batch.QueueCloseDoors(door);
 			}
+
+			batch.FinishBatch();
 		}
 
 		public static void UnlockAll()

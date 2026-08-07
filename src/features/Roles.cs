@@ -3,23 +3,19 @@ using UnityEngine;
 
 namespace HydraMenu.features
 {
-	internal class Roles
+	internal class Roles : MonoBehaviour
 	{
 		public static bool DisableShapeshiftAnimation { get; set; } = false;
 		// public static bool DisablePhantomEndAnimation { get; set; } = false;
 		public static bool AllowVentingForCrewmates { get; set; } = true;
 
-		[HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-		class ShowButtons
+		public void Update()
 		{
-			static void Postfix()
-			{
-				// If PlayerControl::Data isn't null, then we know the player has fully loaded into the game
-				if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
+			// If PlayerControl::Data isn't null, then we know the player has fully loaded into the game
+			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
 
-				if(SkipSabotageChecks.SabotageAsCrewmate) HudManager.Instance.SabotageButton.gameObject.SetActive(true);
-				if(AllowVentingForCrewmates) HudManager.Instance.ImpostorVentButton.gameObject.SetActive(true);
-			}
+			if(SkipSabotageChecks.SabotageAsCrewmate) HudManager.Instance.SabotageButton.gameObject.SetActive(true);
+			if(AllowVentingForCrewmates) HudManager.Instance.ImpostorVentButton.gameObject.SetActive(true);
 		}
 
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdCheckShapeshift))]

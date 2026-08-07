@@ -162,6 +162,20 @@ namespace HydraMenu.network
 			writer.EndMessage();
 		}
 
+		public void QueueCloseDoors(SystemTypes door)
+		{
+			if(AmTarget)
+			{
+				ShipStatus.Instance.CloseDoorsOfType(door);
+			}
+
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(ShipStatus.Instance.NetId);
+			writer.Write((byte)RpcCalls.CloseDoorsOfType);
+			writer.Write((byte)door);
+			writer.EndMessage();
+		}
+
 		public void QueueUpdateSystem(PlayerControl source, SystemTypes system, MessageWriter msg)
 		{
 			writer.StartMessage((byte)GameDataTypes.RpcFlag);

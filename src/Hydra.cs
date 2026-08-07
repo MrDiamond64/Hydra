@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using HydraMenu.features;
 using HydraMenu.routines;
 using HydraMenu.ui;
 using UnityEngine;
@@ -16,6 +17,7 @@ internal class Hydra : BasePlugin
 	private static readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 
 	private static MainUI mainUI;
+	private static Roles roles;
 	public static RoutineManager routines;
 	public static NotificationManager notifications;
 
@@ -24,6 +26,7 @@ internal class Hydra : BasePlugin
 		Log = base.Log;
 
 		mainUI = AddComponent<MainUI>();
+		roles = AddComponent<Roles>();
 		notifications = AddComponent<NotificationManager>();
 		routines = AddComponent<RoutineManager>();
 
@@ -53,6 +56,7 @@ internal class Hydra : BasePlugin
 		}
 
 		Object.Destroy(mainUI);
+		Object.Destroy(roles);
 		Object.Destroy(notifications);
 		Object.Destroy(routines);
 

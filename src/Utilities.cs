@@ -302,7 +302,7 @@ namespace HydraMenu
 
 			if(player.OwnerId == AmongUsClient.Instance.HostId)
 			{
-				Hydra.notifications.Send("Kick Player", "You are not able to kick out the host of the lobby");
+				Hydra.notifications.Send("Kick Player", "You are not able to kick out the host of the lobby.");
 				return;
 			}
 
@@ -345,7 +345,7 @@ namespace HydraMenu
 
 			batch.FinishBatch();
 
-			Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.");
+			Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.", 5);
 		}
 	}
 }
