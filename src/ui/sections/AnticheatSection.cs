@@ -1,4 +1,4 @@
-﻿using HydraMenu.anticheat;
+using HydraMenu.anticheat;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
@@ -27,7 +27,12 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label($"Punish the player with: {Anticheat.punishment}");
-			Anticheat.punishment = (Anticheat.Punishments)GUILayout.HorizontalSlider((float)Anticheat.punishment, 0, 3);
+			Anticheat.punishment = (Anticheat.Punishments)GUILayout.HorizontalSlider((float)Anticheat.punishment, 0, 4);
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label($"Flags required to punish player: {Anticheat.FlagThreshold}");
+			Anticheat.FlagThreshold = (uint)GUILayout.HorizontalSlider(Anticheat.FlagThreshold, 1, 20);
 			GUILayout.EndHorizontal();
 		}
 	}

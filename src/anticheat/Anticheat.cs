@@ -1,4 +1,4 @@
-﻿using AmongUs.InnerNet.GameDataMessages;
+using AmongUs.InnerNet.GameDataMessages;
 using HarmonyLib;
 using Hazel;
 using HydraMenu.anticheat.gamedata;
@@ -47,6 +47,7 @@ namespace HydraMenu.anticheat
 			None,
 			Kick,
 			ErrorKick,
+			ExploitKick,
 			Ban
 		}
 
@@ -55,6 +56,12 @@ namespace HydraMenu.anticheat
 		public static Punishments punishment = Punishments.None;
 		public static bool sendNotification = true;
 		public static bool discardRpc = true;
+
+		// The amount of times a player must be flagged before Hydra Anticheat will actually punish them
+		public static uint FlagThreshold { get; set; } = 1;
+
+		// Tracks how many times each player (by owner id) has been flagged since their count was last reset
+		private static readonly Dictionary<int, uint> flagCounts = new Dictionary<int, uint>();
 
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
 		class OnPlayerControlRPC
@@ -142,23 +149,76 @@ namespace HydraMenu.anticheat
 			// which would result in Hydra Anticheat flagging ourselves and banning us from our own lobby
 			if(player == PlayerControl.LocalPlayer) return;
 
-			if(sendNotification)
+			if(!shouldPunish)
 			{
-				Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
+				NotifyFlag(reason);
+				return;
 			}
 
-			if(AmongUsClient.Instance.AmHost && shouldPunish)
+			uint flagCount = RegisterFlag(player);
+			if(flagCount < FlagThreshold)
 			{
-				Punish(player);
+				NotifyFlag(reason);
+				return;
 			}
+
+			// The player has reached the flag threshold, reset their count so future violations need to build back up to the threshold again
+			flagCounts.Remove(player.OwnerId);
+
+			if(punishment == Punishments.None)
+			{
+				NotifyFlag(reason);
+				return;
+			}
+
+			bool weAreHost = AmongUsClient.Instance.AmHost;
+			bool targetIsHost = player.OwnerId == AmongUsClient.Instance.HostId;
+
+			// Kick, ErrorKick, and Ban all rely on host-only APIs, so if we are not the host of the lobby we cannot actually carry them out
+			// ExploitKick is the only punishment that can be used without being host, since Utilities::KickPlayer has its own non-host fallback via the ventilation system exploit
+			if(!weAreHost && punishment != Punishments.ExploitKick)
+			{
+				NotifyFlag(reason);
+				return;
+			}
+
+			// The ventilation exploit cannot be used to kick the host of the lobby, Utilities::KickPlayer already refuses to do so
+			if(punishment == Punishments.ExploitKick && targetIsHost)
+			{
+				NotifyFlag(reason);
+				return;
+			}
+
+			Punish(player);
 		}
 
 		// If we do not know which player caused the violation
 		public static void Flag(string reason)
 		{
+			NotifyFlag(reason);
+		}
+
+		private static uint RegisterFlag(PlayerControl player)
+		{
+			flagCounts.TryGetValue(player.OwnerId, out uint count);
+			count++;
+			flagCounts[player.OwnerId] = count;
+			return count;
+		}
+
+		private static void NotifyFlag(string reason)
+		{
 			if(sendNotification)
 			{
 				Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
+			}
+		}
+
+		private static void NotifyPunishment(string message)
+		{
+			if(sendNotification)
+			{
+				Hydra.notifications.Send("Anticheat", message, NotificationDuration);
 			}
 		}
 
@@ -166,15 +226,18 @@ namespace HydraMenu.anticheat
 		{
 			switch(punishment)
 			{
-				case Punishments.None:
+				case Punishments.Kick:
+					Hydra.Log.LogMessage($"{player.Data.PlayerName} was kicked by Hydra Anticheat for hacking");
+
+					AmongUsClient.Instance.KickPlayer(player.OwnerId, false);
+					NotifyPunishment($"{player.Data.PlayerName} has been kick from the game by the Hydra Anticheat!");
 					break;
 
-				case Punishments.Kick:
 				case Punishments.ErrorKick:
 					Hydra.Log.LogMessage($"{player.Data.PlayerName} was kicked by Hydra Anticheat for hacking");
 
 					// The vanilla anticheat prevents using the ErrorKick method if the game has not started yet
-					if(punishment == Punishments.Kick || AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
+					if(AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
 					{
 						AmongUsClient.Instance.KickPlayer(player.OwnerId, false);
 					}
@@ -187,11 +250,22 @@ namespace HydraMenu.anticheat
 						// Any other disconnection messages other than ClientTimeout will result in the vanilla anticheat kicking us from the lobby
 						AmongUsClient.Instance.SendLateRejection(player.OwnerId, DisconnectReasons.ClientTimeout);
 					}
+
+					NotifyPunishment($"{player.Data.PlayerName} has been ErrorKicked by the Hydra Anticheat !");
+					break;
+
+				case Punishments.ExploitKick:
+					Hydra.Log.LogMessage($"{player.Data.PlayerName} was kicked by Hydra Anticheat via the ventilation system exploit");
+
+					Utilities.KickPlayer(player);
+					NotifyPunishment($"{player.Data.PlayerName} has been kicked by the Hydra Anticheat using the Ventilation System exploit!");
 					break;
 
 				case Punishments.Ban:
 					Hydra.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Hydra Anticheat for hacking");
+
 					AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
+					NotifyPunishment($"{player.Data.PlayerName} has been banned by the Hydra Anticheat!");
 					break;
 			}
 		}
