@@ -85,6 +85,17 @@ namespace HydraMenu
 			{ "Mushroom Mixup", SystemTypes.MushroomMixupSabotage }
 		};
 
+		public static Dictionary<string, SystemTypes> fungleDoors = new Dictionary<string, SystemTypes>()
+		{
+			{ "Storage", SystemTypes.Storage },
+			{ "Kitchen", SystemTypes.Kitchen },
+			{ "Laboratory", SystemTypes.Laboratory },
+			{ "Lookout", SystemTypes.Lookout },
+			{ "Mining Pit", SystemTypes.MiningPit },
+			{ "Communications", SystemTypes.Comms },
+			{ "Reactor", SystemTypes.Reactor }
+		};
+
 		public static Dictionary<string, SystemTypes> GetSabotages()
 		{
 			MapNames map = Utilities.GetCurrentMap();
@@ -110,6 +121,7 @@ namespace HydraMenu
 				MapNames.MiraHQ => [],
 				MapNames.Polus => polusDoors,
 				MapNames.Airship => airshipDoors,
+				MapNames.Fungle => fungleDoors,
 				// If we don't have any doors for the current map then just default to the Skeld ones
 				_ => skeldDoors,
 			};
