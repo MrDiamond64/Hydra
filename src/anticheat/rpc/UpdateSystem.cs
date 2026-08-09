@@ -1,4 +1,5 @@
 ﻿using Hazel;
+using Il2CppInterop.Runtime;
 using InnerNet;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,21 @@ namespace HydraMenu.anticheat.rpc
 			SystemTypes.Ventilation
 		};
 
+		private static readonly Dictionary<Il2CppSystem.Type, Func<PlayerControl, MessageReader, bool>> systemHandlers = new Dictionary<Il2CppSystem.Type, Func<PlayerControl, MessageReader, bool>>()
+		{
+			{ Il2CppType.From(typeof(SwitchSystem)), ValidateSwitchSystem },
+			{ Il2CppType.From(typeof(MushroomMixupSabotageSystem)), ValidateMushroomMixupSystem },
+			{ Il2CppType.From(typeof(ReactorSystemType)), ValidateReactorSystem},
+			{ Il2CppType.From(typeof(SabotageSystemType)), ValidateSabotageSystem }
+		};
+
 		public override bool Validate(PlayerControl player, MessageReader reader)
 		{
 			SystemTypes system = (SystemTypes)reader.ReadByte();
 			player = reader.ReadNetObject<PlayerControl>();
 
-			if(!ShipStatus.Instance.Systems.ContainsKey(system))
+			ShipStatus.Instance.Systems.TryGetValue(system, out ISystemType systemInterface);
+			if(systemInterface == null)
 			{
 				Anticheat.Flag(player, $"{player.Data.PlayerName} tried to update system {system} when the current map has no such system.");
 				return false;
@@ -34,25 +44,13 @@ namespace HydraMenu.anticheat.rpc
 				return false;
 			}
 
-			switch(system)
-			{
-				case SystemTypes.Electrical:
-					return ValidateSwitchSystem(player, reader);
+			// thanks https://discord.com/channels/623153565053222947/754333645199900723/1292612730418757785
+			Il2CppSystem.Type systemType = Il2CppType.TypeFromPointer(systemInterface.ObjectClass);
 
-				case SystemTypes.MushroomMixupSabotage:
-					return ValidateMushroomMixupSystem(player, reader);
+			systemHandlers.TryGetValue(systemType, out Func<PlayerControl, MessageReader, bool> handler);
+			if(handler == null) return true;
 
-				case SystemTypes.Reactor:
-				case SystemTypes.Laboratory:
-				case SystemTypes.HeliSabotage:
-					return ValidateReactorSystem(player, reader);
-
-				case SystemTypes.Sabotage:
-					return ValidateSabotageSystem(player, reader);
-
-				default:
-					return true;
-			}
+			return handler(player, reader);
 		}
 
 		// The Mushroom Mixup system is only updated in the SabotageSystemType::Update function by the host. It should never be sent by a player
@@ -81,7 +79,6 @@ namespace HydraMenu.anticheat.rpc
 				default:
 					return true;
 			}
-
 		}
 
 		private static bool ValidateSabotageSystem(PlayerControl player, MessageReader reader)

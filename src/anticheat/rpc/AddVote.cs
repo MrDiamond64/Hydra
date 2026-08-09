@@ -28,7 +28,7 @@ namespace HydraMenu.anticheat.rpc
 
 			if(MeetingHud.Instance == null)
 			{
-				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to votekick a player outside of a meeting."); ;
+				Anticheat.Flag(player, $"{player.Data.PlayerName} attempted to votekick a player outside of a meeting.");
 				return false;
 			}
 

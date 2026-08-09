@@ -70,7 +70,7 @@ namespace HydraMenu.features
 			}
 		}
 
-		// Similiar to being able to use the sabotage button while crewmate, the vent button also has checks to make sure the current player can actually vent, so we have to reimplement the Vent::CanUse function
+		// Similar to being able to use the sabotage button while crewmate, the vent button also has checks to make sure the current player can actually vent, so we have to reimplement the Vent::CanUse function
 		// The normal function also has checks to make sure the vent isn't being cleaned, however that isn't important so we don't reimplement those checks
 		[HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
 		class SkipVentChecks

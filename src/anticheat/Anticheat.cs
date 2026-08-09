@@ -14,6 +14,7 @@ namespace HydraMenu.anticheat
 
 		public static Dictionary<GameDataTypes, GameDataCheck> GameDataHandlers = new Dictionary<GameDataTypes, GameDataCheck>()
 		{
+			{ GameDataTypes.SceneChangeFlag, new SceneChange() },
 			{ GameDataTypes.ReadyFlag, new ClientReady() }
 		};
 

@@ -262,7 +262,7 @@ namespace HydraMenu
 		{
 			if(Constants.IsVersionModded() || PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return false;
 
-			// On freeplay, local, and modded lobbies, NetworkedPlayerInfo net objects are owned by the host (-2)
+			// On Freeplay, local, and modded lobbies, NetworkedPlayerInfo net objects are owned by the host (-2)
 			// On vanilla lobbies, NetworkedPlayerInfo net objects are owned by the backend among us servers (-4)
 			// If our NetworkedPlayerInfo net object is owned by the host, we can assume that the lobby has a lax anticheat without server authority
 			// which does not require us to use any sort of bypasses
@@ -296,7 +296,7 @@ namespace HydraMenu
 			if(AmongUsClient.Instance.AmHost)
 			{
 				AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
-				Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.");
+				Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.", 5);
 				return;
 			}
 

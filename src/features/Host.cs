@@ -164,7 +164,7 @@ namespace HydraMenu.features
 			public static bool Enabled { get; set; } = false;
 			public static RoleTypes assignedRole = RoleTypes.Viper;
 
-			// Make sure List<T> is imported from Il2cppSystem otherwise things will go terribly wrong!
+			// Make sure List<T> is imported from Il2CppSystem otherwise things will go terribly wrong!
 			static void Prefix(ref List<NetworkedPlayerInfo> players, ref List<RoleTypes> roleList, ref int rolesAssigned)
 			{
 				if(!Enabled || !AmongUsClient.Instance.AmHost) return;
@@ -226,7 +226,7 @@ namespace HydraMenu.features
 			{
 				if(!Enabled || __instance != PlayerControl.LocalPlayer) return;
 
-				time = 0;
+				time = 0f;
 			}
 		}
 	}
