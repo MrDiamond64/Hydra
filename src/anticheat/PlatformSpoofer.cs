@@ -38,6 +38,8 @@ namespace HydraMenu.anticheat
 				case Platforms.StandaloneItch:
 				case Platforms.IPhone:
 				case Platforms.Android:
+				// Platform ID 112 is used by the third-party Starlight program, which allows Android devices to use BepInEx mods
+				case (Platforms)112:
 					if(IsGenericPlatformName(platformName) && xuid == 0 && psid == 0) return true;
 					break;
 

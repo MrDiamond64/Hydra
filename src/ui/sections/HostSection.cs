@@ -4,6 +4,7 @@ using HydraMenu.network;
 using InnerNet;
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -55,7 +56,7 @@ namespace HydraMenu.ui.sections
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Force Crewmate Victory"))
 			{
-				// Just incase the user has this enabled
+				// Just in case the user has this enabled
 				Host.DisableGameEnd.Enabled = false;
 
 				GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByTask, false);
@@ -64,7 +65,7 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Force Imposter Victory"))
 			{
-				// Just incase the user has this enabled
+				// Just in case the user has this enabled
 				Host.DisableGameEnd.Enabled = false;
 
 				GameManager.Instance.RpcEndGame(GameOverReason.ImpostorsByKill, false);
@@ -114,10 +115,7 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Spawn Lobby"))
 			{
-				LobbyBehaviour.Instance = UnityEngine.Object.Instantiate<LobbyBehaviour>(GameStartManager.Instance.LobbyPrefab);
-				AmongUsClient.Instance.Spawn(LobbyBehaviour.Instance, -2, SpawnFlags.None);
-
-				Hydra.notifications.Send("Lobby Map", "A new instance of the lobby map has been spawned", 5);
+				SpawnLobby();
 			}
 			GUILayout.EndHorizontal();
 
@@ -215,6 +213,32 @@ namespace HydraMenu.ui.sections
 			}
 
 			batch.FinishBatch();
+		}
+
+		private static void SpawnLobby()
+		{
+			Hydra.Log.LogInfo($"Attempting to spawn in lobby");
+
+			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
+			{
+				Hydra.notifications.Send("Lobby Spawner", "This feature can only be used if you are the host of the lobby.");
+				return;
+			}
+
+			InnerNetObject lobbyPrefab = AmongUsClient.Instance.NonAddressableSpawnableObjects.First((obj) => obj.SpawnId == (uint)network.Constants.SpawnType.LobbyBehavior);
+			if(lobbyPrefab == null)
+			{
+				Hydra.Log.LogError($"Failed to find LobbyBehavior prefab in NonAddressableSpawnableObjects");
+				return;
+			}
+
+			LobbyBehaviour lobby = UnityEngine.Object.Instantiate(lobbyPrefab).Cast<LobbyBehaviour>();
+
+			BatchedMessage batch = new BatchedMessage();
+			batch.QueueSpawn(lobby, -2, SpawnFlags.None);
+			batch.FinishBatch();
+
+			Hydra.notifications.Send("Lobby Spawner", "A new instance of the lobby has been spawned", 5);
 		}
 
 		private static IEnumerator SpawnMap(byte mapId)
