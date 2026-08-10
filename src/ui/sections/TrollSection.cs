@@ -1,6 +1,8 @@
-﻿using Hazel;
+using Hazel;
+using HarmonyLib;
 using HydraMenu.features;
 using HydraMenu.network;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
@@ -11,6 +13,11 @@ namespace HydraMenu.ui.sections
 
 		public int selectedVent = 0;
 		public System.Random rnd = new System.Random();
+
+		public static byte size = 1;
+		public static List<string> colors = new List<string> { "black", "blue", "green", "orange", "purple", "red", "white", "yellow" };
+		public static byte colorIndex = 0;
+		public static bool Enabled { get; set; } = false;
 
 		public override void Render()
 		{
@@ -106,6 +113,52 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Label($"Lock and Unlock Delay: {Hydra.routines.doorTroller.lockAndUnlockDelay:F2}s");
 			Hydra.routines.doorTroller.lockAndUnlockDelay = GUILayout.HorizontalSlider(Hydra.routines.doorTroller.lockAndUnlockDelay, 0.1f, 2.0f);
+
+			if (!Utilities.IsAnticheatPresent())
+			{
+				GUILayout.Space(5);
+				GUILayout.Label("Custom Chat:");
+				Enabled = GUILayout.Toggle(Enabled, "Enabled");
+				GUILayout.Label($"Size: {size}");
+				size = (byte)GUILayout.HorizontalSlider((int)size, 0f, 10f);
+				GUILayout.Label("Color: " + colors[colorIndex]);
+				colorIndex = (byte)GUILayout.HorizontalSlider((int)colorIndex, 0f, colors.Count - 1);
+			}
+		}
+	}
+
+	[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSendChat))]
+	public static class CustomChatPatch
+	{
+		private static bool Prefix(PlayerControl __instance, string chatText)
+		{
+			if (Utilities.IsAnticheatPresent())
+			{
+				TrollSection.Enabled = false;
+				return true;
+			}
+
+			if (!TrollSection.Enabled)
+			{
+				return true;
+			}
+
+			string text = $"<size={TrollSection.size}><color={TrollSection.colors[TrollSection.colorIndex]}>{chatText}";
+			
+			if (DestroyableSingleton<HudManager>.Instance != null)
+			{
+				DestroyableSingleton<HudManager>.Instance.Chat.AddChat(__instance, text, true);
+			}
+
+			BatchedMessage batchedMessage = new BatchedMessage();
+			batchedMessage.writer.StartMessage(2);
+			batchedMessage.writer.WritePacked(__instance.NetId);
+			batchedMessage.writer.Write((byte)13);
+			batchedMessage.writer.Write(text);
+			batchedMessage.writer.EndMessage();
+			batchedMessage.FinishBatch();
+
+			return false;
 		}
 	}
 }
