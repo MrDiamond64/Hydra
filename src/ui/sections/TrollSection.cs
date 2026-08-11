@@ -1,6 +1,7 @@
 using Hazel;
 using HydraMenu.features;
 using HydraMenu.network;
+using HarmonyLib;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
@@ -11,6 +12,71 @@ namespace HydraMenu.ui.sections
 
         public int selectedVent = 0;
         public System.Random rnd = new System.Random();
+
+        private static float spammerTimer = 0f;
+        private static float spammerActionCycleTimer = 0f;
+        private static bool spammerIsPaused = false;
+        private static float spammerPauseTimer = 0f;
+
+        private const float SPAM_RATE = 0.25f;
+        private const float ACTIVE_DURATION = 2.0f;
+        private const float PAUSE_DURATION = 1.0f;
+
+        public static bool TaskAndHnSSpammerEnabled { get; set; } = false;
+
+        public static void UpdateSpammer()
+        {
+            if (!TaskAndHnSSpammerEnabled) return;
+
+            float deltaTime = Time.deltaTime;
+
+            if (spammerIsPaused)
+            {
+                spammerPauseTimer += deltaTime;
+                if (spammerPauseTimer >= PAUSE_DURATION)
+                {
+                    spammerIsPaused = false;
+                    spammerPauseTimer = 0f;
+                    spammerActionCycleTimer = 0f;
+                }
+                return;
+            }
+
+            spammerActionCycleTimer += deltaTime;
+            if (spammerActionCycleTimer >= ACTIVE_DURATION)
+            {
+                spammerIsPaused = true;
+                spammerPauseTimer = 0f;
+                return;
+            }
+
+            spammerTimer += deltaTime;
+            if (spammerTimer >= SPAM_RATE)
+            {
+                spammerTimer = 0f;
+                if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.myTasks != null)
+                {
+                    var tasks = PlayerControl.LocalPlayer.myTasks;
+                    for (int i = 0; i < tasks.Count; i++)
+                    {
+                        try
+                        {
+                            PlayerControl.LocalPlayer.RpcCompleteTask(tasks[i].Id);
+                        }
+                        catch { }
+                    }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+        public static class TaskAndHnSSpammerPatch
+        {
+            static void Postfix()
+            {
+                UpdateSpammer();
+            }
+        }
 
         public override void Render()
         {
@@ -23,6 +89,8 @@ namespace HydraMenu.ui.sections
             Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
             Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
             Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");
+
+            TaskAndHnSSpammerEnabled = GUILayout.Toggle(TaskAndHnSSpammerEnabled, "Deplete HnS timer");
 
             if (GUILayout.Button("Kick All Players"))
             {
