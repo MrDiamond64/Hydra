@@ -1,111 +1,116 @@
-﻿using Hazel;
+using Hazel;
 using HydraMenu.features;
 using HydraMenu.network;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class TrollSection : ISection
-	{
-		public TrollSection() : base("Troll") { }
+    internal class TrollSection : ISection
+    {
+        public TrollSection() : base("Troll") { }
 
-		public int selectedVent = 0;
-		public System.Random rnd = new System.Random();
+        public int selectedVent = 0;
+        public System.Random rnd = new System.Random();
 
-		public override void Render()
-		{
-			if(PlayerControl.LocalPlayer == null)
-			{
-				GUILayout.Label("You are not currently in a game, these options will not work.");
-			}
+        public override void Render()
+        {
+            if (PlayerControl.LocalPlayer == null)
+            {
+                GUILayout.Label("You are not currently in a game, these options will not work.");
+            }
 
-			Troll.AutoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies", PlayerControl.LocalPlayer, ref Troll.AutoReportBodies.source);
-			Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
-			Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
-			Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");
+            Troll.AutoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies", PlayerControl.LocalPlayer, ref Troll.AutoReportBodies.source);
+            Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
+            Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
+            Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");
 
-			if(GUILayout.Button("Kick All Players"))
-			{
-				Hydra.Log.LogInfo($"Sending Enter ventilation system update to all players");
+            if (GUILayout.Button("Kick All Players"))
+            {
+                Hydra.Log.LogInfo($"Sending Enter ventilation system update to all players");
 
-				MessageWriter writer = MessageWriter.Get(SendOption.Reliable);
-				writer.Write((ushort)0);
-				writer.Write((byte)VentilationSystem.Operation.Enter);
-				writer.Write((byte)0);
+                MessageWriter writer = MessageWriter.Get(SendOption.Reliable);
+                writer.Write((ushort)0);
+                writer.Write((byte)VentilationSystem.Operation.Enter);
+                writer.Write((byte)0);
 
-				BatchedMessage batch = new BatchedMessage();
-				batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, writer);
-				batch.FinishBatch();
+                BatchedMessage batch = new BatchedMessage();
+                batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, writer);
+                batch.FinishBatch();
 
-				writer.Recycle();
+                writer.Recycle();
 
-				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
-				{
-					if(player == PlayerControl.LocalPlayer || player.OwnerId == AmongUsClient.Instance.HostId) continue;
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                {
+                    if (player == PlayerControl.LocalPlayer || player.OwnerId == AmongUsClient.Instance.HostId) continue;
 
-					Utilities.KickPlayer(player, true);
-				}
-			}
+                    Utilities.KickPlayer(player, true);
+                }
+            }
 
-			if(GUILayout.Button("Copy Random Player"))
-			{
-				PlayerControl randomPl = Utilities.GetRandomPlayer();
-				Utilities.CopyPlayer(randomPl);
-			}
+            Hydra.routines.autoKickAll.Enabled = GUILayout.Toggle(Hydra.routines.autoKickAll.Enabled, "Auto Kick All");
 
-			if(GUILayout.Button("Trigger All Spores"))
-			{
-				if(Utilities.GetCurrentMap() != MapNames.Fungle)
-				{
-					Hydra.notifications.Send("Trigger Spores", "This option only works on the Fungle map.");
-				}
-				else
-				{
-					FungleShipStatus shipStatus = ShipStatus.Instance.Cast<FungleShipStatus>();
+            GUILayout.Label($"Auto Kick Delay: {Hydra.routines.autoKickAll.delay:F1}s");
+            Hydra.routines.autoKickAll.delay = GUILayout.HorizontalSlider(Hydra.routines.autoKickAll.delay, 1.0f, 60.0f);
 
-					foreach(Mushroom mushroom in shipStatus.sporeMushrooms.Values)
-					{
-						PlayerControl.LocalPlayer.RpcTriggerSpores(mushroom);
-					}
+            if (GUILayout.Button("Copy Random Player"))
+            {
+                PlayerControl randomPl = Utilities.GetRandomPlayer();
+                Utilities.CopyPlayer(randomPl);
+            }
 
-					Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
-				}
-			}
+            if (GUILayout.Button("Trigger All Spores"))
+            {
+                if (Utilities.GetCurrentMap() != MapNames.Fungle)
+                {
+                    Hydra.notifications.Send("Trigger Spores", "This option only works on the Fungle map.");
+                }
+                else
+                {
+                    FungleShipStatus shipStatus = ShipStatus.Instance.Cast<FungleShipStatus>();
 
-			GUILayout.Space(5);
-			GUILayout.Label($"Vent TP:");
-			Hydra.routines.teleportSpammer.Enabled = GUILayout.Toggle(Hydra.routines.teleportSpammer.Enabled, "Teleport Flooder");
+                    foreach (Mushroom mushroom in shipStatus.sporeMushrooms.Values)
+                    {
+                        PlayerControl.LocalPlayer.RpcTriggerSpores(mushroom);
+                    }
 
-			GUILayout.Label($"Teleport everyone to vent: {selectedVent}");
-			selectedVent = (int)GUILayout.HorizontalSlider(selectedVent, 0, ShipStatus.Instance != null ? ShipStatus.Instance.AllVents.Count - 1 : 10);
+                    Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
+                }
+            }
 
-			if(GUILayout.Button("Teleport to Vent"))
-			{
-				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
-				{
-					Teleporter.TeleportToVent(player, selectedVent);
-				}
-			}
+            GUILayout.Space(5);
+            GUILayout.Label($"Vent TP:");
+            Hydra.routines.teleportSpammer.Enabled = GUILayout.Toggle(Hydra.routines.teleportSpammer.Enabled, "Teleport Flooder");
 
-			if(GUILayout.Button("Teleport to Random Vent"))
-			{
-				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
-				{
-					if(player == PlayerControl.LocalPlayer) continue;
+            GUILayout.Label($"Teleport everyone to vent: {selectedVent}");
+            selectedVent = (int)GUILayout.HorizontalSlider(selectedVent, 0, ShipStatus.Instance != null ? ShipStatus.Instance.AllVents.Count - 1 : 10);
 
-					int ventId = rnd.Next(0, ShipStatus.Instance.AllVents.Count);
+            if (GUILayout.Button("Teleport to Vent"))
+            {
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                {
+                    Teleporter.TeleportToVent(player, selectedVent);
+                }
+            }
 
-					Teleporter.TeleportToVent(player, ventId);
-				}
-			}
+            if (GUILayout.Button("Teleport to Random Vent"))
+            {
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                {
+                    if (player == PlayerControl.LocalPlayer) continue;
 
-			GUILayout.Space(5);
-			// Automatically close and open all doors at a set interval
-			GUILayout.Label("Door Troller:");
-			Hydra.routines.doorTroller.Enabled = GUILayout.Toggle(Hydra.routines.doorTroller.Enabled, "Enabled");
+                    int ventId = rnd.Next(0, ShipStatus.Instance.AllVents.Count);
 
-			GUILayout.Label($"Lock and Unlock Delay: {Hydra.routines.doorTroller.lockAndUnlockDelay:F2}s");
-			Hydra.routines.doorTroller.lockAndUnlockDelay = GUILayout.HorizontalSlider(Hydra.routines.doorTroller.lockAndUnlockDelay, 0.1f, 2.0f);
-		}
-	}
+                    Teleporter.TeleportToVent(player, ventId);
+                }
+            }
+
+            GUILayout.Space(5);
+            // Automatically close and open all doors at a set interval
+            GUILayout.Label("Door Troller:");
+            Hydra.routines.doorTroller.Enabled = GUILayout.Toggle(Hydra.routines.doorTroller.Enabled, "Enabled");
+
+            GUILayout.Label($"Lock and Unlock Delay: {Hydra.routines.doorTroller.lockAndUnlockDelay:F2}s");
+            Hydra.routines.doorTroller.lockAndUnlockDelay = GUILayout.HorizontalSlider(Hydra.routines.doorTroller.lockAndUnlockDelay, 0.1f, 2.0f);
+        }
+    }
 }
