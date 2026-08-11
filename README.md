@@ -21,6 +21,7 @@ We have a Discord server, feel free to join and talk, ask for help, or offer sug
 - [Ban players from lobbies without host](https://streamable.com/wtb7jl)
 - [Become immortal](https://streamable.com/k1b0m0)
 - [Configurable anticheat to detect common hacks and exploits](https://github.com/MrDiamond64/Hydra?tab=readme-ov-file#hydra-anticheat)
+- Auto kick player's
 - And more!
 
 # Hydra Anticheat
