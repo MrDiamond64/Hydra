@@ -1,4 +1,4 @@
-﻿using AmongUs.GameOptions;
+using AmongUs.GameOptions;
 using Hazel;
 using HydraMenu.network;
 using InnerNet;
@@ -109,7 +109,7 @@ namespace HydraMenu
 			batch.FinishBatch();
 		}
 
-		public static void AttemptStartMeeting(PlayerControl reporter, NetworkedPlayerInfo target)
+		public static void AttemptStartMeeting(PlayerControl reporter, NetworkedPlayerInfo target, bool silent = false)
 		{
 			Hydra.Log.LogInfo($"Attempting to start a meeting for {reporter.Data.PlayerName}");
 
@@ -117,7 +117,7 @@ namespace HydraMenu
 
 			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
 			{
-				Hydra.notifications.Send("Start Meeting", "The game must have started in order for this feature to work.");
+				if(!silent) Hydra.notifications.Send("Start Meeting", "The game must have started in order for this feature to work.");
 				return;
 			}
 
@@ -127,7 +127,7 @@ namespace HydraMenu
 
 				if(ShipStatus.Instance == null)
 				{
-					Hydra.notifications.Send("Start Meeting", "There must be a valid instance of ShipStatus for this feature to work.");
+					if(!silent) Hydra.notifications.Send("Start Meeting", "There must be a valid instance of ShipStatus for this feature to work.");
 				}
 				else
 				{
@@ -141,13 +141,13 @@ namespace HydraMenu
 
 			if(hasAnticheat && reporter != PlayerControl.LocalPlayer)
 			{
-				Hydra.notifications.Send("Start Meeting", "You must be the host of the lobby to make another player start a meeting.");
+				if(!silent) Hydra.notifications.Send("Start Meeting", "You must be the host of the lobby to make another player start a meeting.");
 				return;
 			}
 
 			if(reporter.Data.IsDead)
 			{
-				Hydra.notifications.Send("Start Meeting", "You can only call meetings or report bodies if you are alive.");
+				if(!silent) Hydra.notifications.Send("Start Meeting", "You can only call meetings or report bodies if you are alive.");
 				return;
 			}
 
@@ -155,13 +155,13 @@ namespace HydraMenu
 			{
 				if(!target.IsDead)
 				{
-					Hydra.notifications.Send("Start Meeting", "You can only report bodies of players who have died in this round.");
+					if(!silent) Hydra.notifications.Send("Start Meeting", "You can only report bodies of players who have died in this round.");
 					return;
 				}
 
 				if(!DoesDeadBodyExist(target.PlayerId))
 				{
-					Hydra.notifications.Send("Start Meeting", "Unable to find a dead body for this player, you can only report a player's body if they have died this round and their body has not dissolved.");
+					if(!silent) Hydra.notifications.Send("Start Meeting", "Unable to find a dead body for this player, you can only report a player's body if they have died this round and their body has not dissolved.");
 					return;
 				}
 			}
