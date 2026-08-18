@@ -28,5 +28,6 @@ namespace HydraMenu.modules
 		public static ShowGhosts showGhosts = new ShowGhosts();
 		public static ShowProtections showProtections = new ShowProtections();
 		public static SkipShhhAnimation skipShhhAnimation = new SkipShhhAnimation();
+		public static SpectatePlayer spectatePlayer = new SpectatePlayer();
 	}
 }
