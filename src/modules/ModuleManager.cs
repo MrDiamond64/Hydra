@@ -15,6 +15,7 @@ namespace HydraMenu.modules
 		public static UpdateStatsFreeplay updateStatsFreeplay = new UpdateStatsFreeplay();
 
 		// Spoofer
+		public static SpoofLevel spoofLevel = new SpoofLevel();
 		public static SpoofVersion spoofVersion = new SpoofVersion();
 
 		// Visual
