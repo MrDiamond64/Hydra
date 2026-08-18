@@ -78,8 +78,8 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label("Platform Spoofer:");
 
-			GUILayout.Label($"Spoofed Platform: {Spoofer.spoofedPlatform}");
-			Spoofer.spoofedPlatform = (Platforms)GUILayout.HorizontalSlider((float)Spoofer.spoofedPlatform, 0, 10);
+			GUILayout.Label($"Spoofed Platform: {ModuleManager.spoofDevice.spoofedPlatform}");
+			ModuleManager.spoofDevice.spoofedPlatform = (Platforms)GUILayout.HorizontalSlider((float)ModuleManager.spoofDevice.spoofedPlatform, 0, 10);
 		}
 
 		private void ClampSelectedLevel(uint newLevel)
