@@ -23,6 +23,7 @@ namespace HydraMenu.modules
 		public static AccurateDisconnectReason accurateDisconnectReason = new AccurateDisconnectReason();
 		public static AlwaysVisibleChat alwaysVisibleChat = new AlwaysVisibleChat();
 		public static Fullbright fullbright = new Fullbright();
+		public static NoSeekerAnimation noSeekerAnimation = new NoSeekerAnimation();
 		public static ShowGhostMessages showGhostMessages = new ShowGhostMessages();
 		public static ShowProtections showProtections = new ShowProtections();
 		public static SkipShhhAnimation skipShhhAnimation = new SkipShhhAnimation();
