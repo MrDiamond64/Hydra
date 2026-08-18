@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HydraMenu;
 
-[BepInPlugin("com.mrd.hydramenu", "Hydra", "1.9.0.0")]
+[BepInPlugin("com.mrd.hydramenu", "Hydra", "2.0.0.0")]
 [BepInProcess("Among Us.exe")]
 internal class Hydra : BasePlugin
 {
