@@ -21,6 +21,7 @@ namespace HydraMenu.modules
 
 		// Visual
 		public static AlwaysVisibleChat alwaysVisibleChat = new AlwaysVisibleChat();
+		public static Fullbright fullbright = new Fullbright();
 		public static ShowGhostMessages showGhostMessages = new ShowGhostMessages();
 	}
 }
