@@ -14,22 +14,28 @@ namespace HydraMenu.modules.visuals
 			get { return ModuleManager.showGhostMessages; }
 		}
 
-		[HarmonyPatch(typeof(ChatController), nameof(ChatController.AddChat))]
-		public static class OnChat
+		private void OnPlayerChat(PlayerControl player, string text)
 		{
-			static void Postfix(ChatController __instance, PlayerControl sourcePlayer, string chatText)
-			{
-				if(sourcePlayer == null) return;
+			if(player == null) return;
 
-				// This is kind of a hacky workaround to be able to see messages by ghosts
-				// The game has no easy way to show messages by ghosts, so we would have to completely reimplement the ChatController::AddChat function
-				// I don't really like reimplementing large functions as it makes backwards compatability harder and requires more effort when updating the mod to newer versions of AU
-				// Instead of having to reimplement the function, we can just use ChatController::AddChatWarning to add a chat bubble and include the player's name and message contents to the warning
-				if(Instance.Enabled && !PlayerControl.LocalPlayer.Data.IsDead && sourcePlayer.Data.IsDead)
-				{
-					__instance.AddChatWarning($"{sourcePlayer.Data.PlayerName}\n{chatText}");
-				}
+			// This is kind of a hacky workaround to be able to see messages by ghosts
+			// The game has no easy way to show messages by ghosts, so we would have to completely reimplement the ChatController::AddChat function
+			// I don't really like reimplementing large functions as it makes backwards compatability harder and requires more effort when updating the mod to newer versions of AU
+			// Instead of having to reimplement the function, we can just use ChatController::AddChatWarning to add a chat bubble and include the player's name and message contents to the warning
+			if(Instance.Enabled && !PlayerControl.LocalPlayer.Data.IsDead && player.Data.IsDead)
+			{
+				HudManager._instance.Chat.AddChatWarning($"{player.Data.PlayerName}\n{text}");
 			}
+		}
+
+		protected override void OnEnable()
+		{
+			EventCoordinator.OnPlayerChat += OnPlayerChat;
+		}
+
+		protected override void OnDisable()
+		{
+			EventCoordinator.OnPlayerChat -= OnPlayerChat;
 		}
 	}
 }
