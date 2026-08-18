@@ -1,4 +1,5 @@
 ﻿using HydraMenu.modules.self;
+using HydraMenu.modules.spoofer;
 using HydraMenu.modules.visuals;
 
 namespace HydraMenu.modules
@@ -12,6 +13,9 @@ namespace HydraMenu.modules
 		public static SpeedModifier speedModifier = new SpeedModifier();
 		public static UnlimitedMeetings unlimitedMeetings = new UnlimitedMeetings();
 		public static UpdateStatsFreeplay updateStatsFreeplay = new UpdateStatsFreeplay();
+
+		// Spoofer
+		public static SpoofVersion spoofVersion = new SpoofVersion();
 
 		// Visual
 		public static AlwaysVisibleChat alwaysVisibleChat = new AlwaysVisibleChat();

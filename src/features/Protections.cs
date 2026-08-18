@@ -50,7 +50,7 @@ namespace HydraMenu.features
 				if(
 					// Only make it so only our body reports run
 					__instance.NetId == PlayerControl.LocalPlayer.NetId &&
-					// Make sure its not an emergency meeting
+					// Make sure it is not an emergency meeting
 					target != null &&
 					target.Disconnected &&
 					// Hosts are exempt from the anticheat detection

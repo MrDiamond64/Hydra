@@ -18,7 +18,7 @@ namespace HydraMenu.modules.self
 		}
 
 		[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.TrueSpeed), MethodType.Getter)]
-		public static class PlayerSpeedModifier
+		class PlayerSpeedModifier
 		{
 			static void Postfix(ref float __result)
 			{

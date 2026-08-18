@@ -1,4 +1,5 @@
 ﻿using HydraMenu.features;
+using HydraMenu.modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,8 @@ namespace HydraMenu.ui.sections
 		public readonly Dictionary<string, int> versions = new Dictionary<string, int>()
 		{
 			// Current version at runtime
-			// VersionShower::Start uses ReferenceDataManager.Refdata.userFacingVersion to get version strings such as "17.1" however that doesn't seem to before the game fully loads, so we have to use Constants::AddressablesVersion to get a less human-understandable version string
+			// VersionShower::Start uses ReferenceDataManager.Refdata.userFacingVersion to get version strings such as "17.1"
+			// however that doesn't seem to before the game fully loads, so we have to use Constants::AddressablesVersion to get a less human-understandable version string
 			{ $"{Constants.AddressablesVersion} (Current)", Constants.GetBroadcastVersion() },
 			{ "16.1.0", 50632950 },
 			{ "17.1", 50643450 },
@@ -30,13 +32,13 @@ namespace HydraMenu.ui.sections
 		public override void Render()
 		{
 			GUILayout.Label("Version Spoofer:");
-			Spoofer.shouldSpoofVersion = GUILayout.Toggle(Spoofer.shouldSpoofVersion, "Enable Version Spoofing");
+			ModuleManager.spoofVersion.Enabled = GUILayout.Toggle(ModuleManager.spoofVersion.Enabled, "Enable Version Spoofing");
 
-			GUILayout.Label($"Spoofed Version: {versions.ElementAt(versionSelection).Key} ({Spoofer.spoofedVersion})");
+			GUILayout.Label($"Spoofed Version: {versions.ElementAt(versionSelection).Key} ({ModuleManager.spoofVersion.spoofedVersion})");
 			versionSelection = (int)GUILayout.HorizontalSlider(versionSelection, 0, versions.Count - 1);
-			Spoofer.spoofedVersion = versions.ElementAt(versionSelection).Value;
+			ModuleManager.spoofVersion.spoofedVersion = versions.ElementAt(versionSelection).Value;
 
-			Spoofer.useModdedProtocol = GUILayout.Toggle(Spoofer.useModdedProtocol, "Use Modded Protocol");
+			ModuleManager.spoofVersion.useModdedProtocol = GUILayout.Toggle(ModuleManager.spoofVersion.useModdedProtocol, "Use Modded Protocol");
 
 			GUILayout.Space(5);
 			GUILayout.Label("Level Spoofer:");
