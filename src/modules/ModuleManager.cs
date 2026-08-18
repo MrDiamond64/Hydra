@@ -25,5 +25,6 @@ namespace HydraMenu.modules
 		public static Fullbright fullbright = new Fullbright();
 		public static ShowGhostMessages showGhostMessages = new ShowGhostMessages();
 		public static ShowProtections showProtections = new ShowProtections();
+		public static SkipShhhAnimation skipShhhAnimation = new SkipShhhAnimation();
 	}
 }

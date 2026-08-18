@@ -5,26 +5,6 @@ namespace HydraMenu.features
 {
     internal class Visuals
     {
-
-		[HarmonyPatch(typeof(ShhhBehaviour), nameof(ShhhBehaviour.PlayAnimation))]
-		public static class SkipShhhAnimation
-		{
-			public static bool Enabled { get; set; } = true;
-
-			static bool Prefix()
-			{
-				if(Enabled)
-				{
-					HudManager.Instance.shhhEmblem.gameObject.SetActive(false);
-					return false;
-				}
-				else
-				{
-					return true;
-				}
-			}
-		}
-
 		[HarmonyPatch(typeof(LogicOptionsHnS), nameof(LogicOptionsHnS.GetCrewmateLeadTime))]
 		public static class NoSeekerAnimationPatch
 		{
