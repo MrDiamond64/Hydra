@@ -20,6 +20,7 @@ namespace HydraMenu.modules
 		public static SpoofVersion spoofVersion = new SpoofVersion();
 
 		// Visual
+		public static AccurateDisconnectReason accurateDisconnectReason = new AccurateDisconnectReason();
 		public static AlwaysVisibleChat alwaysVisibleChat = new AlwaysVisibleChat();
 		public static Fullbright fullbright = new Fullbright();
 		public static ShowGhostMessages showGhostMessages = new ShowGhostMessages();
