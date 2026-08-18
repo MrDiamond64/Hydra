@@ -5,17 +5,6 @@ namespace HydraMenu.features
 {
     internal class Visuals
     {
-        [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.TurnOnProtection))]
-        public static class ShowProtections
-        {
-            public static bool Enabled { get; set; } = true;
-
-            static void Prefix(ref bool visible)
-            {
-                if(Enabled) visible = true;
-            }
-        }
-
         // The GameData::ShowNotification function by default only handles disconnect reasons of ExitGame, Kicked, or Banned
         // Any other disconnection reasons automatically default to the error disconnection message
 		[HarmonyPatch(typeof(GameData), nameof(GameData.ShowNotification))]
