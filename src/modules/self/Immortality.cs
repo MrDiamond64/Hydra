@@ -1,9 +1,8 @@
 ﻿using HarmonyLib;
-using InnerNet;
 
-namespace HydraMenu.features
+namespace HydraMenu.modules.self
 {
-	internal class Immortality
+	internal class Immortality : Module
 	{
 		// The PlayerControl::CheckMurder function is the handler for CheckMurder RPCs. When the host of the lobby receives this RPC, it first checks
 		// to make sure that the player who attempted to kill is an imposter and is alive, and then checks if the player who should be killed is alive, is not inside a vent, and is not on a ladder or platform
@@ -21,36 +20,13 @@ namespace HydraMenu.features
 		// but it also used by the backend Among Us servers to determine if a player is inside a vent when handling CheckMurder RPCs
 		// So when the backend Among Us servers receives a CheckMurder RPC, it goes through a list of all net objects that exist for the given lobby, finds ShipStatus, gets the data for the VentilationSystem, and determines if a player is inside of a vent through there
 		// Server authority here is actually helpful for us as our previous theory for immortality would make us immortal in the eyes of the host, meanwhile this will make us visible for all online players
+		public Immortality() : base("Immortality") { }
+
 		private static readonly int CUSTOM_VENT_ID = 50;
 
-		private static bool _enabled = false;
-
-		public static bool Enabled
+		public static Immortality Instance
 		{
-			get
-			{
-				return _enabled;
-			}
-			set
-			{
-				if(value == _enabled) return;
-
-				if(PlayerControl.LocalPlayer != null && !PlayerControl.LocalPlayer.inVent)
-				{
-					if(value)
-					{
-						Hydra.Log.LogInfo("Immortality was enabled, sending a VentilationSystem update with operation Enter");
-						VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
-					}
-					else
-					{
-						Hydra.Log.LogInfo("Immortality was disabled, sending a VentilationSystem update with operation Exit");
-						VentilationSystem.Update(VentilationSystem.Operation.Exit, CUSTOM_VENT_ID);
-					}
-				}
-
-				_enabled = value;
-			}
+			get { return ModuleManager.immortality; }
 		}
 
 		[HarmonyPatch(typeof(VentilationSystem), nameof(VentilationSystem.Update))]
@@ -58,7 +34,7 @@ namespace HydraMenu.features
 		{
 			static bool Prefix(VentilationSystem.Operation op, int ventId)
 			{
-				if(ventId != CUSTOM_VENT_ID && Enabled && (op == VentilationSystem.Operation.Enter || op == VentilationSystem.Operation.Exit || op == VentilationSystem.Operation.Move))
+				if(Instance.Enabled && ventId != CUSTOM_VENT_ID && (op == VentilationSystem.Operation.Enter || op == VentilationSystem.Operation.Exit || op == VentilationSystem.Operation.Move))
 				{
 					// Hydra.Log.LogInfo($"Our client send VentilationSystem operation {op} for vent {ventId}. Resending Immortality RPC");
 					// VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
@@ -71,39 +47,50 @@ namespace HydraMenu.features
 			}
 		}
 
-		[HarmonyPatch(typeof(GameManager), nameof(GameManager.StartGame))]
-		class OnGameStart
+		private void OnGameLoad()
 		{
-			static void Postfix()
-			{
-				if(!Enabled) return;
+			Hydra.Log.LogMessage($"A new instance of ShipStatus has spawned, sending the immortality RPC");
+			VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
+		}
 
-				Hydra.Log.LogMessage($"A new instance of ShipStatus has spawned, sending the immortality RPC");
+		private void OnPlayerMurder(PlayerControl murderer, PlayerControl victim, MurderResultFlags flags)
+		{
+			if(victim != PlayerControl.LocalPlayer) return;
+
+			Hydra.notifications.Send("Immortality", $"{murderer.Data.PlayerName} attempted to kill you!", 5);
+		}
+
+		private void OnMeetingEnd()
+		{
+			if(PlayerControl.LocalPlayer.Data.IsDead) return;
+
+			Hydra.Log.LogInfo("Meeting has ended, resending Immortality RPC to retain immortal status");
+			VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
+		}
+
+		protected override void OnEnable()
+		{
+			EventCoordinator.OnGameLoad += OnGameLoad;
+			EventCoordinator.OnPlayerMurder += OnPlayerMurder;
+			EventCoordinator.OnMeetingEnd += OnMeetingEnd;
+
+			if(PlayerControl.LocalPlayer != null)
+			{
+				Hydra.Log.LogInfo("Immortality was enabled, sending a VentilationSystem update with operation Enter");
 				VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
 			}
 		}
 
-		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
-		class OnMurder
+		protected override void OnDisable()
 		{
-			static void Postfix(PlayerControl __instance, PlayerControl target)
-			{
-				if(Enabled && target == PlayerControl.LocalPlayer)
-				{
-					Hydra.notifications.Send("Immortality", $"{__instance.Data.PlayerName} attempted to kill you!", 5);
-				}
-			}
-		}
+			EventCoordinator.OnGameLoad -= OnGameLoad;
+			EventCoordinator.OnPlayerMurder -= OnPlayerMurder;
+			EventCoordinator.OnMeetingEnd -= OnMeetingEnd;
 
-		[HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Close))]
-		class OnMeetingEnd
-		{
-			static void Postfix()
+			if(PlayerControl.LocalPlayer != null)
 			{
-				if(!Enabled || PlayerControl.LocalPlayer.Data.IsDead) return;
-
-				Hydra.Log.LogInfo("Meeting has ended, resending Immortality RPC to retain immortal status");
-				VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
+				Hydra.Log.LogInfo("Immortality was disabled, sending a VentilationSystem update with operation Exit");
+				VentilationSystem.Update(VentilationSystem.Operation.Exit, CUSTOM_VENT_ID);
 			}
 		}
 	}

@@ -1,0 +1,30 @@
+﻿using Il2CppInterop.Runtime;
+using System;
+
+namespace HydraMenu.modules.self
+{
+	internal class UnlimitedMeetings : Module
+	{
+		public UnlimitedMeetings() : base("UnlimitedMeetings")
+		{
+			Enabled = true;
+		}
+
+		private void OnOpenMinigame(Minigame minigame)
+		{
+			if(minigame.GetIl2CppType() != Il2CppType.From(typeof(EmergencyMinigame))) return;
+
+			PlayerControl.LocalPlayer.RemainingEmergencies = 999999;
+		}
+
+		protected override void OnEnable()
+		{
+			EventCoordinator.OnOpenMinigame += OnOpenMinigame;
+		}
+
+		protected override void OnDisable()
+		{
+			EventCoordinator.OnOpenMinigame -= OnOpenMinigame;
+		}
+	}
+}

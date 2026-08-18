@@ -1,6 +1,6 @@
 ﻿namespace HydraMenu.modules
 {
-	public abstract class Module
+	internal abstract class Module
 	{
 		public readonly string name;
 

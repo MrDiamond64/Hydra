@@ -2,7 +2,7 @@
 
 namespace HydraMenu.modules.visuals
 {
-	public class AlwaysVisibleChat : Module
+	internal class AlwaysVisibleChat : Module
 	{
 		public AlwaysVisibleChat() : base("AlwaysVisibleChat")
 		{
