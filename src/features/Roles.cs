@@ -99,45 +99,5 @@ namespace HydraMenu.features
 				return true;
 			}
 		}
-
-		public static bool NoKillChecks { get; set; } = false;
-
-		[HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.IsValidTarget))]
-		class NoNormalKillChecks
-		{
-			static bool Prefix(NetworkedPlayerInfo target, ref bool __result)
-			{
-				if(target == PlayerControl.LocalPlayer.Data) return true;
-
-				if(NoKillChecks)
-				{
-					__result = true;
-					return false;
-				}
-				else
-				{
-					return true;
-				}
-			}
-		}
-
-		[HarmonyPatch(typeof(ImpostorRole), nameof(ImpostorRole.IsValidTarget))]
-		class NoImpKillChecks
-		{
-			static bool Prefix(NetworkedPlayerInfo target, ref bool __result)
-			{
-				if(target == PlayerControl.LocalPlayer.Data) return true;
-
-				if(NoKillChecks)
-				{
-					__result = true;
-					return false;
-				}
-				else
-				{
-					return true;
-				}
-			}
-		}
 	}
 }

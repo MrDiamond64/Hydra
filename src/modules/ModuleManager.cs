@@ -9,6 +9,7 @@ namespace HydraMenu.modules
 	internal class ModuleManager
 	{
 		// Roles
+		public static NoKillChecks noKillChecks = new NoKillChecks();
 		public static NoShapeshiftAnimation noShapeshiftAnimation = new NoShapeshiftAnimation();
 
 		// Self
