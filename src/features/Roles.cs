@@ -6,7 +6,6 @@ namespace HydraMenu.features
 {
 	internal class Roles : MonoBehaviour
 	{
-		public static bool DisableShapeshiftAnimation { get; set; } = false;
 		// public static bool DisablePhantomEndAnimation { get; set; } = false;
 		public static bool AllowVentingForCrewmates { get; set; } = true;
 
@@ -25,26 +24,6 @@ namespace HydraMenu.features
 			if(ModuleManager.alwaysVisibleChat.Enabled)
 			{
 				HudManager.Instance.MatchInfoButton.gameObject.SetActive(MeetingHud.Instance != null);
-			}
-		}
-
-		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdCheckShapeshift))]
-		class ShapeshiftStart
-		{
-			static void Prefix(ref bool shouldAnimate)
-			{
-				if(DisableShapeshiftAnimation) shouldAnimate = false;
-			}
-		}
-
-		// PlayerControl::CmdCheckRevertShapeshift just runs the PlayerControl::CmdCheckShapeshift function which we patch above, however for some reason we are not able to set shouldAnimate to false
-		// My guess to why this happens is that the CmdCheckShapeshift function is getting inlined here so it doesn't actually get ran
-		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdCheckRevertShapeshift))]
-		class ShapeshiftEnd
-		{
-			static void Prefix(ref bool shouldAnimate)
-			{
-				if(DisableShapeshiftAnimation) shouldAnimate = false;
 			}
 		}
 

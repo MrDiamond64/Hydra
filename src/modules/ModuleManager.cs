@@ -1,4 +1,5 @@
-﻿using HydraMenu.modules.self;
+﻿using HydraMenu.modules.roles;
+using HydraMenu.modules.self;
 using HydraMenu.modules.spoofer;
 using HydraMenu.modules.troll;
 using HydraMenu.modules.visuals;
@@ -7,6 +8,9 @@ namespace HydraMenu.modules
 {
 	internal class ModuleManager
 	{
+		// Roles
+		public static NoShapeshiftAnimation noShapeshiftAnimation = new NoShapeshiftAnimation();
+
 		// Self
 		public static AlwaysShowTaskAnimations alwaysShowTaskAnimations = new AlwaysShowTaskAnimations();
 		public static Immortality immortality = new Immortality();
