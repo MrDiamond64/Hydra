@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
+using Hazel;
 using InnerNet;
 using System;
+using System.Collections.Generic;
 
 namespace HydraMenu.modules
 {
@@ -15,6 +17,9 @@ namespace HydraMenu.modules
 		// Player Events
 		public static event Action<PlayerControl, ClientData> OnPlayerJoin;
 		public static event Action<PlayerControl, string> OnPlayerChat;
+		public static event Action<PlayerControl, byte> OnPlayerEnterVent;
+		public static event Action<PlayerControl, byte> OnPlayerExitVent;
+		public static event Action<PlayerControl, byte, byte> OnPlayerMoveVent;
 		public static event Action<PlayerControl, PlayerControl, MurderResultFlags> OnPlayerMurder;
 
 		// This function is called when the role selection screen finishes and the game is ready to play
@@ -91,6 +96,91 @@ namespace HydraMenu.modules
 				Hydra.Log.LogMessage($"[ChatLogger] {sourcePlayer.Data.PlayerName}: {chatText}");
 
 				PublishEvent(OnPlayerChat, sourcePlayer, chatText);
+			}
+		}
+
+		[HarmonyPatch(typeof(VentilationSystem), nameof(VentilationSystem.Deserialize))]
+		class PlayerVentNonHost
+		{
+			static void Prefix(VentilationSystem __instance, MessageReader reader) {
+				int oldReadPosition = reader.Position;
+
+				int ventCleans = reader.ReadPackedInt32();
+				if(ventCleans > PlayerControl.AllPlayerControls.Count || ventCleans > reader.BytesRemaining) return;
+
+				// Skip reading through vent clean data
+				// 1 byte for player id, another byte for vent id, so we need to skip by 2 * vent clean count
+				reader.Position += 2 * ventCleans;
+
+				int ventedPlayers = reader.ReadPackedInt32();
+				if(ventedPlayers > PlayerControl.AllPlayerControls.Count || ventedPlayers > reader.BytesRemaining) return;
+
+				Dictionary<byte, byte> ventData = new Dictionary<byte, byte>();
+				for(int i = 0; i < ventedPlayers; i++)
+				{
+					byte playerId = reader.ReadByte();
+					byte ventId = reader.ReadByte();
+
+					ventData[playerId] = ventId;
+				}
+
+				reader.Position = oldReadPosition;
+
+				// Compare with what we have with new data to see vent changes
+				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+				{
+					byte playerId = player.PlayerId;
+
+					bool inOld = __instance.PlayersInsideVents.TryGetValue(playerId, out byte oldVent);
+					bool inNew = ventData.TryGetValue(playerId, out byte newVent);
+
+					if(!inOld && inNew)
+					{
+						Hydra.Log.LogMessage($"{player.Data.PlayerName} entered vent {newVent}");
+						PublishEvent(OnPlayerEnterVent, player, newVent);
+					}
+					else if(inOld && !inNew)
+					{
+						Hydra.Log.LogMessage($"{player.Data.PlayerName} left vent {oldVent}");
+						PublishEvent(OnPlayerExitVent, player, oldVent);
+					}
+					else if(oldVent != newVent)
+					{
+						Hydra.Log.LogMessage($"{player.Data.PlayerName} moved from vent {oldVent} to {newVent}");
+						PublishEvent(OnPlayerMoveVent, player, oldVent, newVent);
+					}
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(VentilationSystem), nameof(VentilationSystem.UpdateSystem))]
+		class PlayerVentHost
+		{
+			static void Prefix(VentilationSystem __instance, PlayerControl player, MessageReader msgReader)
+			{
+				int oldReadPosition = msgReader.Position;
+
+				msgReader.ReadUInt16(); // Sequence ID
+				VentilationSystem.Operation operation = (VentilationSystem.Operation)msgReader.ReadByte();
+				byte ventId = msgReader.ReadByte();
+
+				switch(operation)
+				{
+					case VentilationSystem.Operation.Enter:
+						PublishEvent(OnPlayerEnterVent, player, ventId);
+						break;
+
+					case VentilationSystem.Operation.Exit:
+						PublishEvent(OnPlayerExitVent, player, ventId);
+						break;
+
+					case VentilationSystem.Operation.Move:
+						byte oldVent = __instance.PlayersInsideVents[player.PlayerId];
+						PublishEvent(OnPlayerMoveVent, player, oldVent, ventId);
+						break;
+				}
+
+				msgReader.Position = oldReadPosition;
 			}
 		}
 
