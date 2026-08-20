@@ -80,24 +80,5 @@ namespace HydraMenu.features
 				return false;
 			}
 		}
-
-		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CanMove), MethodType.Getter)]
-		public static class MoveModifier
-		{
-			public static bool MoveInVents { get; set; } = true;
-
-			static bool Prefix(PlayerControl __instance, ref bool __result)
-			{
-				if(HudManager.Instance.Chat.IsOpenOrOpening) return true;
-
-				if(__instance.inVent && MoveInVents)
-				{
-					__result = true;
-					return false;
-				}
-
-				return true;
-			}
-		}
 	}
 }
