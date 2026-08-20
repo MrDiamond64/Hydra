@@ -13,19 +13,17 @@ namespace HydraMenu.modules
 		public static event Action<Ladder> OnUseLadder;
 
 		// Player Events
-		public static event Action<PlayerControl, PlatformSpecificData> OnPlayerJoin;
+		public static event Action<PlayerControl, ClientData> OnPlayerJoin;
 		public static event Action<PlayerControl, string> OnPlayerChat;
 		public static event Action<PlayerControl, PlayerControl, MurderResultFlags> OnPlayerMurder;
 
+		// This function is called when the role selection screen finishes and the game is ready to play
 		[HarmonyPatch(typeof(GameManager), nameof(GameManager.StartGame))]
 		class GameLoad
 		{
 			static void Prefix()
 			{
-				if(OnGameLoad != null)
-				{
-					OnGameLoad();
-				}
+				PublishEvent(OnGameLoad);
 			}
 		}
 
@@ -34,10 +32,7 @@ namespace HydraMenu.modules
 		{
 			static void Prefix()
 			{
-				if(OnMeetingEnd != null)
-				{
-					OnMeetingEnd();
-				}
+				PublishEvent(OnMeetingEnd);
 			}
 		}
 
@@ -48,10 +43,7 @@ namespace HydraMenu.modules
 			{
 				Hydra.Log.LogMessage($"Minigame of type {__instance.GetIl2CppType().Name} was opened");
 
-				if(OnOpenMinigame != null)
-				{
-					OnOpenMinigame(__instance);
-				}
+				PublishEvent(OnOpenMinigame, __instance);
 			}
 		}
 
@@ -63,10 +55,7 @@ namespace HydraMenu.modules
 			{
 				Hydra.Log.LogMessage($"Used ladder");
 
-				if(OnUseLadder != null)
-				{
-					OnUseLadder(__instance.Destination);
-				}
+				PublishEvent(OnUseLadder, __instance.Destination);
 			}
 		}
 
@@ -77,12 +66,10 @@ namespace HydraMenu.modules
 			{
 				if(__instance == PlayerControl.LocalPlayer || AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay) return;
 
-				PlatformSpecificData platformData = null;
-
 				ClientData clientData = AmongUsClient.Instance.GetClientFromCharacter(__instance);
 				if(clientData != null)
 				{
-					platformData = clientData.PlatformData;
+					PlatformSpecificData platformData = clientData.PlatformData;
 					Hydra.Log.LogMessage($"[PlayerLogger] {clientData.PlayerName} ({__instance.NetId}) joined on {platformData.Platform}. Friendcode {clientData.FriendCode}, PUID {clientData.ProductUserId}");
 				}
 				else
@@ -92,11 +79,7 @@ namespace HydraMenu.modules
 					Hydra.Log.LogMessage($"[PlayerLogger] {__instance.name} ({__instance.NetId}) joined.");
 				}
 
-
-				if(OnPlayerJoin != null)
-				{
-					OnPlayerJoin(__instance, platformData);
-				}
+				PublishEvent(OnPlayerJoin, __instance, clientData);
 			}
 		}
 
@@ -107,10 +90,7 @@ namespace HydraMenu.modules
 			{
 				Hydra.Log.LogMessage($"[ChatLogger] {sourcePlayer.Data.PlayerName}: {chatText}");
 
-				if(OnPlayerChat != null)
-				{
-					OnPlayerChat(sourcePlayer, chatText);
-				}
+				PublishEvent(OnPlayerChat, sourcePlayer, chatText);
 			}
 		}
 
@@ -119,11 +99,34 @@ namespace HydraMenu.modules
 		{
 			static void Prefix(PlayerControl __instance, PlayerControl target, MurderResultFlags resultFlags)
 			{
-				if(OnPlayerMurder != null)
-				{
-					OnPlayerMurder(__instance, target, resultFlags);
-				}
+				PublishEvent(OnPlayerMurder, __instance, target, resultFlags);
 			}
+		}
+
+		// These functions are to simplify having null-checks everywhere
+		// Yes I know we could use evt?.Invoke to avoid having to check if the event is null, I just don't like that code style
+		private static void PublishEvent(Action evt)
+		{
+			if(evt == null) return;
+			evt();
+		}
+
+		private static void PublishEvent<T1>(Action<T1> evt, T1 arg1)
+		{
+			if(evt == null) return;
+			evt(arg1);
+		}
+
+		private static void PublishEvent<T1, T2>(Action<T1, T2> evt, T1 arg1, T2 arg2)
+		{
+			if(evt == null) return;
+			evt(arg1, arg2);
+		}
+
+		private static void PublishEvent<T1, T2, T3>(Action<T1, T2, T3> evt, T1 arg1, T2 arg2, T3 arg3)
+		{
+			if(evt == null) return;
+			evt(arg1, arg2, arg3);
 		}
 	}
 }
