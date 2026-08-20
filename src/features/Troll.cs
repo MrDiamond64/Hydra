@@ -7,30 +7,6 @@ namespace HydraMenu.features
 	{
 		public static Dictionary<PlayerControl, ushort> VentSeqIds = new Dictionary<PlayerControl, ushort>();
 
-		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
-		public static class AutoReportBodies
-		{
-			public static PlayerControl source;
-
-			public static bool Enabled { get; set; } = false;
-
-			static void Postfix(PlayerControl __instance, PlayerControl target, MurderResultFlags resultFlags)
-			{
-				if(!Enabled || !resultFlags.HasFlag(MurderResultFlags.Succeeded)) return;
-
-				if(AmongUsClient.Instance.AmHost)
-				{
-					Utilities.OpenMeeting(source ?? PlayerControl.LocalPlayer, target.Data);
-					return;
-				}
-
-				if(PlayerControl.LocalPlayer.Data.IsDead) return;
-
-				Hydra.notifications.Send("Auto Report Bodies", $"{target.Data.PlayerName} was killed by {__instance.Data.PlayerName} ({Utilities.GetPlayerColor(__instance.Data)}), their body has been automatically reported.");
-				PlayerControl.LocalPlayer.CmdReportDeadBody(target.Data);
-			}
-		}
-
 		[HarmonyPatch(typeof(VentilationSystem), nameof(VentilationSystem.Deserialize))]
 		public static class BlockVenting
 		{

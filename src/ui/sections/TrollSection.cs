@@ -2,6 +2,7 @@
 using Hazel;
 using HydraMenu.assets;
 using HydraMenu.features;
+using HydraMenu.modules;
 using HydraMenu.network;
 using System;
 using System.Collections;
@@ -24,7 +25,7 @@ namespace HydraMenu.ui.sections
 				GUILayout.Label("You are not currently in a game, these options will not work.");
 			}
 
-			Troll.AutoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies", PlayerControl.LocalPlayer, ref Troll.AutoReportBodies.source);
+			ModuleManager.autoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies", PlayerControl.LocalPlayer, ref ModuleManager.autoReportBodies.target);
 			Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
 			Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
 			Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");

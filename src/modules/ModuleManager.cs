@@ -1,5 +1,6 @@
 ﻿using HydraMenu.modules.self;
 using HydraMenu.modules.spoofer;
+using HydraMenu.modules.troll;
 using HydraMenu.modules.visuals;
 
 namespace HydraMenu.modules
@@ -18,6 +19,9 @@ namespace HydraMenu.modules
 		public static SpoofDevice spoofDevice = new SpoofDevice();
 		public static SpoofLevel spoofLevel = new SpoofLevel();
 		public static SpoofVersion spoofVersion = new SpoofVersion();
+
+		// Troll
+		public static AutoReportBodies autoReportBodies = new AutoReportBodies();
 
 		// Visual
 		public static AccurateDisconnectReason accurateDisconnectReason = new AccurateDisconnectReason();
