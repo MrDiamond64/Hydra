@@ -241,7 +241,7 @@ namespace HydraMenu.ui.sections
 					}
 
 					BatchedMessage batch = new BatchedMessage();
-					batch.QueueVotingComplete(array, target.Data, false);
+					batch.QueueVotingComplete(array, target.Data, false, false, 0);
 					batch.FinishBatch();
 				}
 			}
@@ -258,7 +258,7 @@ namespace HydraMenu.ui.sections
 
 				MeetingHud.VoterState[] votes = Array.Empty<MeetingHud.VoterState>();
 
-				batch.QueueVotingComplete(votes, target.Data, false);
+				batch.QueueVotingComplete(votes, target.Data, false, false, 0);
 				// If we created a MeetingHud object then it will be destroyed by the RpcClose function
 				batch.QueueCloseMeeting();
 				batch.FinishBatch();

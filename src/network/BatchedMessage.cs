@@ -165,13 +165,13 @@ namespace HydraMenu.network
 			writer.EndMessage();
 		}
 
-		public void QueueVotingComplete(MeetingHud.VoterState[] voteStates, NetworkedPlayerInfo ejectedPlayer, bool isTie)
+		public void QueueVotingComplete(MeetingHud.VoterState[] voteStates, NetworkedPlayerInfo ejectedPlayer, bool isTie, bool wasOverruled, ushort overruleNonce)
 		{
 			msgCount++;
 
 			if(IsGlobal || AmTarget)
 			{
-				MeetingHud.Instance.VotingComplete(voteStates, ejectedPlayer, isTie);
+				MeetingHud.Instance.VotingComplete(voteStates, ejectedPlayer, isTie, wasOverruled, overruleNonce);
 				if(AmTarget) return;
 			}
 
@@ -186,8 +186,10 @@ namespace HydraMenu.network
 				state.Serialize(writer);
 			}
 
-			writer.Write(ejectedPlayer.PlayerId);
+			writer.Write(ejectedPlayer != null ? ejectedPlayer.PlayerId : byte.MaxValue);
 			writer.Write(isTie);
+			writer.Write(wasOverruled);
+			writer.Write(overruleNonce);
 
 			writer.EndMessage();
 		}

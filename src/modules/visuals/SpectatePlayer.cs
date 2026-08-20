@@ -14,7 +14,7 @@ namespace HydraMenu.modules.visuals
 			FollowerCamera camera = Camera.main.GetComponent<FollowerCamera>();
 			camera.SetTarget(target);
 
-			wereShadowsEnabled = HudManager._instance.ShadowQuad.gameObject.active;
+			wereShadowsEnabled = HudManager.Instance.ShadowQuad.gameObject.active;
 			HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
 		}
 

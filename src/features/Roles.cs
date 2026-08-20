@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using HydraMenu.modules;
 using UnityEngine;
 
 namespace HydraMenu.features
@@ -16,6 +17,15 @@ namespace HydraMenu.features
 
 			if(SkipSabotageChecks.SabotageAsCrewmate) HudManager.Instance.SabotageButton.gameObject.SetActive(true);
 			if(AllowVentingForCrewmates) HudManager.Instance.ImpostorVentButton.gameObject.SetActive(true);
+
+			// The Chat button and Match Info buttons will overlap if both are active in-game (but not in meetings)
+			// I tried modifying `MatchInfoButton.transform.position` and the likes to try and shift the button towards the left
+			// however that only moved the collider of the button, not the icon
+			// So we just use this workaround to hide the Match Info Button in situations where it will not overlap with the Chat button
+			if(ModuleManager.alwaysVisibleChat.Enabled)
+			{
+				HudManager.Instance.MatchInfoButton.gameObject.SetActive(MeetingHud.Instance != null);
+			}
 		}
 
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdCheckShapeshift))]

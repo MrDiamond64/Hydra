@@ -141,7 +141,7 @@ namespace HydraMenu.ui.sections
 					MeetingHud.VoterState[] votes = Array.Empty<MeetingHud.VoterState>();
 
 					BatchedMessage batch = new BatchedMessage();
-					batch.QueueVotingComplete(votes, null, false);
+					batch.QueueVotingComplete(votes, null, false, false, 0);
 					batch.QueueCloseMeeting();
 					batch.FinishBatch();
 				}
