@@ -22,6 +22,7 @@ namespace HydraMenu.modules
 
 		// Troll
 		public static AutoReportBodies autoReportBodies = new AutoReportBodies();
+		public static BlockSabotages blockSabotages = new BlockSabotages();
 
 		// Visual
 		public static AccurateDisconnectReason accurateDisconnectReason = new AccurateDisconnectReason();

@@ -27,7 +27,7 @@ namespace HydraMenu.ui.sections
 
 			ModuleManager.autoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies", PlayerControl.LocalPlayer, ref ModuleManager.autoReportBodies.target);
 			Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
-			Troll.BlockSabotages.Enabled = GUILayout.Toggle(Troll.BlockSabotages.Enabled, "Block Sabotages");
+			ModuleManager.blockSabotages.Enabled = GUILayout.Toggle(ModuleManager.blockSabotages.Enabled, "Block Sabotages");
 			Troll.BlockVenting.Enabled = GUILayout.Toggle(Troll.BlockVenting.Enabled, "Disable Vents");
 
 			if(GUILayout.Button("Kick All Players"))
