@@ -103,6 +103,22 @@ namespace HydraMenu.features
 			}
 		}
 
+		[HarmonyPatch(typeof(ZiplineConsole), nameof(ZiplineConsole.CanUse))]
+		 public static class NoZiplineCooldown
+		 {
+			 public static bool Enabled { get; set; } = true;
+
+			 static void Postfix(ZiplineConsole __instance)
+			 {
+				 if(Enabled)
+				 {
+					 Hydra.Log.LogMessage($"Used ZipLine");
+					  __instance.CoolDown = 0.0f;
+					  __instance.destination.CoolDown = 0.0f;
+				 }
+			 }
+		 }
+
 		[HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Begin))]
 		public static class UnlimitedMeetings
 		{
