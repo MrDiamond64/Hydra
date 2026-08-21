@@ -39,7 +39,7 @@ namespace HydraMenu.modules.troll
 			if(AmongUsClient.Instance.AmHost)
 			{
 				Hydra.notifications.Send("Block Sabotages", "This option should be used when you are not the host of the lobby. Use Disable Sabotages in the Host section instead.");
-				Host.DisableSabotages.Enabled = true;
+				ModuleManager.disableSabotages.Enabled = true;
 				Enabled = false;
 				return;
 			}

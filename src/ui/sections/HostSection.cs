@@ -29,19 +29,19 @@ namespace HydraMenu.ui.sections
 				GUILayout.Label("You are not the host of the current lobby. Using these options will either do nothing or get you banned by the anticheat");
 			}
 
-			Host.BanMidGame.Enabled = GUILayout.Toggle(Host.BanMidGame.Enabled, "Be able to ban players mid-game");
+			ModuleManager.banMidGame.Enabled = GUILayout.Toggle(ModuleManager.banMidGame.Enabled, "Be able to ban players mid-game");
 
 			ModuleManager.flipSkeld.Enabled = GUILayout.Toggle(ModuleManager.flipSkeld.Enabled, "Use Flipped Skeld Map");
 
-			Host.DisableSabotages.Enabled = GUILayout.Toggle(Host.DisableSabotages.Enabled, "Disable Sabotages");
-			Host.DisableCloseDoors.Enabled = GUILayout.Toggle(Host.DisableCloseDoors.Enabled, "Disable Close Doors");
-			Host.DisableCameras.Enabled = GUILayout.Toggle(Host.DisableCameras.Enabled, "Disable Security Cameras");
-			Host.DisableGameEnd.Enabled = GUILayout.Toggle(Host.DisableGameEnd.Enabled, "Disable Game End");
-			Host.NoKillCooldown.Enabled = GUILayout.Toggle(Host.NoKillCooldown.Enabled, "No Kill Cooldown");
+			ModuleManager.disableSabotages.Enabled = GUILayout.Toggle(ModuleManager.disableSabotages.Enabled, "Disable Sabotages");
+			ModuleManager.disableCloseDoors.Enabled = GUILayout.Toggle(ModuleManager.disableCloseDoors.Enabled, "Disable Close Doors");
+			ModuleManager.disableCameras.Enabled = GUILayout.Toggle(ModuleManager.disableCameras.Enabled, "Disable Security Cameras");
+			ModuleManager.disableGameEnd.Enabled = GUILayout.Toggle(ModuleManager.disableGameEnd.Enabled, "Disable Game End");
+			ModuleManager.noKillCooldown.Enabled = GUILayout.Toggle(ModuleManager.noKillCooldown.Enabled, "No Kill Cooldown");
 
 			GUILayout.BeginHorizontal();
-			Host.BlockLowLevels.Enabled = GUILayout.Toggle(Host.BlockLowLevels.Enabled, $"Kick players with less than {Host.BlockLowLevels.MinLevel} levels");
-			Host.BlockLowLevels.MinLevel = (uint)GUILayout.HorizontalSlider(Host.BlockLowLevels.MinLevel, 0, 100);
+			ModuleManager.blockLowLevels.Enabled = GUILayout.Toggle(ModuleManager.blockLowLevels.Enabled, $"Kick players with less than {ModuleManager.blockLowLevels.minLevel} levels");
+			ModuleManager.blockLowLevels.minLevel = (uint)GUILayout.HorizontalSlider(ModuleManager.blockLowLevels.minLevel, 0, 100);
 			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Force Start Game"))
@@ -58,7 +58,7 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Force Crewmate Victory"))
 			{
 				// Just in case the user has this enabled
-				Host.DisableGameEnd.Enabled = false;
+				ModuleManager.disableGameEnd.Enabled = false;
 
 				GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByTask, false);
 				Hydra.notifications.Send("Game Finished", "You ended the game with a crewmate victory.", 5);
@@ -67,7 +67,7 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Force Imposter Victory"))
 			{
 				// Just in case the user has this enabled
-				Host.DisableGameEnd.Enabled = false;
+				ModuleManager.disableGameEnd.Enabled = false;
 
 				GameManager.Instance.RpcEndGame(GameOverReason.ImpostorsByKill, false);
 				Hydra.notifications.Send("Game Finished", "You ended the game with an imposter victory.", 5);
@@ -122,13 +122,13 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Space(5);
 			GUILayout.Label("Assign roles for next round:");
-			Host.AlwaysImposter.Enabled = GUILayout.Toggle(Host.AlwaysImposter.Enabled, "Enabled");
-			GUILayout.Label($"Role to assign: {Host.AlwaysImposter.assignedRole}");
-			Host.AlwaysImposter.assignedRole = Controls.HorizontalRoleSlider(Host.AlwaysImposter.assignedRole);
+			ModuleManager.assignRoles.Enabled = GUILayout.Toggle(ModuleManager.assignRoles.Enabled, "Enabled");
+			GUILayout.Label($"Role to assign: {ModuleManager.assignRoles.assignedRole}");
+			ModuleManager.assignRoles.assignedRole = Controls.HorizontalRoleSlider(ModuleManager.assignRoles.assignedRole);
 
 			GUILayout.Space(5);
 			GUILayout.Label("Meeting Controls:");
-			Host.DisableMeetings.Enabled = GUILayout.Toggle(Host.DisableMeetings.Enabled, "Disable Meetings");
+			ModuleManager.disableMeetings.Enabled = GUILayout.Toggle(ModuleManager.disableMeetings.Enabled, "Disable Meetings");
 			Hydra.routines.reportBodySpam.Enabled = GUILayout.Toggle(Hydra.routines.reportBodySpam.Enabled, "Spam Report Bodies");
 
 			if(GUILayout.Button("Close Meeting"))

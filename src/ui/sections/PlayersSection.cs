@@ -439,7 +439,7 @@ namespace HydraMenu.ui.sections
 				yield break;
 			}
 
-			Host.DisableGameEnd.Enabled = true;
+			ModuleManager.disableGameEnd.Enabled = true;
 
 			if(target != PlayerControl.LocalPlayer)
 			{
@@ -458,7 +458,7 @@ namespace HydraMenu.ui.sections
 			// Wait three seconds so all players can see which player we are framing
 			yield return Effects.Wait(3.0f);
 
-			Host.DisableGameEnd.Enabled = false;
+			ModuleManager.disableGameEnd.Enabled = false;
 			Hydra.notifications.Send("Framer", $"Framed {target.Data.PlayerName} for killing all players!");
 		}
 	}

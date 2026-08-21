@@ -17,9 +17,14 @@ namespace HydraMenu.modules
 		// Player Events
 		public static event Action<PlayerControl, ClientData> OnPlayerJoin;
 		public static event Action<PlayerControl, string> OnPlayerChat;
+
 		public static event Action<PlayerControl, byte> OnPlayerEnterVent;
 		public static event Action<PlayerControl, byte> OnPlayerExitVent;
 		public static event Action<PlayerControl, byte, byte> OnPlayerMoveVent;
+
+		public static event Action<PlayerControl> OnPlayerEnterCameras;
+		public static event Action<PlayerControl> OnPlayerExitCameras;
+
 		public static event Action<PlayerControl, PlayerControl, MurderResultFlags> OnPlayerMurder;
 
 		// This function is called when the role selection screen finishes and the game is ready to play
@@ -181,6 +186,26 @@ namespace HydraMenu.modules
 				}
 
 				msgReader.Position = oldReadPosition;
+			}
+		}
+
+		[HarmonyPatch(typeof(SecurityCameraSystemType), nameof(SecurityCameraSystemType.UpdateSystem))]
+		class UpdateCamerasHost
+		{
+			static void Postfix(PlayerControl player, MessageReader msgReader)
+			{
+				msgReader.Position--;
+				// 1 = Player started to watch cameras, 2 (and every other value) = Player stopped watching cameras
+				byte operation = msgReader.ReadByte();
+
+				if(operation == 1)
+				{
+					PublishEvent(OnPlayerEnterCameras, player);
+				}
+				else
+				{
+					PublishEvent(OnPlayerExitCameras, player);
+				}
 			}
 		}
 

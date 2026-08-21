@@ -34,7 +34,7 @@ namespace HydraMenu.modules.spoofer
 		{
 			static bool Prefix(ref bool __result)
 			{
-				if(!Instance.Enabled && !Instance.useModdedProtocol) return true;
+				if(!Instance.Enabled || !Instance.useModdedProtocol) return true;
 
 				__result = true;
 				return false;

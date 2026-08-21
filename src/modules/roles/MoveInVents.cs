@@ -12,7 +12,7 @@ namespace HydraMenu.modules.roles
 		}
 
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CanMove), MethodType.Getter)]
-		public static class MoveModifier
+		class MoveModifier
 		{
 			static bool Prefix(PlayerControl __instance, ref bool __result)
 			{

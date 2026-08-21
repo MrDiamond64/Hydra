@@ -10,7 +10,16 @@ namespace HydraMenu.modules
 	internal class ModuleManager
 	{
 		// Host
+		public static AssignRoles assignRoles = new AssignRoles();
+		public static BanMidGame banMidGame = new BanMidGame();
+		public static BlockLowLevels blockLowLevels = new BlockLowLevels();
+		public static DisableCameras disableCameras = new DisableCameras();
+		public static DisableCloseDoors disableCloseDoors = new DisableCloseDoors();
+		public static DisableGameEnd disableGameEnd = new DisableGameEnd();
+		public static DisableMeetings disableMeetings = new DisableMeetings();
+		public static DisableSabotages disableSabotages = new DisableSabotages();
 		public static FlipSkeld flipSkeld = new FlipSkeld();
+		public static NoKillCooldown noKillCooldown = new NoKillCooldown();
 
 		// Roles
 		public static MoveInVents moveInVents = new MoveInVents();
