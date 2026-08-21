@@ -121,6 +121,8 @@ namespace HydraMenu
 			{ "Reactor", new Vector2(20.53f, -5.39f) },
 		};
 
+		public static Dictionary<PlayerControl, ushort> VentSeqIds = new Dictionary<PlayerControl, ushort>();
+
 		public static Dictionary<string, Vector2> GetTeleportLocations()
 		{
 			MapNames currentMap = Utilities.GetCurrentMap();
@@ -184,19 +186,19 @@ namespace HydraMenu
 				return;
 			}
 
-			if(!Troll.VentSeqIds.ContainsKey(player))
+			if(!VentSeqIds.ContainsKey(player))
 			{
 				// High enough value to supersede the actual sequence ID
-				Troll.VentSeqIds.Add(player, 10000);
+				VentSeqIds.Add(player, 10000);
 			}
 
 			MessageWriter enterVent = MessageWriter.Get(SendOption.None);
-			enterVent.Write(++Troll.VentSeqIds[player]);
+			enterVent.Write(++VentSeqIds[player]);
 			enterVent.Write((byte)VentilationSystem.Operation.Enter);
 			enterVent.Write((byte)ventId);
 
 			MessageWriter bootFromVent = MessageWriter.Get(SendOption.None);
-			bootFromVent.Write(++Troll.VentSeqIds[player]);
+			bootFromVent.Write(++VentSeqIds[player]);
 			bootFromVent.Write((byte)VentilationSystem.Operation.BootImpostors);
 			bootFromVent.Write((byte)ventId);
 

@@ -1,5 +1,4 @@
 ﻿using Il2CppInterop.Runtime;
-using System;
 
 namespace HydraMenu.modules.self
 {

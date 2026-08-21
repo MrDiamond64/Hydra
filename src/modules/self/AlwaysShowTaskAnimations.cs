@@ -13,9 +13,7 @@ namespace HydraMenu.modules.self
 
 		public static AlwaysShowTaskAnimations Instance
 		{
-			get {
-				return ModuleManager.alwaysShowTaskAnimations;
-			}
+			get { return ModuleManager.alwaysShowTaskAnimations; }
 		}
 
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetScanner))]

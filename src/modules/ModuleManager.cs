@@ -1,4 +1,5 @@
-﻿using HydraMenu.modules.roles;
+﻿using HydraMenu.modules.host;
+using HydraMenu.modules.roles;
 using HydraMenu.modules.self;
 using HydraMenu.modules.spoofer;
 using HydraMenu.modules.troll;
@@ -8,6 +9,9 @@ namespace HydraMenu.modules
 {
 	internal class ModuleManager
 	{
+		// Host
+		public static FlipSkeld flipSkeld = new FlipSkeld();
+
 		// Roles
 		public static MoveInVents moveInVents = new MoveInVents();
 		public static NoKillChecks noKillChecks = new NoKillChecks();
