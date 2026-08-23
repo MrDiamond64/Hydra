@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class SabotageSection : ISection
+	internal class SabotageSection : Section
 	{
 		public SabotageSection() : base("Sabotage") { }
 

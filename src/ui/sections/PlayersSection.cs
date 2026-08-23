@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class PlayersSection : ISection
+	internal class PlayersSection : Section
 	{
 		public PlayersSection() : base("Players") { }
 

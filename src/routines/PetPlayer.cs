@@ -4,7 +4,7 @@ using UnityEngine;
 namespace HydraMenu.routines
 {
 
-	public class PetPlayerRoutine : IRoutine
+	public class PetPlayerRoutine : Routine
 	{
 		public PetPlayerRoutine() : base("PetPlayer") { }
 

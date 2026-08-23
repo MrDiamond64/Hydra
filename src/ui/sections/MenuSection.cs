@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class MenuSection : ISection
+	internal class MenuSection : Section
 	{
 		public MenuSection() : base("Menu") { }
 

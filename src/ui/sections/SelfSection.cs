@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class SelfSection : ISection
+	internal class SelfSection : Section
 	{
 		public SelfSection() : base("Self") { }
 

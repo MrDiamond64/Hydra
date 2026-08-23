@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class RolesSection : ISection
+	internal class RolesSection : Section
 	{
 		public RolesSection() : base("Roles") { }
 

@@ -2,7 +2,7 @@
 
 namespace HydraMenu.routines
 {
-	public class DoorTrollerRoutine : IRoutine
+	public class DoorTrollerRoutine : Routine
 	{
 		public DoorTrollerRoutine() : base("Door Troller") { }
 

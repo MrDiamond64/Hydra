@@ -14,7 +14,7 @@ namespace HydraMenu.routines
 		public ReportBodySpam reportBodySpam = new ReportBodySpam();
 		public TeleportSpammer teleportSpammer = new TeleportSpammer();
 
-		public readonly IRoutine[] routineList;
+		public readonly Routine[] routineList;
 
 		public RoutineManager()
 		{
@@ -23,7 +23,7 @@ namespace HydraMenu.routines
 
 		public void Update()
 		{
-			foreach(IRoutine routine in routineList)
+			foreach(Routine routine in routineList)
 			{
 				if(!routine.Enabled) continue;
 
@@ -38,7 +38,7 @@ namespace HydraMenu.routines
 			{
 				Hydra.Log.LogInfo("Player disconnected from the lobby, disabling relevant routines");
 
-				foreach(IRoutine routine in Hydra.routines.routineList)
+				foreach(Routine routine in Hydra.routines.routineList)
 				{
 					if(!routine.Enabled) continue;
 

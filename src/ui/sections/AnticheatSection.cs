@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class AnticheatSection : ISection
+	internal class AnticheatSection : Section
 	{
 		public AnticheatSection() : base("Anticheat") { }
 

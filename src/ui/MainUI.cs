@@ -32,7 +32,7 @@ namespace HydraMenu.ui
 		}
 
 		// UI Section Pane
-		private readonly ISection[] sections = { new GeneralSection(), new SelfSection(), new TrollSection(), new SabotageSection(), new HostSection(), new RolesSection(), new PlayersSection(), new MovementSection(), new VisualSection(), new ProtectionsSection(), new AnticheatSection(), new SpooferSection(), new MenuSection() };
+		private readonly Section[] sections = { new GeneralSection(), new SelfSection(), new TrollSection(), new SabotageSection(), new HostSection(), new RolesSection(), new PlayersSection(), new MovementSection(), new VisualSection(), new ProtectionsSection(), new AnticheatSection(), new SpooferSection(), new MenuSection() };
 		public byte activeTab = 0;
 
 		public static Vector2 SectionListSize
@@ -110,7 +110,7 @@ namespace HydraMenu.ui
 
 			for(byte i = 0; i < sections.Length; i++)
 			{
-				ISection section = sections[i];
+				Section section = sections[i];
 
 				// Add the tab to the left-pane
 				RenderTab(i, section);
@@ -167,7 +167,7 @@ namespace HydraMenu.ui
 				mousePos.y <= (windowPosition.y + WindowSize.y);
 		}
 
-		private void RenderTab(byte position, ISection section)
+		private void RenderTab(byte position, Section section)
 		{
 			Rect rect = new Rect(
 				SectionListPosition.x,

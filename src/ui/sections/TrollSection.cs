@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class TrollSection : ISection
+	internal class TrollSection : Section
 	{
 		public TrollSection() : base("Troll") { }
 

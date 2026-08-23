@@ -5,7 +5,7 @@ namespace HydraMenu.routines
 {
 	// This could be implemented as a postfix patch of CustomNetworkTransform::Deserialize or as a routine
 	// It took me a while, but I concluded that using a routine is a more elegant design choice
-	public class JailPlayerRoutine : IRoutine
+	public class JailPlayerRoutine : Routine
 	{
 		public JailPlayerRoutine() : base("JailPlayer") { }
 

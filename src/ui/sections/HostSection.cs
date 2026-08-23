@@ -11,7 +11,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace HydraMenu.ui.sections
 {
-	internal class HostSection : ISection
+	internal class HostSection : Section
 	{
 		public HostSection() : base("Host") { }
 

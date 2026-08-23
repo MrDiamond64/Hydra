@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class MovementSection : ISection
+	internal class MovementSection : Section
 	{
 		public MovementSection() : base("Movement") { }
 

@@ -2,7 +2,7 @@
 
 namespace HydraMenu.routines
 {
-	public class PlayerFollowerRoutine : IRoutine
+	public class PlayerFollowerRoutine : Routine
 	{
 		public PlayerFollowerRoutine() : base("PlayerFollower") { }
 

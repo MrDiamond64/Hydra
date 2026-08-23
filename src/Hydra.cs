@@ -54,7 +54,7 @@ internal class Hydra : BasePlugin
 		notifications.ClearNotifications();
 
 		// Some routines include cleanup in the OnDisable method, which we need to trigger
-		foreach(IRoutine routine in routines.routineList)
+		foreach(Routine routine in routines.routineList)
 		{
 			routine.Enabled = false;
 		}

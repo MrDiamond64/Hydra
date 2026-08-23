@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class ProtectionsSection : ISection
+	internal class ProtectionsSection : Section
 	{
 		public ProtectionsSection() : base("Protections") { }
 		public override void Render()

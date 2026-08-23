@@ -2,7 +2,7 @@
 
 namespace HydraMenu.routines
 {
-	public class TeleportSpammer : IRoutine
+	public class TeleportSpammer : Routine
 	{
 		public TeleportSpammer() : base("TeleportSpammer") { }
 

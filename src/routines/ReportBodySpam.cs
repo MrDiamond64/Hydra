@@ -2,7 +2,7 @@
 
 namespace HydraMenu.routines
 {
-	public class ReportBodySpam : IRoutine
+	public class ReportBodySpam : Routine
 	{
 		public ReportBodySpam() : base("ReportBodySpam") { }
 

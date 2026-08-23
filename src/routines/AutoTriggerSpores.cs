@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HydraMenu.routines
 {
-	public class AutoTriggerSporesRoutine : IRoutine
+	public class AutoTriggerSporesRoutine : Routine
 	{
 		public AutoTriggerSporesRoutine() : base("AutoTriggerSpores") { }
 

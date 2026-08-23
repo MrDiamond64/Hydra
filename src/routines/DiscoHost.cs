@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HydraMenu.routines
 {
-	public class DiscoHostRoutine : IRoutine
+	public class DiscoHostRoutine : Routine
 	{
 		public DiscoHostRoutine() : base("DiscoHost") { }
 		public HashSet<int> targets = new HashSet<int>();

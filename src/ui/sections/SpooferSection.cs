@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
-	internal class SpooferSection : ISection
+	internal class SpooferSection : Section
 	{
 		public SpooferSection() : base("Spoofer") { }
 
