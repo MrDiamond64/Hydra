@@ -3,6 +3,7 @@ using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using HydraMenu.features;
+using HydraMenu.modules;
 using HydraMenu.routines;
 using HydraMenu.ui;
 using UnityEngine;
@@ -15,8 +16,9 @@ internal class Hydra : BasePlugin
 {
 	internal static new ManualLogSource Log;
 	private static readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
+	public static readonly ConfigManager config = new ConfigManager();
 
-	private static MainUI mainUI;
+	public static MainUI mainUI;
 	private static Roles roles;
 	public static RoutineManager routines;
 	public static NotificationManager notifications;
@@ -39,6 +41,8 @@ internal class Hydra : BasePlugin
 			notifications.Send("Fatal Error", "Harmony patches failed to load, you are likely using an unsupported version. Check https://github.com/MrDiamond64/Hydra for more information.", 9999);
 			throw;
 		}
+
+		config.Initialize();
 
 		Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} has loaded!");
 	}
