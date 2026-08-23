@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using BepInEx;
+using System.IO;
 using System.Text.Json;
 using UnityEngine;
 
@@ -10,10 +11,10 @@ namespace HydraMenu.modules
 		public string[] configList;
 
 		// Base path is the location of GameAssembly.dll
-		private readonly string configPath = "./BepInEx/config/Hydra/";
+		private readonly string configPath = Path.Combine(Paths.ConfigPath, "Hydra");
 		private string ConfigFile
 		{
-			get { return  configPath + currentConfig + ".json"; }
+			get { return Path.Combine(configPath, currentConfig + ".json"); }
 		}
 
 		public class ConfigData
