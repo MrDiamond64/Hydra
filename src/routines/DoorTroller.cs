@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using HydraMenu.config;
+using UnityEngine;
 
 namespace HydraMenu.routines
 {
@@ -6,7 +7,8 @@ namespace HydraMenu.routines
 	{
 		public DoorTrollerRoutine() : base("Door Troller") { }
 
-		public float lockAndUnlockDelay = 0.5f;
+		[ConfigProperty]
+		public float LockAndUnlockDelay { get; set; }= 0.5f;
 		private float timeElapsed = 0f;
 		private bool doorsLocked = false;
 
@@ -15,7 +17,7 @@ namespace HydraMenu.routines
 			if(ShipStatus.Instance == null) return;
 
 			timeElapsed += Time.deltaTime;
-			if(timeElapsed < lockAndUnlockDelay) return;
+			if(timeElapsed < LockAndUnlockDelay) return;
 
 			if(doorsLocked)
 			{

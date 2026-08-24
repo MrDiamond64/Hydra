@@ -26,6 +26,11 @@ namespace HydraMenu.ui.sections
 				Styles.ClearCache();
 			}
 
+			if(GUILayout.Button("Save Config"))
+			{
+				Hydra.config.SaveConfig();
+			}
+
 			if(GUILayout.Button("Eject"))
 			{
 				Hydra.Eject();

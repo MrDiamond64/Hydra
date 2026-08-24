@@ -1,10 +1,10 @@
 ﻿using BepInEx;
 using HydraMenu.ui;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using UnityEngine;
 
-namespace HydraMenu.modules
+namespace HydraMenu.config
 {
 	internal class ConfigManager
 	{
@@ -20,6 +20,7 @@ namespace HydraMenu.modules
 		public class ConfigData
 		{
 			public MainUI.MainUIConfig Menu { get; set; }
+			public Dictionary<string, Dictionary<string, object>> Routines { get; set; }
 		}
 
 		public void Initialize()
@@ -72,6 +73,7 @@ namespace HydraMenu.modules
 		{
 			ConfigData configData = new ConfigData();
 			configData.Menu = Hydra.mainUI.GetConfigData();
+			configData.Routines = Hydra.routines.GetConfigData();
 
 			JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
 			serializerOptions.WriteIndented = true;

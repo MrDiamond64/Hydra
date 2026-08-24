@@ -117,8 +117,8 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label("Door Troller:");
 			Hydra.routines.doorTroller.Enabled = GUILayout.Toggle(Hydra.routines.doorTroller.Enabled, "Enabled");
 
-			GUILayout.Label($"Lock and Unlock Delay: {Hydra.routines.doorTroller.lockAndUnlockDelay:F2}s");
-			Hydra.routines.doorTroller.lockAndUnlockDelay = GUILayout.HorizontalSlider(Hydra.routines.doorTroller.lockAndUnlockDelay, 0.1f, 2.0f);
+			GUILayout.Label($"Lock and Unlock Delay: {Hydra.routines.doorTroller.LockAndUnlockDelay:F2}s");
+			Hydra.routines.doorTroller.LockAndUnlockDelay = GUILayout.HorizontalSlider(Hydra.routines.doorTroller.LockAndUnlockDelay, 0.1f, 2.0f);
 
 			GUILayout.Space(5);
 			GUILayout.Label("Auto Expose Impostors:");

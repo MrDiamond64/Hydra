@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -29,6 +30,19 @@ namespace HydraMenu.routines
 
 				routine.Run();
 			}
+		}
+
+		// Return a dictionary of each routine with its name, and another dictionary with names and values of each property
+		public Dictionary<string, Dictionary<string, object>> GetConfigData()
+		{
+			Dictionary<string, Dictionary<string, object>> routineConfig = new Dictionary<string, Dictionary<string, object>>();
+
+			foreach(Routine routine in routineList)
+			{
+				routineConfig.Add(routine.name, routine.GetConfigData());
+			}
+
+			return routineConfig;
 		}
 
 		[HarmonyPatch(typeof(GameData), nameof(GameData.OnDisconnected))]

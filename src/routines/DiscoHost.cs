@@ -1,4 +1,5 @@
-﻿using HydraMenu.network;
+﻿using HydraMenu.config;
+using HydraMenu.network;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,8 @@ namespace HydraMenu.routines
 		public DiscoHostRoutine() : base("DiscoHost") { }
 		public HashSet<int> targets = new HashSet<int>();
 
-		public float randomizationDelay = 0.5f;
+		[ConfigProperty]
+		public float RandomizationDelay { get; set; } = 0.5f;
 		private float timeElapsed = 0f;
 
 		private System.Random rnd = new System.Random();
@@ -18,7 +20,7 @@ namespace HydraMenu.routines
 		public override void Run()
 		{
 			timeElapsed += Time.deltaTime;
-			if(timeElapsed < randomizationDelay) return;
+			if(timeElapsed < RandomizationDelay) return;
 			timeElapsed = 0f;
 
 			List<int> colors = Enumerable.Range(0, 18).ToList();
