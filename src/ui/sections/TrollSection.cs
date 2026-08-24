@@ -119,6 +119,13 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Label($"Lock and Unlock Delay: {Hydra.routines.doorTroller.lockAndUnlockDelay:F2}s");
 			Hydra.routines.doorTroller.lockAndUnlockDelay = GUILayout.HorizontalSlider(Hydra.routines.doorTroller.lockAndUnlockDelay, 0.1f, 2.0f);
+
+			GUILayout.Space(5);
+			GUILayout.Label("Auto Expose Impostors:");
+			ModuleManager.autoExposeImpostors.Enabled = GUILayout.Toggle(ModuleManager.autoExposeImpostors.Enabled, "Enabled");
+			ModuleManager.autoExposeImpostors.exposeOnMurder = GUILayout.Toggle(ModuleManager.autoExposeImpostors.exposeOnMurder, "Expose On Murder");
+			ModuleManager.autoExposeImpostors.exposeOnShapeshift = GUILayout.Toggle(ModuleManager.autoExposeImpostors.exposeOnShapeshift, "Expose On Shapeshift");
+			ModuleManager.autoExposeImpostors.exposeOnPhantom = GUILayout.Toggle(ModuleManager.autoExposeImpostors.exposeOnPhantom, "Expose On Phantom");
 		}
 
 		// In Hide and Seek, completing a task will reduce the HnS hide timer depending on the length of the task (short, common, or long)

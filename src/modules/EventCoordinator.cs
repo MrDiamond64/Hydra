@@ -26,6 +26,8 @@ namespace HydraMenu.modules
 		public static event Action<PlayerControl> OnPlayerExitCameras;
 
 		public static event Action<PlayerControl, PlayerControl, MurderResultFlags> OnPlayerMurder;
+		public static event Action<PlayerControl, PlayerControl, bool> OnPlayerShapeshift;
+		public static event Action<PlayerControl> OnPlayerPhantom;
 
 		// This function is called when the role selection screen finishes and the game is ready to play
 		[HarmonyPatch(typeof(GameManager), nameof(GameManager.StartGame))]
@@ -215,6 +217,24 @@ namespace HydraMenu.modules
 			static void Prefix(PlayerControl __instance, PlayerControl target, MurderResultFlags resultFlags)
 			{
 				PublishEvent(OnPlayerMurder, __instance, target, resultFlags);
+			}
+		}
+
+		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Shapeshift))]
+		class PlayerShapeshift
+		{
+			static void Prefix(PlayerControl __instance, PlayerControl targetPlayer, bool animate)
+			{
+				PublishEvent(OnPlayerShapeshift, __instance, targetPlayer, animate);
+			}
+		}
+
+		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleServerVanish))]
+		class PlayerPhantom
+		{
+			static void Prefix(PlayerControl __instance)
+			{
+				PublishEvent(OnPlayerPhantom, __instance);
 			}
 		}
 

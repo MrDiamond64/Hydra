@@ -40,6 +40,7 @@ namespace HydraMenu.modules
 		public static SpoofVersion spoofVersion = new SpoofVersion();
 
 		// Troll
+		public static AutoExposeImpostors autoExposeImpostors = new AutoExposeImpostors();
 		public static AutoReportBodies autoReportBodies = new AutoReportBodies();
 		public static BlockSabotages blockSabotages = new BlockSabotages();
 		public static DisableVents disableVents = new DisableVents();
