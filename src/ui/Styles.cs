@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HydraMenu.ui
 {
-	internal class Styles
+	public class Styles
 	{
 		public enum UIColors
 		{

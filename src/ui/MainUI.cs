@@ -182,5 +182,38 @@ namespace HydraMenu.ui
 				activeTab = position;
 			}
 		}
+
+		public class MainUIConfig
+		{
+			public KeyCode MenuKey { get; set; }
+			public Styles.UIColors PrimaryColor { get; set; }
+			public float MenuOpacity { get; set; }
+			public float UiScale { get; set; }
+		}
+
+		public MainUIConfig GetConfigData()
+		{
+			MainUIConfig config = new MainUIConfig
+			{
+				MenuKey = menuKey,
+				PrimaryColor = Styles.primaryColor,
+				MenuOpacity = Styles.menuOpacity,
+				UiScale = scale
+			};
+
+			return config;
+		}
+
+		public void LoadConfigData(MainUIConfig config)
+		{
+			if(config.MenuKey != KeyCode.None)
+			{
+				Hydra.mainUI.menuKey = config.MenuKey;
+			}
+
+			Styles.primaryColor = (Styles.UIColors)Math.Clamp((int)config.PrimaryColor, 0, Styles.ColorValues.Count - 1);
+			Styles.menuOpacity = Mathf.Clamp(config.MenuOpacity, 0.0f, 1.0f);
+			scale = Mathf.Clamp(config.UiScale, 0.5f, 2.0f);
+		}
 	}
 }

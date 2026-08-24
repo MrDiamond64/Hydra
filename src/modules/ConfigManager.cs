@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using HydraMenu.ui;
 using System.IO;
 using System.Text.Json;
 using UnityEngine;
@@ -10,7 +11,6 @@ namespace HydraMenu.modules
 		public string currentConfig = "Hydra";
 		public string[] configList;
 
-		// Base path is the location of GameAssembly.dll
 		private readonly string configPath = Path.Combine(Paths.ConfigPath, "Hydra");
 		private string ConfigFile
 		{
@@ -19,7 +19,7 @@ namespace HydraMenu.modules
 
 		public class ConfigData
 		{
-			public KeyCode MenuKey { get; set; }
+			public MainUI.MainUIConfig Menu { get; set; }
 		}
 
 		public void Initialize()
@@ -63,11 +63,7 @@ namespace HydraMenu.modules
 				return;
 			}
 
-			// If our config file has no MenuKey property then JsonSerializer will default to None (0)
-			if(configData.MenuKey != KeyCode.None)
-			{
-				Hydra.mainUI.menuKey = configData.MenuKey;
-			}
+			Hydra.mainUI.LoadConfigData(configData.Menu);
 
 			Hydra.Log.LogInfo($"Loaded config {configName}");
 		}
@@ -75,7 +71,7 @@ namespace HydraMenu.modules
 		public void SaveConfig()
 		{
 			ConfigData configData = new ConfigData();
-			configData.MenuKey = Hydra.mainUI.menuKey;
+			configData.Menu = Hydra.mainUI.GetConfigData();
 
 			JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
 			serializerOptions.WriteIndented = true;
