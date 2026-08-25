@@ -39,48 +39,48 @@ namespace HydraMenu.ui.sections
 			versionSelection = (int)GUILayout.HorizontalSlider(versionSelection, 0, versions.Count - 1);
 			ModuleManager.spoofVersion.spoofedVersion = versions.ElementAt(versionSelection).Value;
 
-			ModuleManager.spoofVersion.useModdedProtocol = GUILayout.Toggle(ModuleManager.spoofVersion.useModdedProtocol, "Use Modded Protocol");
+			ModuleManager.spoofVersion.UseModdedProtocol = GUILayout.Toggle(ModuleManager.spoofVersion.UseModdedProtocol, "Use Modded Protocol");
 
 			GUILayout.Space(5);
 			GUILayout.Label("Level Spoofer:");
 
 			ModuleManager.spoofLevel.Enabled = GUILayout.Toggle(ModuleManager.spoofLevel.Enabled, "Enabled");
-			GUILayout.Label($"Spoofed Level: {ModuleManager.spoofLevel.spoofedLevel}");
-			ModuleManager.spoofLevel.spoofedLevel = (uint)GUILayout.HorizontalSlider(ModuleManager.spoofLevel.spoofedLevel, 1, 200);
+			GUILayout.Label($"Spoofed Level: {ModuleManager.spoofLevel.SpoofedLevle}");
+			ModuleManager.spoofLevel.SpoofedLevle = (uint)GUILayout.HorizontalSlider(ModuleManager.spoofLevel.SpoofedLevle, 1, 200);
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("-100"))
 			{
-				ClampSelectedLevel(ModuleManager.spoofLevel.spoofedLevel - 100);
+				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevle - 100);
 			}
 
 			if(GUILayout.Button("-10"))
 			{
-				ClampSelectedLevel(ModuleManager.spoofLevel.spoofedLevel - 10);
+				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevle - 10);
 			}
 
 			if(GUILayout.Button("+10"))
 			{
-				ClampSelectedLevel(ModuleManager.spoofLevel.spoofedLevel + 10);
+				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevle + 10);
 			}
 
 			if(GUILayout.Button("+100"))
 			{
-				ClampSelectedLevel(ModuleManager.spoofLevel.spoofedLevel + 100);
+				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevle + 100);
 			}
 			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Send Level Update"))
 			{
-				PlayerControl.LocalPlayer.RpcSetLevel(ModuleManager.spoofLevel.spoofedLevel - 1);
-				Hydra.notifications.Send("Level Updater", $"Your level has been changed to {ModuleManager.spoofLevel.spoofedLevel}", 5);
+				PlayerControl.LocalPlayer.RpcSetLevel(ModuleManager.spoofLevel.SpoofedLevle - 1);
+				Hydra.notifications.Send("Level Updater", $"Your level has been changed to {ModuleManager.spoofLevel.SpoofedLevle}", 5);
 			}
 
 			GUILayout.Space(5);
 			GUILayout.Label("Platform Spoofer:");
 
-			GUILayout.Label($"Spoofed Platform: {ModuleManager.spoofDevice.spoofedPlatform}");
-			ModuleManager.spoofDevice.spoofedPlatform = (Platforms)GUILayout.HorizontalSlider((float)ModuleManager.spoofDevice.spoofedPlatform, 0, 10);
+			GUILayout.Label($"Spoofed Platform: {ModuleManager.spoofDevice.SpoofedPlatform}");
+			ModuleManager.spoofDevice.SpoofedPlatform = (Platforms)GUILayout.HorizontalSlider((float)ModuleManager.spoofDevice.SpoofedPlatform, 0, 10);
 		}
 
 		private void ClampSelectedLevel(uint newLevel)
@@ -89,7 +89,7 @@ namespace HydraMenu.ui.sections
 			// I doubt anyone will press the +100 that much anyway
 			uint maxLevel = Utilities.IsAnticheatPresent() ? 100001 : uint.MaxValue - 1;
 
-			ModuleManager.spoofLevel.spoofedLevel = Math.Clamp(newLevel, 0, maxLevel);
+			ModuleManager.spoofLevel.SpoofedLevle = Math.Clamp(newLevel, 0, maxLevel);
 		}
 	}
 }

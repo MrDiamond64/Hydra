@@ -10,21 +10,21 @@ namespace HydraMenu.modules.spoofer
 			Enabled = true;
 		}
 
-		public static SpoofDevice Instance
+		private static SpoofDevice Instance
 		{
 			get { return ModuleManager.spoofDevice; }
 		}
 
-		public Platforms spoofedPlatform = Constants.GetPlatformType();
+		public Platforms SpoofedPlatform { get; set; }= Constants.GetPlatformType();
 
 		[HarmonyPatch(typeof(PlatformSpecificData), nameof(PlatformSpecificData.Serialize))]
 		class SerializeDevice
 		{
 			static void Prefix(PlatformSpecificData __instance)
 			{
-				__instance.Platform = Instance.spoofedPlatform;
+				__instance.Platform = Instance.SpoofedPlatform;
 
-				switch (Instance.spoofedPlatform)
+				switch (Instance.SpoofedPlatform)
 				{
 					case Platforms.StandaloneWin10:
 						__instance.XboxPlatformId = 2584878536129841;

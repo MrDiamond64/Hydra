@@ -4,9 +4,12 @@ namespace HydraMenu.modules.visuals
 {
 	internal class ShowProtections : Module
 	{
-		public ShowProtections() : base("ShowProtections") { }
+		public ShowProtections() : base("ShowProtections")
+		{
+			Enabled = true;
+		}
 
-		public static ShowProtections Instance
+		private static ShowProtections Instance
 		{
 			get { return ModuleManager.showProtections; }
 		}

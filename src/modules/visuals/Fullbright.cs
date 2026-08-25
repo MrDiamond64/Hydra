@@ -6,7 +6,7 @@ namespace HydraMenu.modules.visuals
 	{
 		public Fullbright() : base("Fullbright") { }
 
-		public static Fullbright Instance
+		private static Fullbright Instance
 		{
 			get { return ModuleManager.fullbright; }
 		}

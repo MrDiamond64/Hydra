@@ -9,7 +9,7 @@ namespace HydraMenu.modules.visuals
 			Enabled = true;
 		}
 
-		public static ShowGhostMessages Instance
+		private static ShowGhostMessages Instance
 		{
 			get { return ModuleManager.showGhostMessages; }
 		}

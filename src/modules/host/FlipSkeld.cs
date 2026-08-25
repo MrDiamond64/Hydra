@@ -6,7 +6,7 @@ namespace HydraMenu.modules.host
 	{
 		public FlipSkeld() : base("FlipSkeld") { }
 
-		public static FlipSkeld Instance
+		private static FlipSkeld Instance
 		{
 			get { return ModuleManager.flipSkeld; }
 		}

@@ -8,12 +8,12 @@ namespace HydraMenu.modules.host
 	{
 		public AssignRoles() : base("AssignRoles") { }
 
-		public static AssignRoles Instance
+		private static AssignRoles Instance
 		{
 			get { return ModuleManager.assignRoles; }
 		}
 
-		public RoleTypes assignedRole = RoleTypes.Viper;
+		public RoleTypes AssignedRole { get; set; } = RoleTypes.Viper;
 
 		[HarmonyPatch(typeof(LogicRoleSelectionNormal), nameof(LogicRoleSelectionNormal.AssignRolesFromList))]
 		class AlwaysImposter
@@ -23,7 +23,7 @@ namespace HydraMenu.modules.host
 			{
 				if(!Instance.Enabled || !AmongUsClient.Instance.AmHost) return;
 
-				RoleTypes assignedRole = Instance.assignedRole;
+				RoleTypes assignedRole = Instance.AssignedRole;
 				Hydra.Log.LogInfo($"Attempting to assign ourselves the {assignedRole} role");
 
 				// Stupid shenanigans to deal with IL2Cpp interop

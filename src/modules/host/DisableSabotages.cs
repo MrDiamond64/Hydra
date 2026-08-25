@@ -6,7 +6,7 @@ namespace HydraMenu.modules.host
 	{
 		public DisableSabotages() : base("DisableSabotages") { }
 
-		public static DisableSabotages Instance
+		private static DisableSabotages Instance
 		{
 			get { return ModuleManager.disableSabotages; }
 		}

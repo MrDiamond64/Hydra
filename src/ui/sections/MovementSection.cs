@@ -28,8 +28,8 @@ namespace HydraMenu.ui.sections
 				PlayerControl.LocalPlayer.Collider.enabled = !GUILayout.Toggle(!PlayerControl.LocalPlayer.Collider.enabled, "Noclip");
 			}
 
-			GUILayout.Label($"Speed Modifier: {ModuleManager.speedModifier.multiplier:F2}x");
-			ModuleManager.speedModifier.multiplier = GUILayout.HorizontalSlider(ModuleManager.speedModifier.multiplier, 0f, 5f);
+			GUILayout.Label($"Speed Modifier: {ModuleManager.speedModifier.Multiplier:F2}x");
+			ModuleManager.speedModifier.Multiplier = GUILayout.HorizontalSlider(ModuleManager.speedModifier.Multiplier, 0f, 5f);
 
 			Teleporter.UseSnapToRPC = GUILayout.Toggle(Teleporter.UseSnapToRPC, "Use SnapTo RPC For Teleports");
 			GUILayout.Label("Teleport To Location:");

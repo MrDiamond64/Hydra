@@ -6,7 +6,7 @@ namespace HydraMenu.modules.visuals
 	{
 		public NoSeekerAnimation() : base("NoSeekerAnimation") { }
 
-		public static NoSeekerAnimation Instance
+		private static NoSeekerAnimation Instance
 		{
 			get { return ModuleManager.noSeekerAnimation; }
 		}

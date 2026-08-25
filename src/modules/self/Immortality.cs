@@ -24,7 +24,7 @@ namespace HydraMenu.modules.self
 
 		private static readonly int CUSTOM_VENT_ID = 50;
 
-		public static Immortality Instance
+		private static Immortality Instance
 		{
 			get { return ModuleManager.immortality; }
 		}

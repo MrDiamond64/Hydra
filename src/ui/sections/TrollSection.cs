@@ -123,9 +123,9 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label("Auto Expose Impostors:");
 			ModuleManager.autoExposeImpostors.Enabled = GUILayout.Toggle(ModuleManager.autoExposeImpostors.Enabled, "Enabled");
-			ModuleManager.autoExposeImpostors.exposeOnMurder = GUILayout.Toggle(ModuleManager.autoExposeImpostors.exposeOnMurder, "Expose On Murder");
-			ModuleManager.autoExposeImpostors.exposeOnShapeshift = GUILayout.Toggle(ModuleManager.autoExposeImpostors.exposeOnShapeshift, "Expose On Shapeshift");
-			ModuleManager.autoExposeImpostors.exposeOnPhantom = GUILayout.Toggle(ModuleManager.autoExposeImpostors.exposeOnPhantom, "Expose On Phantom");
+			ModuleManager.autoExposeImpostors.ExposeOnMurder = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnMurder, "Expose On Murder");
+			ModuleManager.autoExposeImpostors.ExposeOnShapeshift = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnShapeshift, "Expose On Shapeshift");
+			ModuleManager.autoExposeImpostors.ExposeOnPhantom = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnPhantom, "Expose On Phantom");
 		}
 
 		// In Hide and Seek, completing a task will reduce the HnS hide timer depending on the length of the task (short, common, or long)

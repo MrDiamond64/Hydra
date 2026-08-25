@@ -1,4 +1,9 @@
-﻿namespace HydraMenu.modules
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text.Json;
+
+namespace HydraMenu.modules
 {
 	internal abstract class Module
 	{
@@ -31,5 +36,37 @@
 
 		protected virtual void OnEnable() { }
 		protected virtual void OnDisable() { }
+
+		public Dictionary<string, JsonElement> GetConfigData()
+		{
+			Dictionary<string, JsonElement> configData = new Dictionary<string, JsonElement>();
+
+			Type type = GetType();
+			PropertyInfo[] properties = type.GetProperties();
+
+			foreach(PropertyInfo property in properties)
+			{
+				configData.Add(property.Name, JsonSerializer.SerializeToElement(property.GetValue(this, null)));
+			}
+
+			return configData;
+		}
+
+		public void LoadConfigData(Dictionary<string, JsonElement> configData)
+		{
+			Type type = GetType();
+
+			foreach((string propertyName, JsonElement propertyValue) in configData)
+			{
+				PropertyInfo property = type.GetProperty(propertyName);
+				if(property == null)
+				{
+					Hydra.Log.LogWarning($"Config has setting {propertyName} for module {name} when this module has no such setting");
+					continue;
+				}
+
+				property.SetValue(this, propertyValue.Deserialize(property.PropertyType));
+			}
+		}
 	}
 }

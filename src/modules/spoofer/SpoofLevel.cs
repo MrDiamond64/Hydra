@@ -8,9 +8,9 @@ namespace HydraMenu.modules.spoofer
 	{
 		public SpoofLevel() : base("SpoofLevel") { }
 
-		public uint spoofedLevel = 200;
+		public uint SpoofedLevle { get; set; } = 200;
 
-		public static SpoofLevel Instance
+		private static SpoofLevel Instance
 		{
 			get { return ModuleManager.spoofLevel; }
 		}
@@ -22,7 +22,7 @@ namespace HydraMenu.modules.spoofer
 			static bool Prefix(MessageWriter msg)
 			{
 				if(!Instance.Enabled) return true;
-				uint level = Instance.spoofedLevel - 1;
+				uint level = Instance.SpoofedLevle - 1;
 
 				msg.WritePacked(level);
 				PlayerControl.LocalPlayer.SetLevel(level);

@@ -17,7 +17,7 @@ namespace HydraMenu.modules.troll
 		// Can be any value that is not assigned to any SystemTypes
 		public readonly byte INVALID_SYSTEM_TYPE = 255;
 
-		public static BlockSabotages Instance
+		private static BlockSabotages Instance
 		{
 			get { return ModuleManager.blockSabotages; }
 		}

@@ -9,7 +9,7 @@ namespace HydraMenu.modules.visuals
 			Enabled = true;
 		}
 
-		public static AlwaysVisibleChat Instance
+		private static AlwaysVisibleChat Instance
 		{
 			get { return ModuleManager.alwaysVisibleChat; }
 		}

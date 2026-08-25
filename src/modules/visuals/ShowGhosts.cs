@@ -4,9 +4,12 @@ namespace HydraMenu.modules.visuals
 {
 	internal class ShowGhosts : Module
 	{
-		public ShowGhosts() : base("ShowGhosts") { }
+		public ShowGhosts() : base("ShowGhosts")
+		{
+			Enabled = true;
+		}
 
-		public static ShowGhosts Instance
+		private static ShowGhosts Instance
 		{
 			get { return ModuleManager.showGhosts; }
 		}

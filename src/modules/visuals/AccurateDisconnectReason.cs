@@ -6,7 +6,7 @@ namespace HydraMenu.modules.visuals
 	{
 		public AccurateDisconnectReason() : base("AccurateDisconnectReason") { }
 
-		public static AccurateDisconnectReason Instance
+		private static AccurateDisconnectReason Instance
 		{
 			get { return ModuleManager.accurateDisconnectReason; }
 		}

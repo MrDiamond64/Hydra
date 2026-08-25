@@ -11,7 +11,7 @@ namespace HydraMenu.modules.self
 		// meaning this will only show task animations on normal games and not hide and seek as well
 		public AlwaysShowTaskAnimations() : base("AlwaysShowTaskAnimations") { }
 
-		public static AlwaysShowTaskAnimations Instance
+		private static AlwaysShowTaskAnimations Instance
 		{
 			get { return ModuleManager.alwaysShowTaskAnimations; }
 		}

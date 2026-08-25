@@ -6,7 +6,7 @@ namespace HydraMenu.modules.host
 	{
 		public NoKillCooldown() : base("NoKillCooldown") { }
 
-		public static NoKillCooldown Instance
+		private static NoKillCooldown Instance
 		{
 			get { return ModuleManager.noKillCooldown; }
 		}

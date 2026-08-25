@@ -6,7 +6,7 @@ namespace HydraMenu.modules.roles
 	{
 		public NoShapeshiftAnimation() : base("NoShapeshiftAnimation") { }
 
-		public static NoShapeshiftAnimation Instance
+		private static NoShapeshiftAnimation Instance
 		{
 			get { return ModuleManager.noShapeshiftAnimation; }
 		}

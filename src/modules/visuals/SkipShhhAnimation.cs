@@ -4,9 +4,12 @@ namespace HydraMenu.modules.visuals
 {
 	internal class SkipShhhAnimation : Module
 	{
-		public SkipShhhAnimation() : base("SkipShhhAnimation") { }
+		public SkipShhhAnimation() : base("SkipShhhAnimation")
+		{
+			Enabled = true;
+		}
 
-		public static SkipShhhAnimation Instance
+		private static SkipShhhAnimation Instance
 		{
 			get { return ModuleManager.skipShhhAnimation; }
 		}

@@ -6,7 +6,7 @@ namespace HydraMenu.modules.host
 	{
 		public DisableGameEnd() : base("DisableGameEnd") { }
 
-		public static DisableGameEnd Instance
+		private static DisableGameEnd Instance
 		{
 			get { return ModuleManager.disableGameEnd; }
 		}

@@ -6,7 +6,7 @@ namespace HydraMenu.modules.host
 	{
 		public DisableMeetings() : base("DisableMeetings") { }
 
-		public static DisableMeetings Instance
+		private static DisableMeetings Instance
 		{
 			get { return ModuleManager.disableMeetings; }
 		}

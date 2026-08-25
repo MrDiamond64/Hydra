@@ -10,9 +10,9 @@ namespace HydraMenu.modules.self
 			Enabled = true;
 		}
 
-		public float multiplier = 1.0f;
+		public float Multiplier { get; set; } = 1.0f;
 
-		public static SpeedModifier Instance
+		private static SpeedModifier Instance
 		{
 			get { return ModuleManager.speedModifier; }
 		}
@@ -22,7 +22,7 @@ namespace HydraMenu.modules.self
 		{
 			static void Postfix(ref float __result)
 			{
-				__result *= Instance.multiplier;
+				__result *= Instance.Multiplier;
 			}
 		}
 	}

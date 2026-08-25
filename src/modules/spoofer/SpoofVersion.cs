@@ -7,9 +7,9 @@ namespace HydraMenu.modules.spoofer
 		public SpoofVersion() : base("SpoofVersion") { }
 
 		public int spoofedVersion = Constants.GetBroadcastVersion();
-		public bool useModdedProtocol = false;
+		public bool UseModdedProtocol { get; set; } = false;
 
-		public static SpoofVersion Instance
+		private static SpoofVersion Instance
 		{
 			get { return ModuleManager.spoofVersion; }
 		}
@@ -23,7 +23,7 @@ namespace HydraMenu.modules.spoofer
 				if(!Instance.Enabled || AmongUsClient.Instance == null || AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame) return true;
 
 				__result = Instance.spoofedVersion;
-				if(Instance.useModdedProtocol) __result += 25;
+				if(Instance.UseModdedProtocol) __result += 25;
 
 				return false;
 			}
@@ -34,7 +34,7 @@ namespace HydraMenu.modules.spoofer
 		{
 			static bool Prefix(ref bool __result)
 			{
-				if(!Instance.Enabled || !Instance.useModdedProtocol) return true;
+				if(!Instance.Enabled || !Instance.UseModdedProtocol) return true;
 
 				__result = true;
 				return false;

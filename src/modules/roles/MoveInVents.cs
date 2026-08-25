@@ -4,9 +4,12 @@ namespace HydraMenu.modules.roles
 {
 	internal class MoveInVents : Module
 	{
-		public MoveInVents() : base("MoveInVents") { }
+		public MoveInVents() : base("MoveInVents")
+		{
+			Enabled = true;
+		}
 
-		public static MoveInVents Instance
+		private static MoveInVents Instance
 		{
 			get { return ModuleManager.moveInVents; }
 		}

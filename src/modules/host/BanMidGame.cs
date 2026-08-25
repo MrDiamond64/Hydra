@@ -5,9 +5,12 @@ namespace HydraMenu.modules.host
 {
 	internal class BanMidGame : Module
 	{
-		public BanMidGame() : base("BanMidGame") { }
+		public BanMidGame() : base("BanMidGame")
+		{
+			Enabled = true;
+		}
 
-		public static BanMidGame Instance
+		private static BanMidGame Instance
 		{
 			get { return ModuleManager.banMidGame; }
 		}

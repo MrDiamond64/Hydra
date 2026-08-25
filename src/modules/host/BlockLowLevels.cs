@@ -6,9 +6,9 @@ namespace HydraMenu.modules.host
 	{
 		public BlockLowLevels() : base("BlockLowLevels") { }
 
-		public uint minLevel = 20;
+		public uint MinLevel { get; set; } = 20;
 
-		public static BlockLowLevels Instance
+		private static BlockLowLevels Instance
 		{
 			get { return ModuleManager.blockLowLevels; }
 		}
@@ -18,7 +18,7 @@ namespace HydraMenu.modules.host
 		{
 			static void Prefix(PlayerControl __instance, uint level)
 			{
-				if(!Instance.Enabled || !AmongUsClient.Instance.AmHost || __instance == PlayerControl.LocalPlayer || level > Instance.minLevel) return;
+				if(!Instance.Enabled || !AmongUsClient.Instance.AmHost || __instance == PlayerControl.LocalPlayer || level > Instance.MinLevel) return;
 
 				Hydra.notifications.Send("Block Low Levels", $"{__instance.Data.PlayerName} is level {level}, which is below the level threshold. They will be kicked from the game.");
 				AmongUsClient.Instance.KickPlayer(__instance.OwnerId, false);

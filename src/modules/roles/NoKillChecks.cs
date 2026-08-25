@@ -6,7 +6,7 @@ namespace HydraMenu.modules.roles
 	{
 		public NoKillChecks() : base("NoKillChecks") { }
 
-		public static NoKillChecks Instance
+		private static NoKillChecks Instance
 		{
 			get { return ModuleManager.noKillChecks; }
 		}

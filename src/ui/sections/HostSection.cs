@@ -40,8 +40,8 @@ namespace HydraMenu.ui.sections
 			ModuleManager.noKillCooldown.Enabled = GUILayout.Toggle(ModuleManager.noKillCooldown.Enabled, "No Kill Cooldown");
 
 			GUILayout.BeginHorizontal();
-			ModuleManager.blockLowLevels.Enabled = GUILayout.Toggle(ModuleManager.blockLowLevels.Enabled, $"Kick players with less than {ModuleManager.blockLowLevels.minLevel} levels");
-			ModuleManager.blockLowLevels.minLevel = (uint)GUILayout.HorizontalSlider(ModuleManager.blockLowLevels.minLevel, 0, 100);
+			ModuleManager.blockLowLevels.Enabled = GUILayout.Toggle(ModuleManager.blockLowLevels.Enabled, $"Kick players with less than {ModuleManager.blockLowLevels.MinLevel} levels");
+			ModuleManager.blockLowLevels.MinLevel = (uint)GUILayout.HorizontalSlider(ModuleManager.blockLowLevels.MinLevel, 0, 100);
 			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Force Start Game"))
@@ -123,8 +123,8 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label("Assign roles for next round:");
 			ModuleManager.assignRoles.Enabled = GUILayout.Toggle(ModuleManager.assignRoles.Enabled, "Enabled");
-			GUILayout.Label($"Role to assign: {ModuleManager.assignRoles.assignedRole}");
-			ModuleManager.assignRoles.assignedRole = Controls.HorizontalRoleSlider(ModuleManager.assignRoles.assignedRole);
+			GUILayout.Label($"Role to assign: {ModuleManager.assignRoles.AssignedRole}");
+			ModuleManager.assignRoles.AssignedRole = Controls.HorizontalRoleSlider(ModuleManager.assignRoles.AssignedRole);
 
 			GUILayout.Space(5);
 			GUILayout.Label("Meeting Controls:");

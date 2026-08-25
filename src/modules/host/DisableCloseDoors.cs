@@ -6,7 +6,7 @@ namespace HydraMenu.modules.host
 	{
 		public DisableCloseDoors() : base("DisableCloseDoors") { }
 
-		public static DisableCloseDoors Instance
+		private static DisableCloseDoors Instance
 		{
 			get { return ModuleManager.disableCloseDoors; }
 		}

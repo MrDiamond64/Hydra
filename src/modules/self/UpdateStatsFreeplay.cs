@@ -7,7 +7,7 @@ namespace HydraMenu.modules.self
 	{
 		public UpdateStatsFreeplay() : base("UpdateStatsFreeplay") { }
 
-		public static UpdateStatsFreeplay Instance
+		private static UpdateStatsFreeplay Instance
 		{
 			get { return ModuleManager.updateStatsFreeplay; }
 		}

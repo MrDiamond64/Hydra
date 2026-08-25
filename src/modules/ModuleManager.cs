@@ -4,6 +4,9 @@ using HydraMenu.modules.self;
 using HydraMenu.modules.spoofer;
 using HydraMenu.modules.troll;
 using HydraMenu.modules.visuals;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace HydraMenu.modules
 {
@@ -55,5 +58,80 @@ namespace HydraMenu.modules
 		public static ShowProtections showProtections = new ShowProtections();
 		public static SkipShhhAnimation skipShhhAnimation = new SkipShhhAnimation();
 		public static SpectatePlayer spectatePlayer = new SpectatePlayer();
+
+		public static readonly Module[] moduleList;
+
+		static ModuleManager()
+		{
+			moduleList = [
+				assignRoles,
+				banMidGame,
+				blockLowLevels,
+				disableCameras,
+				disableCloseDoors,
+				disableGameEnd,
+				disableMeetings,
+				flipSkeld,
+				noKillCooldown,
+
+				moveInVents,
+				noKillChecks,
+				noShapeshiftAnimation,
+
+				alwaysShowTaskAnimations,
+				immortality,
+				noLadderCooldown,
+				speedModifier,
+				unlimitedMeetings,
+				updateStatsFreeplay,
+
+				spoofDevice,
+				spoofLevel,
+				spoofVersion,
+
+				autoExposeImpostors,
+				autoReportBodies,
+				blockSabotages,
+				disableVents,
+
+				accurateDisconnectReason,
+				alwaysVisibleChat,
+				noSeekerAnimation,
+				showGhostMessages,
+				showGhosts,
+				showProtections,
+				skipShhhAnimation,
+				spectatePlayer
+			];
+		}
+
+		// Return a dictionary of each module with its name, and another dictionary with names and values of each property
+		public static Dictionary<string, Dictionary<string, JsonElement>> GetConfigData()
+		{
+			Dictionary<string, Dictionary<string, JsonElement>> moduleConfig = new Dictionary<string, Dictionary<string, JsonElement>>();
+
+			foreach(Module module in moduleList)
+			{
+				moduleConfig.Add(module.name, module.GetConfigData());
+			}
+
+			return moduleConfig;
+		}
+
+		public static void LoadConfigData(Dictionary<string, Dictionary<string, JsonElement>> moduleConfig)
+		{
+			foreach((string moduleName, Dictionary<string, JsonElement> configData) in moduleConfig)
+			{
+				int moduleIndex = Array.FindIndex(moduleList, r => r.name == moduleName);
+				if(moduleIndex == -1)
+				{
+					Hydra.Log.LogWarning($"Config has entry for module {moduleName} when there is no such module");
+					continue;
+				}
+
+				Module module = moduleList[moduleIndex];
+				module.LoadConfigData(configData);
+			}
+		}
 	}
 }

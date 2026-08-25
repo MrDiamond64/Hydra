@@ -9,15 +9,15 @@ namespace HydraMenu.modules.troll
 		public float MIN_KILL_DISTANCE = 1.0f;
 		public float MAX_DISTANCE = 5.0f;
 
-		public bool exposeOnMurder = true;
-		public bool exposeOnShapeshift = true;
+		public bool ExposeOnMurder { get; set; } = true;
+		public bool ExposeOnShapeshift { get; set; } = true;
 		// Only triggers on vanish and not unvanish
 		// The unvanish animation is much shorter so once everyone gets teleported they might not notice the cloud
-		public bool exposeOnPhantom = true;
+		public bool ExposeOnPhantom { get; set; } = true;
 
 		private void OnPlayerMurder(PlayerControl murderer, PlayerControl target, MurderResultFlags flags)
 		{
-			if(!exposeOnMurder || ShipStatus.Instance == null || !flags.HasFlag(MurderResultFlags.Succeeded) || Sabotage.IsSabotageActive(SystemTypes.Electrical)) return;
+			if(!ExposeOnMurder || ShipStatus.Instance == null || !flags.HasFlag(MurderResultFlags.Succeeded) || Sabotage.IsSabotageActive(SystemTypes.Electrical)) return;
 
 			Vent selectedVent = FindClosestVent(murderer, MIN_KILL_DISTANCE, MAX_DISTANCE);
 			if(selectedVent == null)
@@ -36,7 +36,7 @@ namespace HydraMenu.modules.troll
 
 		private void OnPlayerShapeshift(PlayerControl shapeshifter, PlayerControl target, bool shouldAnimate)
 		{
-			if(!exposeOnShapeshift || ShipStatus.Instance == null || Sabotage.IsSabotageActive(SystemTypes.Electrical)) return;
+			if(!ExposeOnShapeshift || ShipStatus.Instance == null || Sabotage.IsSabotageActive(SystemTypes.Electrical)) return;
 
 			Vent selectedVent = FindClosestVent(shapeshifter, MIN_KILL_DISTANCE, MAX_DISTANCE);
 			if(selectedVent == null)
@@ -55,7 +55,7 @@ namespace HydraMenu.modules.troll
 
 		private void OnPlayerPhantom(PlayerControl phantom)
 		{
-			if(!exposeOnPhantom || ShipStatus.Instance == null || Sabotage.IsSabotageActive(SystemTypes.Electrical)) return;
+			if(!ExposeOnPhantom || ShipStatus.Instance == null || Sabotage.IsSabotageActive(SystemTypes.Electrical)) return;
 
 			Vent selectedVent = FindClosestVent(phantom, 0.0f, MAX_DISTANCE);
 			if(selectedVent == null)
