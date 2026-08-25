@@ -20,7 +20,7 @@ namespace HydraMenu.modules
 		public class ConfigData
 		{
 			public MainUI.MainUIConfig Menu { get; set; }
-			public Dictionary<string, Dictionary<string, object>> Routines { get; set; }
+			public Dictionary<string, Dictionary<string, JsonElement>> Routines { get; set; }
 		}
 
 		public void Initialize()
@@ -65,6 +65,7 @@ namespace HydraMenu.modules
 			}
 
 			Hydra.mainUI.LoadConfigData(configData.Menu);
+			Hydra.routines.LoadConfigData(configData.Routines);
 
 			Hydra.Log.LogInfo($"Loaded config {configName}");
 		}

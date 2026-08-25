@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 
 namespace HydraMenu.routines
 {
@@ -40,19 +41,36 @@ namespace HydraMenu.routines
 		protected virtual void OnDisable() { }
 		public virtual void OnDisconnect() { }
 
-		public Dictionary<string, object> GetConfigData()
+		public Dictionary<string, JsonElement> GetConfigData()
 		{
-			Dictionary<string, object> configData = new Dictionary<string, object>();
+			Dictionary<string, JsonElement> configData = new Dictionary<string, JsonElement>();
 
 			Type type = GetType();
-			IEnumerable<PropertyInfo> properties = type.GetProperties();
+			PropertyInfo[] properties = type.GetProperties();
 
 			foreach(PropertyInfo property in properties)
 			{
-				configData.Add(property.Name, property.GetValue(this, null));
+				configData.Add(property.Name, JsonSerializer.SerializeToElement(property.GetValue(this, null)));
 			}
 
 			return configData;
+		}
+
+		public void LoadConfigData(Dictionary<string, JsonElement> configData)
+		{
+			Type type = GetType();
+
+			foreach((string propertyName, JsonElement propertyValue) in configData)
+			{
+				PropertyInfo property = type.GetProperty(propertyName);
+				if(property == null)
+				{
+					Hydra.Log.LogWarning($"Config has setting {propertyName} for routine {name} when this routine has no such setting");
+					continue;
+				}
+
+				property.SetValue(this, propertyValue.Deserialize(property.PropertyType));
+			}
 		}
 	}
 }
