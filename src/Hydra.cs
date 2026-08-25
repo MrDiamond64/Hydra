@@ -30,6 +30,8 @@ internal class Hydra : BasePlugin
 		notifications = AddComponent<NotificationManager>();
 		routines = AddComponent<RoutineManager>();
 
+		ConfigManager.Load();
+
 		try
 		{
 			harmony.PatchAll();
