@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace HydraMenu.config
+namespace HydraMenu.modules
 {
 	internal class ConfigManager
 	{

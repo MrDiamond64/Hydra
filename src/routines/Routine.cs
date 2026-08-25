@@ -1,5 +1,4 @@
-﻿using HydraMenu.config;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +10,6 @@ namespace HydraMenu.routines
 		public readonly string name;
 
 		public bool _enabled = false;
-		[ConfigProperty]
 		public virtual bool Enabled
 		{
 			get { return _enabled; }
@@ -47,7 +45,7 @@ namespace HydraMenu.routines
 			Dictionary<string, object> configData = new Dictionary<string, object>();
 
 			Type type = GetType();
-			IEnumerable<PropertyInfo> properties = type.GetProperties().Where(prop => prop.GetCustomAttributes(typeof(ConfigPropertyAttribute), false).Any());
+			IEnumerable<PropertyInfo> properties = type.GetProperties();
 
 			foreach(PropertyInfo property in properties)
 			{

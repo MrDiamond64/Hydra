@@ -1,5 +1,4 @@
-﻿using HydraMenu.config;
-using HydraMenu.network;
+﻿using HydraMenu.network;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,7 +10,6 @@ namespace HydraMenu.routines
 		public DiscoHostRoutine() : base("DiscoHost") { }
 		public HashSet<int> targets = new HashSet<int>();
 
-		[ConfigProperty]
 		public float RandomizationDelay { get; set; } = 0.5f;
 		private float timeElapsed = 0f;
 
@@ -50,7 +48,7 @@ namespace HydraMenu.routines
 			batch.FinishBatch();
 		}
 
-		public bool IsGlobal
+		private bool IsGlobal
 		{
 			get { return targets.Count == 1 && targets.Contains(int.MaxValue); }
 		}

@@ -2,7 +2,7 @@
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
-using HydraMenu.config;
+using HydraMenu.modules;
 using HydraMenu.features;
 using HydraMenu.routines;
 using HydraMenu.ui;
