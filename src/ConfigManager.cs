@@ -76,6 +76,10 @@ namespace HydraMenu
 
         public bool RolesDisableShapeshiftAnimation { get; set; } = false;
         public bool RolesAllowVentingForCrewmates { get; set; } = true;
+        public bool RolesNoKillChecks { get; set; } = false;
+        public bool RolesSabotageAsCrewmate { get; set; } = false;
+        public bool RolesSabotageInVents { get; set; } = false;
+        public bool RolesMoveInVents { get; set; } = true;
 
         public bool SabotageUpdateSystemsDirectly { get; set; } = true;
         public bool SpectatePlayerEnabled { get; set; } = false;
@@ -161,6 +165,10 @@ namespace HydraMenu
 
                     RolesDisableShapeshiftAnimation = features.Roles.DisableShapeshiftAnimation,
                     RolesAllowVentingForCrewmates = features.Roles.AllowVentingForCrewmates,
+                    RolesNoKillChecks = features.Roles.NoKillChecks,
+                    RolesSabotageAsCrewmate = features.Roles.SkipSabotageChecks.SabotageAsCrewmate,
+                    RolesSabotageInVents = features.Roles.SkipSabotageChecks.SabotageInVents,
+                    RolesMoveInVents = features.Roles.MoveModifier.MoveInVents,
 
                     SabotageUpdateSystemsDirectly = Sabotage.UpdateSystemsDirectly,
                     SpectatePlayerEnabled = features.Visuals.SpectatePlayer.Enabled,
@@ -261,6 +269,10 @@ namespace HydraMenu
 
                 features.Roles.DisableShapeshiftAnimation = data.RolesDisableShapeshiftAnimation;
                 features.Roles.AllowVentingForCrewmates = data.RolesAllowVentingForCrewmates;
+                features.Roles.NoKillChecks = data.RolesNoKillChecks;
+                features.Roles.SkipSabotageChecks.SabotageAsCrewmate = data.RolesSabotageAsCrewmate;
+                features.Roles.SkipSabotageChecks.SabotageInVents = data.RolesSabotageInVents;
+                features.Roles.MoveModifier.MoveInVents = data.RolesMoveInVents;
 
                 Sabotage.UpdateSystemsDirectly = data.SabotageUpdateSystemsDirectly;
                 features.Visuals.SpectatePlayer.Enabled = data.SpectatePlayerEnabled;
