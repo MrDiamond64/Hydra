@@ -13,6 +13,12 @@ namespace HydraMenu.modules.host
 
 		private void SwapMapAssets()
 		{
+			if(AmongUsClient.Instance == null)
+			{
+				_enabled = false;
+				return;
+			}
+
 			// ShipPrefabs is a list corresponding map IDs to their map
 			// ID 0 is Skeld, 1 is Mira, 2 is Polus, and 3 is Dleks
 			// If we want to be able to spawn in Dleks (as this is normally inaccessible) we can swap the two elements

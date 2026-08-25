@@ -9,7 +9,7 @@ namespace HydraMenu.modules
 	{
 		public readonly string name;
 
-		private bool _enabled = false;
+		protected bool _enabled = false;
 		public virtual bool Enabled
 		{
 			get { return _enabled; }
