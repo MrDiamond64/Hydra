@@ -9,8 +9,9 @@ namespace HydraMenu.modules
 	internal class EventCoordinator
 	{
 		// Game Events
-		public static event Action OnMeetingEnd;
+		public static event Action OnGameStart;
 		public static event Action OnGameLoad;
+		public static event Action OnMeetingEnd;
 		public static event Action<Minigame> OnOpenMinigame;
 		public static event Action<Ladder> OnUseLadder;
 
@@ -28,6 +29,17 @@ namespace HydraMenu.modules
 		public static event Action<PlayerControl, PlayerControl, MurderResultFlags> OnPlayerMurder;
 		public static event Action<PlayerControl, PlayerControl, bool> OnPlayerShapeshift;
 		public static event Action<PlayerControl> OnPlayerPhantom;
+
+		public static event Action<ClientData, ClientData> OnPlayerVotekick;
+
+		[HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.CoStartGame))]
+		class GameStart
+		{
+			static void Prefix()
+			{
+				PublishEvent(OnGameStart);
+			}
+		}
 
 		// This function is called when the role selection screen finishes and the game is ready to play
 		[HarmonyPatch(typeof(GameManager), nameof(GameManager.StartGame))]
@@ -235,6 +247,26 @@ namespace HydraMenu.modules
 			static void Prefix(PlayerControl __instance)
 			{
 				PublishEvent(OnPlayerPhantom, __instance);
+			}
+		}
+
+		[HarmonyPatch(typeof(VoteBanSystem), nameof(VoteBanSystem.AddVote))]
+		class PlayerVotekick
+		{
+			static void Postfix(int srcClient, int clientId)
+			{
+				Hydra.Log.LogInfo($"[VotekickLogger] {srcClient} voted to kick out {clientId}");
+
+				ClientData source = AmongUsClient.Instance.FindClientById(srcClient);
+				ClientData target = AmongUsClient.Instance.FindClientById(clientId);
+				if(source == null || target == null) return;
+
+				if(clientId == AmongUsClient.Instance.ClientId)
+				{
+					Hydra.notifications.Send("Votekick Logger", $"{source.PlayerName} has voted to kick you out.");
+				}
+
+				PublishEvent(OnPlayerVotekick, source, target);
 			}
 		}
 

@@ -1,4 +1,5 @@
 ﻿using HydraMenu.modules.host;
+using HydraMenu.modules.protections;
 using HydraMenu.modules.roles;
 using HydraMenu.modules.self;
 using HydraMenu.modules.spoofer;
@@ -23,6 +24,14 @@ namespace HydraMenu.modules
 		public static DisableSabotages disableSabotages = new DisableSabotages();
 		public static FlipSkeld flipSkeld = new FlipSkeld();
 		public static NoKillCooldown noKillCooldown = new NoKillCooldown();
+
+		// Protections
+		public static AntiKick antiKick = new AntiKick();
+		public static AntiOverload antiOverload = new AntiOverload();
+		public static BlockServerTeleports blockServerTeleports = new BlockServerTeleports();
+		public static BlockUnauthorizedUpdates blockUnauthorizedUpdates = new BlockUnauthorizedUpdates();
+		public static BypassShapeshiftRatelimits bypassShapeshiftRatelimits = new BypassShapeshiftRatelimits();
+		public static ForceDTLs forceDtls = new ForceDTLs();
 
 		// Roles
 		public static MoveInVents moveInVents = new MoveInVents();
@@ -73,6 +82,13 @@ namespace HydraMenu.modules
 				disableMeetings,
 				flipSkeld,
 				noKillCooldown,
+
+				antiKick,
+				antiOverload,
+				blockServerTeleports,
+				blockUnauthorizedUpdates,
+				bypassShapeshiftRatelimits,
+				forceDtls,
 
 				moveInVents,
 				noKillChecks,
