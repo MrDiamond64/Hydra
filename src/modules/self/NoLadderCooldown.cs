@@ -4,7 +4,7 @@
 	{
 		public NoLadderCooldown() : base("NoLadderCooldown")
 		{
-			Enabled = true;
+			base.Enabled = true;
 		}
 
 		private void OnLadderUse(Ladder ladder)

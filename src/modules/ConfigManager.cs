@@ -8,14 +8,10 @@ namespace HydraMenu.modules
 {
 	internal class ConfigManager
 	{
-		public string currentConfig = "Hydra";
-		public string[] configList;
+		public readonly string configPath = Path.Combine(Paths.ConfigPath, "Hydra");
 
-		private readonly string configPath = Path.Combine(Paths.ConfigPath, "Hydra");
-		private string ConfigFile
-		{
-			get { return Path.Combine(configPath, currentConfig + ".json"); }
-		}
+		public string currentConfig = "Hydra";
+		public string[] configList = [];
 
 		public class ConfigData
 		{
@@ -38,21 +34,38 @@ namespace HydraMenu.modules
 			string[] configFiles = Directory.GetFiles(configPath, "*.json");
 			Hydra.Log.LogInfo($"Discovered {configFiles.Length} config files");
 
+			configList = new string[configFiles.Length];
+
+			for(byte i = 0; i < configFiles.Length; i++)
+			{
+				configList[i] = Path.GetFileNameWithoutExtension(configFiles[i]);
+			}
+
+			if(configList.Length == 0)
+			{
+				configList = ["Hydra"];
+			}
+
 			// Load the default config
 			LoadConfig(currentConfig);
 		}
 
+		public string GetConfigPath(string configName)
+		{
+			return Path.Combine(configPath, configName + ".json");
+		}
+
 		public void LoadConfig(string configName)
 		{
-			currentConfig = configName;
-			if(!File.Exists(ConfigFile))
+			string configLocation = GetConfigPath(configName);
+			if(!File.Exists(configLocation))
 			{
 				Hydra.Log.LogWarning($"Tried to load config {configName} when no such config exists");
 				// Let's just carry on with our current config
 				return;
 			}
 
-			string configString = File.ReadAllText(ConfigFile);
+			string configString = File.ReadAllText(configLocation);
 
 			ConfigData configData = null;
 			try
@@ -61,7 +74,7 @@ namespace HydraMenu.modules
 			}
 			catch
 			{
-				Hydra.Log.LogError($"Failed to load {ConfigFile}");
+				Hydra.Log.LogError($"Failed to load config at {configLocation}");
 				return;
 			}
 
@@ -69,11 +82,14 @@ namespace HydraMenu.modules
 			ModuleManager.LoadConfigData(configData.Modules);
 			Hydra.routines.LoadConfigData(configData.Routines);
 
+			currentConfig = configName;
 			Hydra.Log.LogInfo($"Loaded config {configName}");
 		}
 
-		public void SaveConfig()
+		public void SaveConfig(string configName)
 		{
+			string configLocation = GetConfigPath(configName);
+
 			ConfigData configData = new ConfigData();
 			configData.Menu = Hydra.mainUI.GetConfigData();
 			configData.Modules = ModuleManager.GetConfigData();
@@ -83,9 +99,9 @@ namespace HydraMenu.modules
 			serializerOptions.WriteIndented = true;
 
 			string configString = JsonSerializer.Serialize(configData, serializerOptions);
-			File.WriteAllText(ConfigFile,  configString);
+			File.WriteAllText(configLocation, configString);
 
-			Hydra.Log.LogInfo($"Config {currentConfig} has been saved to {ConfigFile}");
+			Hydra.Log.LogInfo($"Config {configName} has been saved to {configLocation}");
 		}
 	}
 }

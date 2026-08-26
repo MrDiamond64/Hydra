@@ -4,7 +4,10 @@ namespace HydraMenu.modules.visuals
 {
 	internal class AccurateDisconnectReason : Module
 	{
-		public AccurateDisconnectReason() : base("AccurateDisconnectReason") { }
+		public AccurateDisconnectReason() : base("AccurateDisconnectReason")
+		{
+			base.Enabled = true;
+		}
 
 		private static AccurateDisconnectReason Instance
 		{

@@ -7,7 +7,7 @@ namespace HydraMenu.modules.spoofer
 		public SpoofDevice() : base("SpoofDevice")
 		{
 			// This module can be enabled at all times
-			Enabled = true;
+			base.Enabled = true;
 		}
 
 		private static SpoofDevice Instance
@@ -15,7 +15,7 @@ namespace HydraMenu.modules.spoofer
 			get { return ModuleManager.spoofDevice; }
 		}
 
-		public Platforms SpoofedPlatform { get; set; }= Constants.GetPlatformType();
+		public Platforms SpoofedPlatform { get; set; } = Constants.GetPlatformType();
 
 		[HarmonyPatch(typeof(PlatformSpecificData), nameof(PlatformSpecificData.Serialize))]
 		class SerializeDevice

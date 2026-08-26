@@ -7,7 +7,7 @@ namespace HydraMenu.modules.host
 	{
 		public BanMidGame() : base("BanMidGame")
 		{
-			Enabled = true;
+			base.Enabled = true;
 		}
 
 		private static BanMidGame Instance

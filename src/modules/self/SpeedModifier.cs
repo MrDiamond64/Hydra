@@ -7,7 +7,7 @@ namespace HydraMenu.modules.self
 		public SpeedModifier() : base("SpeedModifier")
 		{
 			// This module can be enabled at all times
-			Enabled = true;
+			base.Enabled = true;
 		}
 
 		public float Multiplier { get; set; } = 1.0f;

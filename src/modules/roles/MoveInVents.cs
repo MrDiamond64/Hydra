@@ -6,7 +6,7 @@ namespace HydraMenu.modules.roles
 	{
 		public MoveInVents() : base("MoveInVents")
 		{
-			Enabled = true;
+			base.Enabled = true;
 		}
 
 		private static MoveInVents Instance

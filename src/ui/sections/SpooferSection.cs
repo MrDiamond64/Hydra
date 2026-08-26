@@ -45,35 +45,35 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label("Level Spoofer:");
 
 			ModuleManager.spoofLevel.Enabled = GUILayout.Toggle(ModuleManager.spoofLevel.Enabled, "Enabled");
-			GUILayout.Label($"Spoofed Level: {ModuleManager.spoofLevel.SpoofedLevle}");
-			ModuleManager.spoofLevel.SpoofedLevle = (uint)GUILayout.HorizontalSlider(ModuleManager.spoofLevel.SpoofedLevle, 1, 200);
+			GUILayout.Label($"Spoofed Level: {ModuleManager.spoofLevel.SpoofedLevel}");
+			ModuleManager.spoofLevel.SpoofedLevel = (uint)GUILayout.HorizontalSlider(ModuleManager.spoofLevel.SpoofedLevel, 1, 200);
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("-100"))
 			{
-				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevle - 100);
+				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevel - 100);
 			}
 
 			if(GUILayout.Button("-10"))
 			{
-				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevle - 10);
+				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevel - 10);
 			}
 
 			if(GUILayout.Button("+10"))
 			{
-				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevle + 10);
+				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevel + 10);
 			}
 
 			if(GUILayout.Button("+100"))
 			{
-				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevle + 100);
+				ClampSelectedLevel(ModuleManager.spoofLevel.SpoofedLevel + 100);
 			}
 			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Send Level Update"))
 			{
-				PlayerControl.LocalPlayer.RpcSetLevel(ModuleManager.spoofLevel.SpoofedLevle - 1);
-				Hydra.notifications.Send("Level Updater", $"Your level has been changed to {ModuleManager.spoofLevel.SpoofedLevle}", 5);
+				PlayerControl.LocalPlayer.RpcSetLevel(ModuleManager.spoofLevel.SpoofedLevel - 1);
+				Hydra.notifications.Send("Level Updater", $"Your level has been changed to {ModuleManager.spoofLevel.SpoofedLevel}", 5);
 			}
 
 			GUILayout.Space(5);
@@ -89,7 +89,7 @@ namespace HydraMenu.ui.sections
 			// I doubt anyone will press the +100 that much anyway
 			uint maxLevel = Utilities.IsAnticheatPresent() ? 100001 : uint.MaxValue - 1;
 
-			ModuleManager.spoofLevel.SpoofedLevle = Math.Clamp(newLevel, 0, maxLevel);
+			ModuleManager.spoofLevel.SpoofedLevel = Math.Clamp(newLevel, 0, maxLevel);
 		}
 	}
 }

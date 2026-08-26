@@ -7,6 +7,8 @@ namespace HydraMenu.ui.sections
 	{
 		public MenuSection() : base("Menu") { }
 
+		private byte configIndex = 0;
+
 		public override void Render()
 		{
 			// GUILayout.Label($"Texture 2D memory usage: {Texture2D.currentTextureMemory}");
@@ -26,15 +28,28 @@ namespace HydraMenu.ui.sections
 				Styles.ClearCache();
 			}
 
-			if(GUILayout.Button("Save Config"))
-			{
-				Hydra.config.SaveConfig();
-			}
-
 			if(GUILayout.Button("Eject"))
 			{
 				Hydra.Eject();
 			}
+
+			GUILayout.Space(5);
+			GUILayout.Label($"Config:\nCurrent Config: {Hydra.config.currentConfig}");
+
+			GUILayout.Label($"Selected Config: {Hydra.config.configList[configIndex]}");
+			configIndex = (byte)GUILayout.HorizontalSlider(configIndex, 0, Hydra.config.configList.Length - 1);
+
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Load"))
+			{
+				Hydra.config.LoadConfig(Hydra.config.configList[configIndex]);
+			}
+
+			if(GUILayout.Button("Save"))
+			{
+				Hydra.config.SaveConfig(Hydra.config.configList[configIndex]);
+			}
+			GUILayout.EndHorizontal();
 		}
 	}
 }

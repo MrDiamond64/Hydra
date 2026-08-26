@@ -96,6 +96,7 @@ namespace HydraMenu.modules
 
 				accurateDisconnectReason,
 				alwaysVisibleChat,
+				fullbright,
 				noSeekerAnimation,
 				showGhostMessages,
 				showGhosts,

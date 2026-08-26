@@ -6,7 +6,7 @@ namespace HydraMenu.modules.self
 	{
 		public UnlimitedMeetings() : base("UnlimitedMeetings")
 		{
-			Enabled = true;
+			base.Enabled = true;
 		}
 
 		private void OnOpenMinigame(Minigame minigame)
