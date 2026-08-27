@@ -233,6 +233,9 @@ namespace HydraMenu
 
 		public static MapNames GetCurrentMap()
 		{
+			// If Among Us has not fully loaded in yet then default to The Skeld
+			if(AmongUsClient.Instance == null) return MapNames.Skeld;
+
 			// Fall back to current map according to game options if ShipStatus does not exist
 			if(ShipStatus.Instance == null)
 			{

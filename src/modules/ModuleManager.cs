@@ -22,7 +22,6 @@ namespace HydraMenu.modules
 		public static DisableCloseDoors disableCloseDoors = new DisableCloseDoors();
 		public static DisableGameEnd disableGameEnd = new DisableGameEnd();
 		public static DisableMeetings disableMeetings = new DisableMeetings();
-		public static DisableSabotages disableSabotages = new DisableSabotages();
 		public static FlipSkeld flipSkeld = new FlipSkeld();
 		public static NoKillCooldown noKillCooldown = new NoKillCooldown();
 
@@ -57,7 +56,7 @@ namespace HydraMenu.modules
 		// Troll
 		public static AutoExposeImpostors autoExposeImpostors = new AutoExposeImpostors();
 		public static AutoReportBodies autoReportBodies = new AutoReportBodies();
-		public static BlockSabotages blockSabotages = new BlockSabotages();
+		public static DisableSabotages disableSabotages = new DisableSabotages();
 		public static DisableVents disableVents = new DisableVents();
 
 		// Visual
