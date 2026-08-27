@@ -5,11 +5,14 @@ namespace HydraMenu.ui.sections
 {
 	internal class MenuSection : ISection
 	{
+		public static bool BlockClickThrough = true;
+
 		public MenuSection() : base("Menu") { }
 
 		public override void Render()
 		{
 			// GUILayout.Label($"Texture 2D memory usage: {Texture2D.currentTextureMemory}");
+			BlockClickThrough = GUILayout.Toggle(BlockClickThrough, "Block Click-Through");
 			Hydra.notifications.DisableNotifications = GUILayout.Toggle(Hydra.notifications.DisableNotifications, "Disable Notifications");
 
 			GUILayout.Label($"Primary Color: {Styles.primaryColor}");

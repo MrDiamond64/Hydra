@@ -7,6 +7,13 @@ namespace HydraMenu.ui
 	public class MainUI : MonoBehaviour
 	{
 		// Current window
+		public static MainUI Instance;
+
+		private void Awake()
+		{
+			Instance = this;
+		}
+
 		public bool visible = false;
 		public static float scale = 1.0f;
 
@@ -93,8 +100,15 @@ namespace HydraMenu.ui
 
 				sections[activeTab].HandleSubsectionMove(offset);
 			}
+		}
 
-			HandleBoxMovement();
+		private bool IsInHeader(Vector2 mousePos)
+		{
+			return
+				mousePos.x >= windowPosition.x &&
+				mousePos.x <= (windowPosition.x + WindowSize.x) &&
+				mousePos.y >= windowPosition.y &&
+				mousePos.y <= (windowPosition.y + HeaderSize.y);
 		}
 
 		public void OnGUI()
@@ -103,6 +117,8 @@ namespace HydraMenu.ui
 			if(!visible) return;
 
 			GUI.skin.label.fontSize = (int)(13 * scale);
+
+			HandleBoxMovement();
 
 			// Render UI box
 			GUI.Box(new Rect(windowPosition.x, windowPosition.y, WindowSize.x, WindowSize.y), $"{MyPluginInfo.PLUGIN_NAME} - {MyPluginInfo.PLUGIN_VERSION}", Styles.MainBox);
@@ -125,6 +141,7 @@ namespace HydraMenu.ui
 					GUILayout.EndArea();
 				}
 			}
+
 		}
 
 		private void HandleBoxMovement()
@@ -138,7 +155,7 @@ namespace HydraMenu.ui
 				// I tried using currentEvent.delta to get the delta between the last mouse position and the current one,
 				// however I noticed it would 'skip' quite frequently resulting in the window box not properly lining up where it should actually be dragged
 				case EventType.MouseDown:
-					if(!IsInBox(mousePos)) break;
+					if(!IsInHeader(mousePos)) break;
 
 					isDragging = true;
 					mouseDelta = currentEvent.mousePosition - windowPosition;
@@ -155,15 +172,6 @@ namespace HydraMenu.ui
 					isDragging = false;
 					break;
 			}
-		}
-
-		private bool IsInBox(Vector2 mousePos)
-		{
-			return
-				mousePos.x >= windowPosition.x &&
-				mousePos.x <= (windowPosition.x + WindowSize.x) &&
-				mousePos.y >= windowPosition.y &&
-				mousePos.y <= (windowPosition.y + WindowSize.y);
 		}
 
 		private void RenderTab(byte position, ISection section)
