@@ -8,17 +8,17 @@ using System.Collections.Generic;
 
 namespace HydraMenu.anticheat
 {
-	internal class Anticheat
+	public class Anticheat
 	{
 		public static bool Enabled { get; set; } = true;
 
-		public static Dictionary<GameDataTypes, GameDataCheck> GameDataHandlers = new Dictionary<GameDataTypes, GameDataCheck>()
+		public static readonly Dictionary<GameDataTypes, GameDataCheck> GameDataHandlers = new Dictionary<GameDataTypes, GameDataCheck>()
 		{
 			{ GameDataTypes.SceneChangeFlag, new SceneChange() },
 			{ GameDataTypes.ReadyFlag, new ClientReady() }
 		};
 
-		public static Dictionary<RpcCalls, RpcCheck> RpcHandlers = new Dictionary<RpcCalls, RpcCheck>()
+		public static readonly Dictionary<RpcCalls, RpcCheck> RpcHandlers = new Dictionary<RpcCalls, RpcCheck>()
 		{
 			// RPC handlers in this dictionary should be sorted by their RPC ID
 			{ RpcCalls.PlayAnimation, new PlayAnimation() },
@@ -195,6 +195,33 @@ namespace HydraMenu.anticheat
 					AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
 					break;
 			}
+		}
+
+		public class AnticheatConfigData
+		{
+			public bool AcEnabled { get; set; }
+			public bool SendNotification { get; set; }
+			public bool DiscardRpc { get; set; }
+			public Punishments Punishment { get; set; }
+		}
+
+		public static AnticheatConfigData GetConfigData()
+		{
+			return new AnticheatConfigData
+			{
+				AcEnabled = Enabled,
+				SendNotification = sendNotification,
+				DiscardRpc =  discardRpc,
+				Punishment = punishment,
+			};
+		}
+
+		public static void LoadConfigData(AnticheatConfigData configData)
+		{
+			Enabled = configData.AcEnabled;
+			sendNotification = configData.SendNotification;
+			discardRpc = configData.DiscardRpc;
+			punishment = configData.Punishment;
 		}
 	}
 }

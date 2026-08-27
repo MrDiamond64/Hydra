@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using HydraMenu.anticheat;
 using HydraMenu.ui;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,7 @@ namespace HydraMenu.modules
 			public MainUI.MainUIConfig Menu { get; set; }
 			public Dictionary<string, Dictionary<string, JsonElement>> Modules { get; set; }
 			public Dictionary<string, Dictionary<string, JsonElement>> Routines { get; set; }
+			public Anticheat.AnticheatConfigData Anticheat { get; set; }
 		}
 
 		public void Initialize()
@@ -81,6 +83,7 @@ namespace HydraMenu.modules
 			Hydra.mainUI.LoadConfigData(configData.Menu);
 			Hydra.modules.LoadConfigData(configData.Modules);
 			Hydra.routines.LoadConfigData(configData.Routines);
+			Anticheat.LoadConfigData(configData.Anticheat);
 
 			currentConfig = configName;
 			Hydra.Log.LogInfo($"Loaded config {configName}");
@@ -94,6 +97,7 @@ namespace HydraMenu.modules
 			configData.Menu = Hydra.mainUI.GetConfigData();
 			configData.Modules = Hydra.modules.GetConfigData();
 			configData.Routines = Hydra.routines.GetConfigData();
+			configData.Anticheat = Anticheat.GetConfigData();
 
 			JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
 			serializerOptions.WriteIndented = true;

@@ -3,7 +3,7 @@ using Hazel;
 
 namespace HydraMenu.anticheat
 {
-	internal abstract class GameDataCheck : ICheck
+	public abstract class GameDataCheck : ICheck
 	{
 		public bool Enabled { get; set; } = true;
 

@@ -196,7 +196,7 @@ namespace HydraMenu.ui
 
 		public MainUIConfig GetConfigData()
 		{
-			MainUIConfig config = new MainUIConfig
+			return new MainUIConfig
 			{
 				MenuKey = menuKey,
 				PrimaryColor = Styles.primaryColor,
@@ -204,8 +204,6 @@ namespace HydraMenu.ui
 				UiScale = scale,
 				DisableNotifications = Hydra.notifications.disableNotifications
 			};
-
-			return config;
 		}
 
 		public void LoadConfigData(MainUIConfig config)
