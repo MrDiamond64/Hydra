@@ -11,6 +11,13 @@ namespace HydraMenu.modules.visuals
 
 		protected override void OnEnable()
 		{
+			// In case this module was enabled as part of the config
+			if(target == null)
+			{
+				Enabled = false;
+				return;
+			}
+
 			FollowerCamera camera = Camera.main.GetComponent<FollowerCamera>();
 			camera.SetTarget(target);
 
