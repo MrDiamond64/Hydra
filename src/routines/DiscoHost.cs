@@ -13,7 +13,7 @@ namespace HydraMenu.routines
 		public float RandomizationDelay { get; set; } = 0.5f;
 		private float timeElapsed = 0f;
 
-		private System.Random rnd = new System.Random();
+		private readonly System.Random rnd = new System.Random();
 
 		public override void Run()
 		{

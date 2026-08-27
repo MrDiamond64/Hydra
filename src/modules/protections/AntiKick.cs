@@ -59,5 +59,5 @@ namespace HydraMenu.modules.protections
 		{
 			EventCoordinator.OnPlayerVotekick -= OnPlayerVotekick;
 		}
-}
+	}
 }

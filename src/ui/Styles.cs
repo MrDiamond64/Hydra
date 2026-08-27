@@ -30,7 +30,7 @@ namespace HydraMenu.ui
 		public static float menuOpacity = 0.85f;
 		public static UIColors primaryColor = UIColors.Azure;
 
-		private static Dictionary<string, Texture2D> CachedTextures = new Dictionary<string, Texture2D>();
+		private static readonly Dictionary<string, Texture2D> CachedTextures = new Dictionary<string, Texture2D>();
 
 		public static GUIStyle MainBox
 		{
