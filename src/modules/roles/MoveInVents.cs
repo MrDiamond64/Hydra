@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using UnityEngine;
 
 namespace HydraMenu.modules.roles
 {
@@ -24,6 +25,14 @@ namespace HydraMenu.modules.roles
 				__result = true;
 				return false;
 			}
+		}
+
+		protected override void OnDisable()
+		{
+			if(PlayerControl.LocalPlayer == null || Vent.currentVent == null) return;
+
+			PlayerControl.LocalPlayer.NetTransform.body.velocity = Vector2.zero;
+			PlayerControl.LocalPlayer.NetTransform.SnapTo(Vent.currentVent.transform.position + Vent.currentVent.Offset);
 		}
 	}
 }

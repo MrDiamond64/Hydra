@@ -1,4 +1,5 @@
-﻿using AmongUs.InnerNet.GameDataMessages;
+﻿using AmongUs.Data;
+using AmongUs.InnerNet.GameDataMessages;
 using HarmonyLib;
 using Hazel;
 
@@ -27,6 +28,23 @@ namespace HydraMenu.modules.spoofer
 				msg.WritePacked(level);
 				PlayerControl.LocalPlayer.SetLevel(level);
 				return false;
+			}
+		}
+
+		protected override void OnEnable()
+		{
+			if(PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data != null && PlayerControl.LocalPlayer.Data.PlayerLevel != SpoofedLevel)
+			{
+				PlayerControl.LocalPlayer.RpcSetLevel(SpoofedLevel);
+			}
+		}
+
+		protected override void OnDisable()
+		{
+			uint trueLevel = DataManager.Player.Stats.Level;
+			if(PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data != null && PlayerControl.LocalPlayer.Data.PlayerLevel != trueLevel)
+			{
+				PlayerControl.LocalPlayer.RpcSetLevel(trueLevel);
 			}
 		}
 	}

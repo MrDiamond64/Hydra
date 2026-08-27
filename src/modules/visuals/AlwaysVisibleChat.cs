@@ -22,5 +22,20 @@ namespace HydraMenu.modules.visuals
 				if(Instance.Enabled) visible = true;
 			}
 		}
+
+		protected override void OnEnable()
+		{
+			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
+
+			HudManager.Instance.Chat.SetVisible(true);
+		}
+
+		protected override void OnDisable()
+		{
+			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
+
+			bool shouldBeEnabled = RoleManager.IsGhostRole(PlayerControl.LocalPlayer.Data.RoleType) || LobbyBehaviour.Instance != null || MeetingHud.Instance != null;
+			HudManager.Instance.Chat.SetVisible(shouldBeEnabled);
+		}
 	}
 }

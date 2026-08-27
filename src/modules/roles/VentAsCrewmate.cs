@@ -36,5 +36,12 @@ namespace HydraMenu.modules.roles
 				return false;
 			}
 		}
+
+		protected override void OnDisable()
+		{
+			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null || RoleManager.IsImpostorRole(PlayerControl.LocalPlayer.Data.RoleType)) return;
+
+			HudManager.Instance.ImpostorVentButton.gameObject.SetActive(false);
+		}
 	}
 }

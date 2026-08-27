@@ -14,8 +14,8 @@ namespace HydraMenu.ui.sections
 	{
 		public TrollSection() : base("Troll") { }
 
-		public int selectedVent = 0;
-		public System.Random rnd = new System.Random();
+		private int selectedVent = 0;
+		private readonly System.Random rnd = new System.Random();
 
 		public override void Render()
 		{
@@ -26,7 +26,7 @@ namespace HydraMenu.ui.sections
 
 			ModuleManager.autoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies", PlayerControl.LocalPlayer, ref ModuleManager.autoReportBodies.target);
 			Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
-			ModuleManager.blockSabotages.Enabled = GUILayout.Toggle(ModuleManager.blockSabotages.Enabled, "Block Sabotages");
+			ModuleManager.disableSabotages.Enabled = GUILayout.Toggle(ModuleManager.disableSabotages.Enabled, "Disable Sabotages");
 			ModuleManager.disableVents.Enabled = GUILayout.Toggle(ModuleManager.disableVents.Enabled, "Disable Vents");
 
 			if(GUILayout.Button("Kick All Players"))

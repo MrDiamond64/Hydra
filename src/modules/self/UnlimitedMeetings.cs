@@ -24,6 +24,11 @@ namespace HydraMenu.modules.self
 		protected override void OnDisable()
 		{
 			EventCoordinator.OnOpenMinigame -= OnOpenMinigame;
+
+			if(PlayerControl.LocalPlayer != null)
+			{
+				PlayerControl.LocalPlayer.RemainingEmergencies = GameManager.Instance.LogicOptions.GetNumEmergencyMeetings();
+			}
 		}
 	}
 }
