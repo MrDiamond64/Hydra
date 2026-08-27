@@ -16,7 +16,8 @@ namespace HydraMenu.routines
 
 		public override void Run()
 		{
-			if(PlayerControl.LocalPlayer == null || target == null) return;
+			if(PlayerControl.LocalPlayer == null) return;
+			if (target == null) OnDisable();
 
 			timeElapsed += Time.deltaTime;
 			if(timeElapsed < PET_DELAY) return;
