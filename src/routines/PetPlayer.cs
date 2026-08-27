@@ -46,6 +46,12 @@ namespace HydraMenu.routines
 
 		protected override void OnEnable()
 		{
+			if(PlayerControl.LocalPlayer == null)
+			{
+				_enabled = false;
+				return;
+			}
+
 			// Attempting to move will result in our petting hand following our movement
 			// To avoid unexpected behavior, we prevent the player from moving
 			PlayerControl.LocalPlayer.moveable = false;

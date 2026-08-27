@@ -14,7 +14,7 @@ namespace HydraMenu.modules.visuals
 			// In case this module was enabled as part of the config
 			if(target == null)
 			{
-				Enabled = false;
+				_enabled = false;
 				return;
 			}
 

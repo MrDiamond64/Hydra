@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 
@@ -10,7 +9,7 @@ namespace HydraMenu.routines
 	{
 		public readonly string name;
 
-		public bool _enabled = false;
+		protected bool _enabled = false;
 		public virtual bool Enabled
 		{
 			get { return _enabled; }

@@ -33,6 +33,12 @@ namespace HydraMenu.routines
 
 		protected override void OnEnable()
 		{
+			if(PlayerControl.LocalPlayer == null)
+			{
+				_enabled = false;
+				return;
+			}
+
 			PlayerControl.LocalPlayer.moveable = false;
 			PlayerControl.LocalPlayer.NetTransform.body.velocity = Vector2.zero;
 		}
