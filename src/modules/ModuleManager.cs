@@ -8,10 +8,11 @@ using HydraMenu.modules.visuals;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using UnityEngine;
 
 namespace HydraMenu.modules
 {
-	internal class ModuleManager
+	internal class ModuleManager : MonoBehaviour
 	{
 		// Host
 		public static AssignRoles assignRoles = new AssignRoles();
@@ -37,6 +38,8 @@ namespace HydraMenu.modules
 		public static MoveInVents moveInVents = new MoveInVents();
 		public static NoKillChecks noKillChecks = new NoKillChecks();
 		public static NoShapeshiftAnimation noShapeshiftAnimation = new NoShapeshiftAnimation();
+		public static UnlockSabotageButton unlockSabotageButton = new UnlockSabotageButton();
+		public static VentAsCrewmate ventAsCrewmate = new VentAsCrewmate();
 
 		// Self
 		public static AlwaysShowTaskAnimations alwaysShowTaskAnimations = new AlwaysShowTaskAnimations();
@@ -93,6 +96,8 @@ namespace HydraMenu.modules
 				moveInVents,
 				noKillChecks,
 				noShapeshiftAnimation,
+				unlockSabotageButton,
+				ventAsCrewmate,
 
 				alwaysShowTaskAnimations,
 				immortality,
@@ -123,7 +128,7 @@ namespace HydraMenu.modules
 		}
 
 		// Return a dictionary of each module with its name, and another dictionary with names and values of each property
-		public static Dictionary<string, Dictionary<string, JsonElement>> GetConfigData()
+		public Dictionary<string, Dictionary<string, JsonElement>> GetConfigData()
 		{
 			Dictionary<string, Dictionary<string, JsonElement>> moduleConfig = new Dictionary<string, Dictionary<string, JsonElement>>();
 
@@ -135,7 +140,7 @@ namespace HydraMenu.modules
 			return moduleConfig;
 		}
 
-		public static void LoadConfigData(Dictionary<string, Dictionary<string, JsonElement>> moduleConfig)
+		public void LoadConfigData(Dictionary<string, Dictionary<string, JsonElement>> moduleConfig)
 		{
 			foreach((string moduleName, Dictionary<string, JsonElement> configData) in moduleConfig)
 			{
@@ -148,6 +153,25 @@ namespace HydraMenu.modules
 
 				Module module = moduleList[moduleIndex];
 				module.LoadConfigData(configData);
+			}
+		}
+
+		// No idea where else to put this
+		public void Update()
+		{
+			// If PlayerControl::Data isn't null, then we know the player has fully loaded into the game
+			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
+
+			if(ModuleManager.unlockSabotageButton.SabotageAsCrewmate) HudManager.Instance.SabotageButton.gameObject.SetActive(true);
+			if(ventAsCrewmate.Enabled) HudManager.Instance.ImpostorVentButton.gameObject.SetActive(true);
+
+			// The Chat button and Match Info buttons will overlap if both are active in-game (but not in meetings)
+			// I tried modifying `MatchInfoButton.transform.position` and the likes to try and shift the button towards the left
+			// however that only moved the collider of the button, not the icon
+			// So we just use this workaround to hide the Match Info Button in situations where it will not overlap with the Chat button
+			if(ModuleManager.alwaysVisibleChat.Enabled)
+			{
+				HudManager.Instance.MatchInfoButton.gameObject.SetActive(MeetingHud.Instance != null);
 			}
 		}
 	}

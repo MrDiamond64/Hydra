@@ -1,5 +1,4 @@
 ﻿using Hazel;
-using HydraMenu.features;
 using HydraMenu.network;
 using System.Collections.Generic;
 using UnityEngine;

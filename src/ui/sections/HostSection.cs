@@ -1,5 +1,4 @@
 ﻿using BepInEx.Unity.IL2CPP.Utils.Collections;
-using HydraMenu.features;
 using HydraMenu.modules;
 using HydraMenu.network;
 using InnerNet;

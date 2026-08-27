@@ -1,6 +1,5 @@
 ﻿using AmongUs.GameOptions;
 using Hazel;
-using HydraMenu.features;
 using HydraMenu.modules;
 using HydraMenu.network;
 

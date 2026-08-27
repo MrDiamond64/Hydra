@@ -1,7 +1,6 @@
 ﻿using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Hazel;
 using HydraMenu.assets;
-using HydraMenu.features;
 using HydraMenu.modules;
 using HydraMenu.network;
 using System;

@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using HydraMenu.features;
 
 namespace HydraMenu.modules.troll
 {

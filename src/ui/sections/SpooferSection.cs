@@ -1,5 +1,4 @@
-﻿using HydraMenu.features;
-using HydraMenu.modules;
+﻿using HydraMenu.modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -79,7 +79,7 @@ namespace HydraMenu.modules
 			}
 
 			Hydra.mainUI.LoadConfigData(configData.Menu);
-			ModuleManager.LoadConfigData(configData.Modules);
+			Hydra.modules.LoadConfigData(configData.Modules);
 			Hydra.routines.LoadConfigData(configData.Routines);
 
 			currentConfig = configName;
@@ -92,7 +92,7 @@ namespace HydraMenu.modules
 
 			ConfigData configData = new ConfigData();
 			configData.Menu = Hydra.mainUI.GetConfigData();
-			configData.Modules = ModuleManager.GetConfigData();
+			configData.Modules = Hydra.modules.GetConfigData();
 			configData.Routines = Hydra.routines.GetConfigData();
 
 			JsonSerializerOptions serializerOptions = new JsonSerializerOptions();

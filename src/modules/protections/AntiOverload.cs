@@ -10,7 +10,7 @@ namespace HydraMenu.modules.protections
 			base.Enabled = true;
 		}
 
-		public static AntiOverload Instance
+		private static AntiOverload Instance
 		{
 			get { return ModuleManager.antiOverload; }
 		}

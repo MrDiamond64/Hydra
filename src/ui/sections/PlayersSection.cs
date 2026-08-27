@@ -2,7 +2,6 @@
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HydraMenu.assets;
-using HydraMenu.features;
 using HydraMenu.modules;
 using HydraMenu.network;
 using InnerNet;

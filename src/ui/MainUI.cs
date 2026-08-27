@@ -191,6 +191,7 @@ namespace HydraMenu.ui
 			public Styles.UIColors PrimaryColor { get; set; }
 			public float MenuOpacity { get; set; }
 			public float UiScale { get; set; }
+			public bool DisableNotifications { get; set; }
 		}
 
 		public MainUIConfig GetConfigData()
@@ -200,7 +201,8 @@ namespace HydraMenu.ui
 				MenuKey = menuKey,
 				PrimaryColor = Styles.primaryColor,
 				MenuOpacity = Styles.menuOpacity,
-				UiScale = scale
+				UiScale = scale,
+				DisableNotifications = Hydra.notifications.disableNotifications
 			};
 
 			return config;
@@ -216,6 +218,7 @@ namespace HydraMenu.ui
 			Styles.primaryColor = (Styles.UIColors)Math.Clamp((int)config.PrimaryColor, 0, Styles.ColorValues.Count - 1);
 			Styles.menuOpacity = Mathf.Clamp(config.MenuOpacity, 0.0f, 1.0f);
 			scale = Mathf.Clamp(config.UiScale, 0.5f, 2.0f);
+			Hydra.notifications.disableNotifications = config.DisableNotifications;
 		}
 	}
 }

@@ -3,7 +3,6 @@ using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using HydraMenu.modules;
-using HydraMenu.features;
 using HydraMenu.routines;
 using HydraMenu.ui;
 using UnityEngine;
@@ -19,17 +18,17 @@ internal class Hydra : BasePlugin
 	public static readonly ConfigManager config = new ConfigManager();
 
 	public static MainUI mainUI;
-	private static Roles roles;
-	public static RoutineManager routines;
 	public static NotificationManager notifications;
+	public static ModuleManager modules;
+	public static RoutineManager routines;
 
 	public override void Load()
 	{
 		Log = base.Log;
 
 		mainUI = AddComponent<MainUI>();
-		roles = AddComponent<Roles>();
 		notifications = AddComponent<NotificationManager>();
+		modules = AddComponent<ModuleManager>();
 		routines = AddComponent<RoutineManager>();
 
 		try
@@ -60,8 +59,8 @@ internal class Hydra : BasePlugin
 		}
 
 		Object.Destroy(mainUI);
-		Object.Destroy(roles);
 		Object.Destroy(notifications);
+		Object.Destroy(modules);
 		Object.Destroy(routines);
 
 		ModManager.Instance.ModStamp.enabled = false;

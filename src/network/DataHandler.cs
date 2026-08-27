@@ -2,7 +2,6 @@
 using HarmonyLib;
 using Hazel;
 using HydraMenu.anticheat;
-using HydraMenu.features;
 using HydraMenu.modules;
 using InnerNet;
 

@@ -1,5 +1,4 @@
-﻿using HydraMenu.features;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HydraMenu.ui.sections
 {
