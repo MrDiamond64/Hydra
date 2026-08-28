@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
@@ -51,6 +52,7 @@ namespace HydraMenu.ui.sections
 			}
 			GUILayout.EndHorizontal();
 
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("New Config"))
 			{
 				string configName = Hydra.config.GetUnusedConfigName();
@@ -63,6 +65,12 @@ namespace HydraMenu.ui.sections
 
 				Hydra.config.CreateNewConfig(configName);
 			}
+
+			if(GUILayout.Button("Open Config Folder"))
+			{
+				Process.Start("explorer.exe", Hydra.config.CONFIG_PATH);
+			}
+			GUILayout.EndHorizontal();
 		}
 	}
 }
