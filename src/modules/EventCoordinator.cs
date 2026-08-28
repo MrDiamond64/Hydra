@@ -12,6 +12,7 @@ namespace HydraMenu.modules
 		public static event Action OnGameStart;
 		public static event Action OnGameLoad;
 		public static event Action OnDisconnect;
+
 		public static event Action OnMeetingEnd;
 		public static event Action<Minigame> OnOpenMinigame;
 		public static event Action<Ladder> OnUseLadder;
@@ -237,6 +238,7 @@ namespace HydraMenu.modules
 				msgReader.Position--;
 				// 1 = Player started to watch cameras, 2 (and every other value) = Player stopped watching cameras
 				byte operation = msgReader.ReadByte();
+				msgReader.Position++;
 
 				if(operation == 1)
 				{
@@ -246,6 +248,44 @@ namespace HydraMenu.modules
 				{
 					PublishEvent(OnPlayerExitCameras, player);
 				}
+			}
+		}
+
+		[HarmonyPatch(typeof(SecurityCameraSystemType), nameof(SecurityCameraSystemType.Deserialize))]
+		class UpdateCamerasNonHost
+		{
+			static void Prefix(SecurityCameraSystemType __instance, MessageReader reader)
+			{
+				int oldReadPosition = reader.Position;
+
+				int playerCount = reader.ReadPackedInt32();
+				if(playerCount > PlayerControl.AllPlayerControls.Count || playerCount > reader.BytesRemaining) return;
+
+				HashSet<byte> players = new HashSet<byte>();
+
+				for(int i = 0; i < playerCount; i++)
+				{
+					byte playerId = reader.ReadByte();
+
+					players.Add(playerId);
+				}
+
+				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+				{
+					bool inOld = __instance.PlayersUsing.Contains(player.PlayerId);
+					bool inNew = players.Contains(player.PlayerId);
+
+					if(!inOld && inNew)
+					{
+						PublishEvent(OnPlayerEnterCameras, player);
+					}
+					else if(inOld && !inNew)
+					{
+						PublishEvent(OnPlayerExitCameras, player);
+					}
+				}
+
+				reader.Position = oldReadPosition;
 			}
 		}
 

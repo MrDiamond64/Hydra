@@ -190,8 +190,8 @@ namespace HydraMenu
 				// Comms in Mira HQ and HeliSabotage require two different updates in order to complete
 				case SystemTypes.Comms:
 				case SystemTypes.HeliSabotage:
-					ShipStatus.Instance.RpcUpdateSystem(system, 16);
-					ShipStatus.Instance.RpcUpdateSystem(system, 17);
+					ShipStatus.Instance.RpcUpdateSystem(system, 16 | 0);
+					ShipStatus.Instance.RpcUpdateSystem(system, 16 | 1);
 					break;
 
 				case SystemTypes.Electrical:

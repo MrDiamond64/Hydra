@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace HydraMenu.anticheat
 {
-	public class Anticheat
+	internal class Anticheat
 	{
 		public static bool Enabled { get; set; } = true;
 

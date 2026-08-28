@@ -33,7 +33,6 @@ namespace HydraMenu.ui.sections
 			ModuleManager.flipSkeld.Enabled = GUILayout.Toggle(ModuleManager.flipSkeld.Enabled, "Use Flipped Skeld Map");
 
 			ModuleManager.disableCloseDoors.Enabled = GUILayout.Toggle(ModuleManager.disableCloseDoors.Enabled, "Disable Close Doors");
-			ModuleManager.disableCameras.Enabled = GUILayout.Toggle(ModuleManager.disableCameras.Enabled, "Disable Security Cameras");
 			ModuleManager.disableGameEnd.Enabled = GUILayout.Toggle(ModuleManager.disableGameEnd.Enabled, "Disable Game End");
 			ModuleManager.noKillCooldown.Enabled = GUILayout.Toggle(ModuleManager.noKillCooldown.Enabled, "No Kill Cooldown");
 

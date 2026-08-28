@@ -18,7 +18,6 @@ namespace HydraMenu.modules
 		public static AssignRoles assignRoles = new AssignRoles();
 		public static BanMidGame banMidGame = new BanMidGame();
 		public static BlockLowLevels blockLowLevels = new BlockLowLevels();
-		public static DisableCameras disableCameras = new DisableCameras();
 		public static DisableCloseDoors disableCloseDoors = new DisableCloseDoors();
 		public static DisableGameEnd disableGameEnd = new DisableGameEnd();
 		public static DisableMeetings disableMeetings = new DisableMeetings();
@@ -56,6 +55,7 @@ namespace HydraMenu.modules
 		// Troll
 		public static AutoExposeImpostors autoExposeImpostors = new AutoExposeImpostors();
 		public static AutoReportBodies autoReportBodies = new AutoReportBodies();
+		public static DisableCameras disableCameras = new DisableCameras();
 		public static DisableSabotages disableSabotages = new DisableSabotages();
 		public static DisableVents disableVents = new DisableVents();
 
@@ -78,7 +78,6 @@ namespace HydraMenu.modules
 				assignRoles,
 				banMidGame,
 				blockLowLevels,
-				disableCameras,
 				disableCloseDoors,
 				disableGameEnd,
 				disableMeetings,
@@ -111,6 +110,7 @@ namespace HydraMenu.modules
 
 				autoExposeImpostors,
 				autoReportBodies,
+				disableCameras,
 				disableSabotages,
 				disableVents,
 

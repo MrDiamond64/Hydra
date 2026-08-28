@@ -229,6 +229,25 @@ namespace HydraMenu.network
 			writer.EndMessage();
 		}
 
+		public void QueueUpdateSystem(PlayerControl source, SystemTypes system, byte value)
+		{
+			if(IsGlobal || AmTarget)
+			{
+				ShipStatus.Instance.UpdateSystem(system, source, value);
+				if(AmTarget) return;
+			}
+
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(ShipStatus.Instance.NetId);
+			writer.Write((byte)RpcCalls.UpdateSystem);
+			writer.Write((byte)system);
+			writer.WriteNetObject(source);
+			writer.Write(value);
+			writer.EndMessage();
+
+			msgCount++;
+		}
+
 		public void QueueUpdateSystem(PlayerControl source, SystemTypes system, MessageWriter msg)
 		{
 			msgCount++;

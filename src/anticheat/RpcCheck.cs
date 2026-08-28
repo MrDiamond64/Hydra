@@ -3,7 +3,7 @@ using System;
 
 namespace HydraMenu.anticheat
 {
-	public abstract class RpcCheck : ICheck
+	internal abstract class RpcCheck : ICheck
 	{
 		public virtual bool Enabled { get; set; } = true;
 
