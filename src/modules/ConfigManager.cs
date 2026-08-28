@@ -3,16 +3,17 @@ using HydraMenu.anticheat;
 using HydraMenu.ui;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace HydraMenu.modules
 {
 	internal class ConfigManager
 	{
-		public readonly string configPath = Path.Combine(Paths.ConfigPath, "Hydra");
+		public readonly string CONFIG_PATH = Path.Combine(Paths.ConfigPath, "Hydra");
 
+		public readonly List<string> configList = new List<string>();
 		public string currentConfig = "Hydra";
-		public string[] configList = [];
 
 		public class ConfigData
 		{
@@ -24,28 +25,27 @@ namespace HydraMenu.modules
 
 		public void Initialize()
 		{
-			if(!Directory.Exists(configPath))
+			if(!Directory.Exists(CONFIG_PATH))
 			{
 				Hydra.Log.LogInfo("No config folder was found, creating...");
-				Directory.CreateDirectory(configPath);
+				Directory.CreateDirectory(CONFIG_PATH);
 
-				configList = [ currentConfig ];
+				configList.Add(currentConfig);
 				return;
 			}
 
-			string[] configFiles = Directory.GetFiles(configPath, "*.json");
+			string[] configFiles = Directory.GetFiles(CONFIG_PATH, "*.json");
 			Hydra.Log.LogInfo($"Discovered {configFiles.Length} config files");
 
-			configList = new string[configFiles.Length];
-
-			for(byte i = 0; i < configFiles.Length; i++)
+			for(int i = 0; i < configFiles.Length; i++)
 			{
-				configList[i] = Path.GetFileNameWithoutExtension(configFiles[i]);
+				configList.Add(Path.GetFileNameWithoutExtension(configFiles[i]));
 			}
 
-			if(configList.Length == 0)
+			// There should always be a config named "Hydra" present
+			if(!configList.Contains(currentConfig))
 			{
-				configList = ["Hydra"];
+				configList.Add(currentConfig);
 			}
 
 			// Load the default config
@@ -54,7 +54,7 @@ namespace HydraMenu.modules
 
 		public string GetConfigPath(string configName)
 		{
-			return Path.Combine(configPath, configName + ".json");
+			return Path.Combine(CONFIG_PATH, configName + ".json");
 		}
 
 		public void LoadConfig(string configName)
@@ -106,6 +106,38 @@ namespace HydraMenu.modules
 			File.WriteAllText(configLocation, configString);
 
 			Hydra.Log.LogInfo($"Config {configName} has been saved to {configLocation}");
+		}
+
+		public string GetUnusedConfigName()
+		{
+			HashSet<string> configHashList = configList.ToHashSet();
+			string match = null;
+
+			// https://stackoverflow.com/a/27289807
+			char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			string baseConfigName = currentConfig.TrimEnd(digits).Trim();
+
+			for(int i = 1; i < 255; i++)
+			{
+				string configName = baseConfigName + " " + i;
+				if(configHashList.Contains(configName)) continue;
+
+				match = configName;
+				break;
+			}
+
+			return match;
+		}
+
+		public void CreateNewConfig(string configName)
+		{
+			// First save our old config
+			SaveConfig(currentConfig);
+
+			// Then create our new config
+			configList.Add(configName);
+			SaveConfig(configName);
+			currentConfig = configName;
 		}
 	}
 }

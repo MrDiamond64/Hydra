@@ -37,19 +37,32 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label($"Config:\nCurrent Config: {Hydra.config.currentConfig}");
 
 			GUILayout.Label($"Selected Config: {Hydra.config.configList[configIndex]}");
-			configIndex = (byte)GUILayout.HorizontalSlider(configIndex, 0, Hydra.config.configList.Length - 1);
+			configIndex = (byte)GUILayout.HorizontalSlider(configIndex, 0, Hydra.config.configList.Count - 1);
 
 			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Load"))
-			{
-				Hydra.config.LoadConfig(Hydra.config.configList[configIndex]);
-			}
-
 			if(GUILayout.Button("Save"))
 			{
 				Hydra.config.SaveConfig(Hydra.config.configList[configIndex]);
 			}
+
+			if(GUILayout.Button("Load"))
+			{
+				Hydra.config.LoadConfig(Hydra.config.configList[configIndex]);
+			}
 			GUILayout.EndHorizontal();
+
+			if(GUILayout.Button("New Config"))
+			{
+				string configName = Hydra.config.GetUnusedConfigName();
+				// I doubt anyone will actually have 255 configs with the pattern of "Hydra [1-255]", but just in case...
+				if(configName == null)
+				{
+					Hydra.notifications.Send("Config", "Failed to find an unused config name.");
+					return;
+				}
+
+				Hydra.config.CreateNewConfig(configName);
+			}
 		}
 	}
 }
