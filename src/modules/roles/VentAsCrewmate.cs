@@ -42,6 +42,11 @@ namespace HydraMenu.modules.roles
 			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null || RoleManager.IsImpostorRole(PlayerControl.LocalPlayer.Data.RoleType)) return;
 
 			HudManager.Instance.ImpostorVentButton.gameObject.SetActive(false);
+			if(Vent.currentVent != null)
+			{
+				Vent.currentVent.SetButtons(false);
+				PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
+			}
 		}
 	}
 }
