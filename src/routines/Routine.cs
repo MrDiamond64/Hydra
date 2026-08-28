@@ -38,7 +38,6 @@ namespace HydraMenu.routines
 
 		protected virtual void OnEnable() { }
 		protected virtual void OnDisable() { }
-		public virtual void OnDisconnect() { }
 
 		public Dictionary<string, JsonElement> GetConfigData()
 		{

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using HydraMenu.modules;
+using UnityEngine;
 
 namespace HydraMenu.routines
 {
@@ -31,6 +32,12 @@ namespace HydraMenu.routines
 			PlayerControl.LocalPlayer.transform.position = following.transform.position;
 		}
 
+		private void OnDisconnect()
+		{
+			Hydra.notifications.Send("Player Follower", "Player Follower was disabled as you left the game.", 10);
+			Enabled = false;
+		}
+
 		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null)
@@ -41,18 +48,20 @@ namespace HydraMenu.routines
 
 			PlayerControl.LocalPlayer.moveable = false;
 			PlayerControl.LocalPlayer.NetTransform.body.velocity = Vector2.zero;
+
+			EventCoordinator.OnDisconnect += OnDisconnect;
 		}
 
 		protected override void OnDisable()
 		{
 			following = null;
-			if(PlayerControl.LocalPlayer != null) PlayerControl.LocalPlayer.moveable = true;
-		}
 
-		public override void OnDisconnect()
-		{
-			Hydra.notifications.Send("Player Follower", "Player Follower was disabled as you left the game.", 10);
-			Enabled = false;
+			if(PlayerControl.LocalPlayer != null)
+			{
+				PlayerControl.LocalPlayer.moveable = true;
+			}
+
+			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }

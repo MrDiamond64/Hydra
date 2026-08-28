@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using HydraMenu.modules;
+using UnityEngine;
 
 namespace HydraMenu.routines
 {
@@ -28,6 +29,12 @@ namespace HydraMenu.routines
 			}
 		}
 
+		private void OnDisconnect()
+		{
+			Hydra.notifications.Send("Teleport Spammer", "Teleport Spammer was disabled as you left the game.", 10);
+			Enabled = false;
+		}
+
 		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
@@ -36,12 +43,13 @@ namespace HydraMenu.routines
 				Enabled = false;
 				return;
 			}
+
+			EventCoordinator.OnDisconnect += OnDisconnect;
 		}
 
-		public override void OnDisconnect()
+		protected override void OnDisable()
 		{
-			Hydra.notifications.Send("Teleport Spammer", "Teleport Spammer was disabled as you left the game.", 10);
-			Enabled = false;
+			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }

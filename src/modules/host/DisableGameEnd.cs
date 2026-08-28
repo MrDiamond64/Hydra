@@ -12,10 +12,8 @@ namespace HydraMenu.modules.host
 		}
 
 		[HarmonyPatch(typeof(GameManager), nameof(GameManager.RpcEndGame))]
-		public static class OnEndGame
+		class OnEndGame
 		{
-			public static bool Enabled { get; set; } = false;
-
 			static bool Prefix()
 			{
 				return !Instance.Enabled;

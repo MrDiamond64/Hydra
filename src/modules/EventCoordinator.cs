@@ -11,6 +11,7 @@ namespace HydraMenu.modules
 		// Game Events
 		public static event Action OnGameStart;
 		public static event Action OnGameLoad;
+		public static event Action OnDisconnect;
 		public static event Action OnMeetingEnd;
 		public static event Action<Minigame> OnOpenMinigame;
 		public static event Action<Ladder> OnUseLadder;
@@ -57,6 +58,17 @@ namespace HydraMenu.modules
 			static void Prefix()
 			{
 				PublishEvent(OnMeetingEnd);
+			}
+		}
+
+		[HarmonyPatch(typeof(GameData), nameof(GameData.OnDisconnected))]
+		class Disconnect
+		{
+			static void Prefix()
+			{
+				Hydra.Log.LogInfo("[Disconnect Logger] Our player was disconnected from the lobby");
+
+				PublishEvent(OnDisconnect);
 			}
 		}
 

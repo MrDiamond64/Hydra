@@ -62,21 +62,5 @@ namespace HydraMenu.routines
 				routine.LoadConfigData(configData);
 			}
 		}
-
-		[HarmonyPatch(typeof(GameData), nameof(GameData.OnDisconnected))]
-		class DisconnectHandler
-		{
-			static void Prefix()
-			{
-				Hydra.Log.LogInfo("Player disconnected from the lobby, disabling relevant routines");
-
-				foreach(Routine routine in Hydra.routines.routineList)
-				{
-					if(!routine.Enabled) continue;
-
-					routine.OnDisconnect();
-				}
-			}
-		}
 	}
 }

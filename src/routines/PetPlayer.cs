@@ -1,4 +1,5 @@
 ﻿using Hazel;
+using HydraMenu.modules;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -44,6 +45,12 @@ namespace HydraMenu.routines
 			AmongUsClient.Instance.FinishRpcImmediately(writer);
 		}
 
+		private void OnDisconnect()
+		{
+			Hydra.notifications.Send("Pet Player", "Pet Player was disabled as you left the game.", 10);
+			Enabled = false;
+		}
+
 		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null)
@@ -56,6 +63,8 @@ namespace HydraMenu.routines
 			// To avoid unexpected behavior, we prevent the player from moving
 			PlayerControl.LocalPlayer.moveable = false;
 			PlayerControl.LocalPlayer.NetTransform.body.velocity = Vector2.zero;
+
+			EventCoordinator.OnDisconnect += OnDisconnect;
 		}
 
 		protected override void OnDisable()
@@ -67,12 +76,8 @@ namespace HydraMenu.routines
 				PlayerControl.LocalPlayer.moveable = true;
 				PlayerControl.LocalPlayer.MyPhysics.RpcCancelPet();
 			}
-		}
 
-		public override void OnDisconnect()
-		{
-			Hydra.notifications.Send("Pet Player", "Pet Player was disabled as you left the game.", 10);
-			Enabled = false;
+			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }
