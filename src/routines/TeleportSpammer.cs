@@ -7,8 +7,8 @@ namespace HydraMenu.routines
 	{
 		public TeleportSpammer() : base("TeleportSpammer") { }
 
-		private System.Random rnd = new System.Random();
-		private float teleportDelay = 0.5f;
+		private readonly System.Random rnd = new System.Random();
+		private readonly float TELEPORT_DELAY = 0.5f;
 		private float timeElapsed = 0f;
 
 		public override void Run()
@@ -16,7 +16,7 @@ namespace HydraMenu.routines
 			if(ShipStatus.Instance == null) return;
 
 			timeElapsed += Time.deltaTime;
-			if(timeElapsed < teleportDelay) return;
+			if(timeElapsed < TELEPORT_DELAY) return;
 			timeElapsed = 0f;
 
 			foreach(PlayerControl player in PlayerControl.AllPlayerControls)

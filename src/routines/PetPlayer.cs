@@ -1,5 +1,6 @@
 ﻿using Hazel;
 using HydraMenu.modules;
+using InnerNet;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -51,6 +52,14 @@ namespace HydraMenu.routines
 			Enabled = false;
 		}
 
+		private void OnPlayerDisconnect(ClientData client, DisconnectReasons reason)
+		{
+			if(client.Character != target) return;
+
+			Hydra.notifications.Send("Pet Player", "Pet Player was disabled as the player you were petting left the game");
+			Enabled = false;
+		}
+
 		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null)
@@ -65,6 +74,7 @@ namespace HydraMenu.routines
 			PlayerControl.LocalPlayer.NetTransform.body.velocity = Vector2.zero;
 
 			EventCoordinator.OnDisconnect += OnDisconnect;
+			EventCoordinator.OnPlayerDisconnect += OnPlayerDisconnect;
 		}
 
 		protected override void OnDisable()
@@ -78,6 +88,7 @@ namespace HydraMenu.routines
 			}
 
 			EventCoordinator.OnDisconnect -= OnDisconnect;
+			EventCoordinator.OnPlayerDisconnect -= OnPlayerDisconnect;
 		}
 	}
 }

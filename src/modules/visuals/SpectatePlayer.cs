@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using InnerNet;
+using UnityEngine;
 
 namespace HydraMenu.modules.visuals
 {
@@ -8,6 +9,14 @@ namespace HydraMenu.modules.visuals
 
 		public PlayerControl target;
 		private bool wereShadowsEnabled = false;
+
+		private void OnPlayerDisconnect(ClientData client, DisconnectReasons reason)
+		{
+			if(client.Character != target) return;
+
+			Hydra.notifications.Send("Spectate Player", "Spectate Player was disabled as the player you were spectating left the game.");
+			Enabled = false;
+		}
 
 		protected override void OnEnable()
 		{
@@ -23,14 +32,21 @@ namespace HydraMenu.modules.visuals
 
 			wereShadowsEnabled = HudManager.Instance.ShadowQuad.gameObject.active;
 			HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
+
+			EventCoordinator.OnPlayerDisconnect += OnPlayerDisconnect;
 		}
 
 		protected override void OnDisable()
 		{
-			FollowerCamera camera = Camera.main.GetComponent<FollowerCamera>();
-			camera.SetTarget(PlayerControl.LocalPlayer);
+			if(PlayerControl.LocalPlayer != null)
+			{
+				FollowerCamera camera = Camera.main.GetComponent<FollowerCamera>();
+				camera.SetTarget(PlayerControl.LocalPlayer);
 
-			if(wereShadowsEnabled) HudManager.Instance.ShadowQuad.gameObject.SetActive(true);
+				if(wereShadowsEnabled) HudManager.Instance.ShadowQuad.gameObject.SetActive(true);
+			}
+
+			EventCoordinator.OnPlayerDisconnect -= OnPlayerDisconnect;
 		}
 	}
 }

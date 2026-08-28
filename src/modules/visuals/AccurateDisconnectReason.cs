@@ -23,8 +23,6 @@ namespace HydraMenu.modules.visuals
 			{
 				if(!Instance.Enabled) return true;
 
-				Hydra.Log.LogInfo($"[Disconnect Logger] {playerName} was disconnected with reason {reason}");
-
 				switch(reason) {
 					// GameData::ShowNotification already handles these disconnect messages
 					case DisconnectReasons.ExitGame:

@@ -7,7 +7,7 @@ namespace HydraMenu.routines
 	{
 		public ReportBodySpam() : base("ReportBodySpam") { }
 
-		public float reportDelay = 2.5f;
+		public readonly float REPORT_DELAY = 2.5f;
 		private float timeElapsed = 0f;
 
 		public override void Run()
@@ -15,7 +15,7 @@ namespace HydraMenu.routines
 			if(ShipStatus.Instance == null) return;
 
 			timeElapsed += Time.deltaTime;
-			if(timeElapsed < reportDelay) return;
+			if(timeElapsed < REPORT_DELAY) return;
 			timeElapsed = 0f;
 
 			PlayerControl player = Utilities.GetRandomPlayer(false, false, false, false);

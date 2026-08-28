@@ -13,13 +13,13 @@ namespace HydraMenu.routines
 		public HashSet<int> targets = new HashSet<int>();
 
 		// For the sake of performance, only check if players are outside the jail every 500ms
-		public float delay = 0.5f;
+		public readonly float DELAY = 0.5f;
 		private float timeElapsed = 0f;
 
 		public override void Run()
 		{
 			timeElapsed += Time.deltaTime;
-			if(timeElapsed < delay) return;
+			if(timeElapsed < DELAY) return;
 			timeElapsed = 0f;
 
 			GetMapData(out SystemTypes jailRoom, out int ventId);

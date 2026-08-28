@@ -6,6 +6,7 @@ namespace HydraMenu.ui.sections
 	internal class ProtectionsSection : Section
 	{
 		public ProtectionsSection() : base("Protections") { }
+
 		public override void Render()
 		{
 			// Network

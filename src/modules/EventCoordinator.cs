@@ -18,6 +18,7 @@ namespace HydraMenu.modules
 
 		// Player Events
 		public static event Action<PlayerControl, ClientData> OnPlayerJoin;
+		public static event Action<ClientData, DisconnectReasons> OnPlayerDisconnect;
 		public static event Action<PlayerControl, string> OnPlayerChat;
 
 		public static event Action<PlayerControl, byte> OnPlayerEnterVent;
@@ -116,6 +117,19 @@ namespace HydraMenu.modules
 				}
 
 				PublishEvent(OnPlayerJoin, __instance, clientData);
+			}
+		}
+
+		[HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerLeft))]
+		class PlayerDisconnect
+		{
+			static void Prefix(ClientData data, DisconnectReasons reason)
+			{
+				if(data.Character == null) return;
+
+				Hydra.Log.LogInfo($"[Disconnect Logger] {data.Character.Data.PlayerName} was disconnected with reason {reason}");
+
+				PublishEvent(OnPlayerDisconnect, data, reason);
 			}
 		}
 

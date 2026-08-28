@@ -1,4 +1,5 @@
 ﻿using HydraMenu.modules;
+using InnerNet;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -7,17 +8,11 @@ namespace HydraMenu.routines
 	{
 		public PlayerFollowerRoutine() : base("PlayerFollower") { }
 
-		public PlayerControl following;
+		public PlayerControl target;
 
 		public override void Run()
 		{
 			if(PlayerControl.LocalPlayer == null) return;
-
-			if(following == null)
-			{
-				Enabled = false;
-				return;
-			}
 
 			/*
 			float distance = Vector3.Distance(following.transform.position, PlayerControl.LocalPlayer.transform.position);
@@ -29,12 +24,20 @@ namespace HydraMenu.routines
 			*/
 
 			// We could probably see how haunting as a ghost makes the follower walks towards a player's position so we don't have to directly teleport, but this works fine for now
-			PlayerControl.LocalPlayer.transform.position = following.transform.position;
+			PlayerControl.LocalPlayer.transform.position = target.transform.position;
 		}
 
 		private void OnDisconnect()
 		{
 			Hydra.notifications.Send("Player Follower", "Player Follower was disabled as you left the game.", 10);
+			Enabled = false;
+		}
+
+		private void OnPlayerDisconnect(ClientData client, DisconnectReasons reason)
+		{
+			if(client.Character != target) return;
+
+			Hydra.notifications.Send("Follow Player", "Follow Player was disabled as the player you were following left the game");
 			Enabled = false;
 		}
 
@@ -50,11 +53,12 @@ namespace HydraMenu.routines
 			PlayerControl.LocalPlayer.NetTransform.body.velocity = Vector2.zero;
 
 			EventCoordinator.OnDisconnect += OnDisconnect;
+			EventCoordinator.OnPlayerDisconnect += OnPlayerDisconnect;
 		}
 
 		protected override void OnDisable()
 		{
-			following = null;
+			target = null;
 
 			if(PlayerControl.LocalPlayer != null)
 			{
@@ -62,6 +66,7 @@ namespace HydraMenu.routines
 			}
 
 			EventCoordinator.OnDisconnect -= OnDisconnect;
+			EventCoordinator.OnPlayerDisconnect -= OnPlayerDisconnect;
 		}
 	}
 }
