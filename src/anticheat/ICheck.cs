@@ -1,4 +1,4 @@
-﻿namespace HydraMenu.anticheat
+﻿namespace LunarMenu.anticheat
 {
 	internal interface ICheck
 	{

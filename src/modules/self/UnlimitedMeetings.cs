@@ -1,6 +1,6 @@
 ﻿using Il2CppInterop.Runtime;
 
-namespace HydraMenu.modules.self
+namespace LunarMenu.modules.self
 {
 	internal class UnlimitedMeetings : Module
 	{

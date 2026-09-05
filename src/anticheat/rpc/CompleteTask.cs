@@ -1,6 +1,6 @@
 ﻿using Hazel;
 
-namespace HydraMenu.anticheat.rpc
+namespace LunarMenu.anticheat.rpc
 {
 	internal class CompleteTask : RpcCheck
 	{

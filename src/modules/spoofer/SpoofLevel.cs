@@ -3,7 +3,7 @@ using AmongUs.InnerNet.GameDataMessages;
 using HarmonyLib;
 using Hazel;
 
-namespace HydraMenu.modules.spoofer
+namespace LunarMenu.modules.spoofer
 {
 	internal class SpoofLevel : Module
 	{

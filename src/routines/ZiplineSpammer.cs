@@ -1,9 +1,9 @@
-﻿using HydraMenu.modules;
-using HydraMenu.network;
+﻿using LunarMenu.modules;
+using LunarMenu.network;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	internal class ZiplineSpammer : Routine
 	{
@@ -54,7 +54,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Zipline Spammer", "Zipline Spammer was disabled as you left the game.", 10);
+			Lunar.notifications.Send("Zipline Spammer", "Zipline Spammer was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -62,14 +62,14 @@ namespace HydraMenu.routines
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Zipline Spammer", "Zipline Spammer can only be used once the game has started.", 10);
+				Lunar.notifications.Send("Zipline Spammer", "Zipline Spammer can only be used once the game has started.", 10);
 				Enabled = false;
 				return;
 			}
 
 			if(Utilities.GetCurrentMap() != MapNames.Fungle)
 			{
-				Hydra.notifications.Send("Zipline Spammer", "Zipline Spammer can only be used on The Fungle.", 10);
+				Lunar.notifications.Send("Zipline Spammer", "Zipline Spammer can only be used on The Fungle.", 10);
 				Enabled = false;
 				return;
 			}

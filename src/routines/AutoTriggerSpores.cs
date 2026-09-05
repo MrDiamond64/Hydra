@@ -1,8 +1,8 @@
-﻿using HydraMenu.modules;
-using HydraMenu.network;
+﻿using LunarMenu.modules;
+using LunarMenu.network;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	public class AutoTriggerSporesRoutine : Routine
 	{
@@ -33,7 +33,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Trigger Spores", "Auto-Trigger Spores was disabled as you left the game.", 10);
+			Lunar.notifications.Send("Trigger Spores", "Auto-Trigger Spores was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -41,14 +41,14 @@ namespace HydraMenu.routines
 		{
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Trigger Spores", "Auto-Trigger Spores can only be used if the game has started.", 10);
+				Lunar.notifications.Send("Trigger Spores", "Auto-Trigger Spores can only be used if the game has started.", 10);
 				Enabled = false;
 				return;
 			}
 
 			if(Utilities.GetCurrentMap() != MapNames.Fungle)
 			{
-				Hydra.notifications.Send("Trigger Spores", "Auto-Trigger Spores can only be used in The Fungle.", 10);
+				Lunar.notifications.Send("Trigger Spores", "Auto-Trigger Spores can only be used in The Fungle.", 10);
 				Enabled = false;
 				return;
 			}

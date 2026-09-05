@@ -1,7 +1,7 @@
 ﻿using Hazel;
 using System;
 
-namespace HydraMenu.anticheat
+namespace LunarMenu.anticheat
 {
 	internal abstract class RpcCheck : ICheck
 	{

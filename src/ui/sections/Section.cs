@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal abstract class Section
 	{

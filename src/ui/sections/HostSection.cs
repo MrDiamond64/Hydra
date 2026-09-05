@@ -1,6 +1,6 @@
 ﻿using BepInEx.Unity.IL2CPP.Utils.Collections;
-using HydraMenu.modules;
-using HydraMenu.network;
+using LunarMenu.modules;
+using LunarMenu.network;
 using InnerNet;
 using System;
 using System.Collections;
@@ -9,7 +9,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class HostSection : Section
 	{
@@ -63,7 +63,7 @@ namespace HydraMenu.ui.sections
 				ModuleManager.disableGameEnd.Enabled = false;
 
 				GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByTask, false);
-				Hydra.notifications.Send("Game Finished", "You ended the game with a crewmate victory.", 5);
+				Lunar.notifications.Send("Game Finished", "You ended the game with a crewmate victory.", 5);
 			}
 
 			if(GUILayout.Button("Force Imposter Victory"))
@@ -72,7 +72,7 @@ namespace HydraMenu.ui.sections
 				ModuleManager.disableGameEnd.Enabled = false;
 
 				GameManager.Instance.RpcEndGame(GameOverReason.ImpostorsByKill, false);
-				Hydra.notifications.Send("Game Finished", "You ended the game with an imposter victory.", 5);
+				Lunar.notifications.Send("Game Finished", "You ended the game with an imposter victory.", 5);
 			}
 			GUILayout.EndHorizontal();
 
@@ -90,11 +90,11 @@ namespace HydraMenu.ui.sections
 					InnerNetObject ship = shipList.Dequeue();
 					ship.Despawn();
 
-					Hydra.notifications.Send("Game Map", "The current map has been despawned.", 5);
+					Lunar.notifications.Send("Game Map", "The current map has been despawned.", 5);
 				}
 				else
 				{
-					Hydra.notifications.Send("Game Map", "The game map has already been despawned.", 10);
+					Lunar.notifications.Send("Game Map", "The game map has already been despawned.", 10);
 				}
 			}
 
@@ -112,11 +112,11 @@ namespace HydraMenu.ui.sections
 					InnerNetObject lobby = lobbyList.Dequeue();
 					lobby.Despawn();
 
-					Hydra.notifications.Send("Lobby Map", "The lobby map has been despawned.", 5);
+					Lunar.notifications.Send("Lobby Map", "The lobby map has been despawned.", 5);
 				}
 				else
 				{
-					Hydra.notifications.Send("Lobby Map", "The lobby map has already been despawned.", 10);
+					Lunar.notifications.Send("Lobby Map", "The lobby map has already been despawned.", 10);
 				}
 			}
 
@@ -135,15 +135,15 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label("Meeting Controls:");
 			ModuleManager.disableMeetings.Enabled = GUILayout.Toggle(ModuleManager.disableMeetings.Enabled, "Disable Meetings");
-			Hydra.routines.reportBodySpam.Enabled = GUILayout.Toggle(Hydra.routines.reportBodySpam.Enabled, "Spam Report Bodies");
+			Lunar.routines.reportBodySpam.Enabled = GUILayout.Toggle(Lunar.routines.reportBodySpam.Enabled, "Spam Report Bodies");
 			ModuleManager.voteImmune.Enabled = Controls.PlayerSpecificToggle("Vote Immune", PlayerControl.LocalPlayer, ModuleManager.voteImmune.targets);
-			Hydra.routines.voteSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Spam Votes", Hydra.routines.voteSpammer.targets);
+			Lunar.routines.voteSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Spam Votes", Lunar.routines.voteSpammer.targets);
 
 			if(GUILayout.Button("Close Meeting"))
 			{
 				if(MeetingHud.Instance == null)
 				{
-					Hydra.notifications.Send("Skip Meeting", "This option can only be used in a meeting.");
+					Lunar.notifications.Send("Skip Meeting", "This option can only be used in a meeting.");
 				}
 				else
 				{
@@ -192,10 +192,10 @@ namespace HydraMenu.ui.sections
 				batch.FinishBatch();
 			}
 
-			Hydra.routines.discoHost.Enabled = Controls.GlobalPlayerSpecificToggle("Disco Party", Hydra.routines.discoHost.targets);
+			Lunar.routines.discoHost.Enabled = Controls.GlobalPlayerSpecificToggle("Disco Party", Lunar.routines.discoHost.targets);
 
-			GUILayout.Label($"Color randomization delay: {Hydra.routines.discoHost.RandomizationDelay:F2}s");
-			Hydra.routines.discoHost.RandomizationDelay = GUILayout.HorizontalSlider(Hydra.routines.discoHost.RandomizationDelay, 0.1f, 2.0f);
+			GUILayout.Label($"Color randomization delay: {Lunar.routines.discoHost.RandomizationDelay:F2}s");
+			Lunar.routines.discoHost.RandomizationDelay = GUILayout.HorizontalSlider(Lunar.routines.discoHost.RandomizationDelay, 0.1f, 2.0f);
 		}
 
 		private static void KillAllPlayers()
@@ -204,13 +204,13 @@ namespace HydraMenu.ui.sections
 
 			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
 			{
-				Hydra.notifications.Send("Murder Player", "This feature can only be used once the game has started.");
+				Lunar.notifications.Send("Murder Player", "This feature can only be used once the game has started.");
 				return;
 			}
 
 			if(hasAnticheat && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Murder Player", "This feature can only be used if you are the host of the lobby.");
+				Lunar.notifications.Send("Murder Player", "This feature can only be used if you are the host of the lobby.");
 				return;
 			}
 
@@ -235,18 +235,18 @@ namespace HydraMenu.ui.sections
 
 		private static void SpawnLobby()
 		{
-			Hydra.Log.LogInfo($"Attempting to spawn in lobby");
+			Lunar.Log.LogInfo($"Attempting to spawn in lobby");
 
 			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Lobby Spawner", "This feature can only be used if you are the host of the lobby.");
+				Lunar.notifications.Send("Lobby Spawner", "This feature can only be used if you are the host of the lobby.");
 				return;
 			}
 
 			InnerNetObject lobbyPrefab = AmongUsClient.Instance.NonAddressableSpawnableObjects.First((obj) => obj.SpawnId == (uint)network.Constants.SpawnType.LobbyBehavior);
 			if(lobbyPrefab == null)
 			{
-				Hydra.Log.LogError($"Failed to find LobbyBehavior prefab in NonAddressableSpawnableObjects");
+				Lunar.Log.LogError($"Failed to find LobbyBehavior prefab in NonAddressableSpawnableObjects");
 				return;
 			}
 
@@ -256,19 +256,19 @@ namespace HydraMenu.ui.sections
 			batch.QueueSpawn(lobby, -2, SpawnFlags.None);
 			batch.FinishBatch();
 
-			Hydra.notifications.Send("Lobby Spawner", "A new instance of the lobby has been spawned", 5);
+			Lunar.notifications.Send("Lobby Spawner", "A new instance of the lobby has been spawned", 5);
 		}
 
 		private static IEnumerator SpawnMap(byte mapId)
 		{
-			Hydra.Log.LogInfo($"Attempting to spawn in map id {mapId}");
+			Lunar.Log.LogInfo($"Attempting to spawn in map id {mapId}");
 
 			// The Utilities::IsAnticheatPresent function does not work perfectly here
 			// We are able to spawn in any maps we want without host in local, or even skeld.net lobbies
 			// however +25 modded protocol lobbies, while having much of their anticheat checks disabled, still has checks against non-hosts sending spawn messages
 			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Map Spawner", "This feature can only be used if you are the host of the lobby.");
+				Lunar.notifications.Send("Map Spawner", "This feature can only be used if you are the host of the lobby.");
 				yield break;
 			}
 
@@ -281,14 +281,14 @@ namespace HydraMenu.ui.sections
 			batch.QueueSpawn(ship, -2, SpawnFlags.None);
 			batch.FinishBatch();
 
-			Hydra.notifications.Send("Map Spawner", $"{(MapNames)mapId} has been spawned.", 5);
+			Lunar.notifications.Send("Map Spawner", $"{(MapNames)mapId} has been spawned.", 5);
 		}
 
 		private static IEnumerator ShapeshiftAll(PlayerControl target)
 		{
 			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Shapeshift Player", "You need to be the host of the lobby in order to use this feature.");
+				Lunar.notifications.Send("Shapeshift Player", "You need to be the host of the lobby in order to use this feature.");
 				yield break;
 			}
 
@@ -307,7 +307,7 @@ namespace HydraMenu.ui.sections
 		{
 			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Shapeshift Player", "You need to be the host of the lobby in order to use this feature.");
+				Lunar.notifications.Send("Shapeshift Player", "You need to be the host of the lobby in order to use this feature.");
 				yield break;
 			}
 

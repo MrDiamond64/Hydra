@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
-using HydraMenu.network;
+using LunarMenu.network;
 
-namespace HydraMenu.modules.host
+namespace LunarMenu.modules.host
 {
 	internal class FakeShapeshiftBubble : Module
 	{

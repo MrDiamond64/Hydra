@@ -1,7 +1,7 @@
-﻿using HydraMenu.modules;
+﻿using LunarMenu.modules;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class ProtectionsSection : Section
 	{

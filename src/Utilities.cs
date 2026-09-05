@@ -1,13 +1,13 @@
 ﻿using AmongUs.GameOptions;
 using Hazel;
-using HydraMenu.network;
+using LunarMenu.network;
 using InnerNet;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static HydraMenu.network.Constants;
+using static LunarMenu.network.Constants;
 
-namespace HydraMenu
+namespace LunarMenu
 {
 	internal class Utilities
 	{
@@ -17,7 +17,43 @@ namespace HydraMenu
 		private static readonly Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<PetData> allPets = HatManager.Instance.allPets;
 		private static readonly Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<NamePlateData> allNameplates = HatManager.Instance.allNamePlates;
 
-		public static int GetRandomUnusedColor()
+		public static bool inLocalGame => ((AmongUsClient.Instance.NetworkMode == NetworkModes.LocalGame) && (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started));
+        public static bool inLocalLobby => ((AmongUsClient.Instance.NetworkMode == NetworkModes.LocalGame) && (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Joined));
+        public static bool inOnlineGame => ((AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame) && (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started));
+        public static bool inOnlineLobby => ((AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame) && (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Joined));
+		public static bool tutorialScene => GameState.CurrentScene == "TutorialScene";
+
+		public static bool InLobby()
+		{
+			if (AmongUsClient.Instance == null) return false;
+			if (!GameManager.Instance) return false;
+			return (inLocalLobby || inOnlineLobby) && PlayerControl.LocalPlayer != null;
+		}
+
+		public static bool InGame()
+		{
+			if (AmongUsClient.Instance == null) return false;
+			if (!GameManager.Instance) return false;
+			return (inLocalGame || inOnlineGame || tutorialScene) && (ShipStatus.Instance != null || GameState.GameLoaded) && PlayerControl.LocalPlayer != null;
+		}
+
+		public static string GetHostUsername(bool colored = false)
+		{
+			if (Utilities.InGame() || Utilities.InLobby() && !colored)
+				return AmongUsClient.Instance.GetHost().PlayerName;
+			if (Utilities.InGame() || Utilities.InLobby())
+			{
+				Color color = 
+			}
+		}
+
+		public static Color GetPlayerColor(int colorId)
+		{
+			var colorArray = Palette.PlayerColors;
+			if ((colorId < 0 || colorId > 17))
+		}
+
+        public static int GetRandomUnusedColor()
 		{
 			List<int> colors = Enumerable.Range(0, 18).ToList();
 
@@ -111,23 +147,23 @@ namespace HydraMenu
 
 		public static void AttemptStartMeeting(PlayerControl reporter, NetworkedPlayerInfo target)
 		{
-			Hydra.Log.LogInfo($"Attempting to start a meeting for {reporter.Data.PlayerName}");
+			Lunar.Log.LogInfo($"Attempting to start a meeting for {reporter.Data.PlayerName}");
 
 			bool hasAnticheat = IsAnticheatPresent();
 
 			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
 			{
-				Hydra.notifications.Send("Start Meeting", "The game must have started in order for this feature to work.");
+				Lunar.notifications.Send("Start Meeting", "The game must have started in order for this feature to work.");
 				return;
 			}
 
 			if(AmongUsClient.Instance.AmHost)
 			{
-				Hydra.Log.LogInfo($"We are the host so we can directly use the StartMeeting RPC");
+				Lunar.Log.LogInfo($"We are the host so we can directly use the StartMeeting RPC");
 
 				if(ShipStatus.Instance == null)
 				{
-					Hydra.notifications.Send("Start Meeting", "There must be a valid instance of ShipStatus for this feature to work.");
+					Lunar.notifications.Send("Start Meeting", "There must be a valid instance of ShipStatus for this feature to work.");
 				}
 				else
 				{
@@ -137,17 +173,17 @@ namespace HydraMenu
 				return;
 			}
 
-			Hydra.Log.LogInfo("We are not the host so we have to use the ReportDeadBody RPC");
+			Lunar.Log.LogInfo("We are not the host so we have to use the ReportDeadBody RPC");
 
 			if(hasAnticheat && reporter != PlayerControl.LocalPlayer)
 			{
-				Hydra.notifications.Send("Start Meeting", "You must be the host of the lobby to make another player start a meeting.");
+				Lunar.notifications.Send("Start Meeting", "You must be the host of the lobby to make another player start a meeting.");
 				return;
 			}
 
 			if(reporter.Data.IsDead)
 			{
-				Hydra.notifications.Send("Start Meeting", "You can only call meetings or report bodies if you are alive.");
+				Lunar.notifications.Send("Start Meeting", "You can only call meetings or report bodies if you are alive.");
 				return;
 			}
 
@@ -155,13 +191,13 @@ namespace HydraMenu
 			{
 				if(!target.IsDead)
 				{
-					Hydra.notifications.Send("Start Meeting", "You can only report bodies of players who have died in this round.");
+					Lunar.notifications.Send("Start Meeting", "You can only report bodies of players who have died in this round.");
 					return;
 				}
 
 				if(!DoesDeadBodyExist(target.PlayerId))
 				{
-					Hydra.notifications.Send("Start Meeting", "Unable to find a dead body for this player, you can only report a player's body if they have died this round and their body has not dissolved.");
+					Lunar.notifications.Send("Start Meeting", "Unable to find a dead body for this player, you can only report a player's body if they have died this round and their body has not dissolved.");
 					return;
 				}
 			}
@@ -198,13 +234,13 @@ namespace HydraMenu
 
 			if(hasAnticheat && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Shapeshift Player", "You must be the host of the lobby in order to use this feature.");
+				Lunar.notifications.Send("Shapeshift Player", "You must be the host of the lobby in order to use this feature.");
 				return;
 			}
 
 			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
 			{
-				Hydra.notifications.Send("Shapeshift Player", "The game must have started for this option to work.");
+				Lunar.notifications.Send("Shapeshift Player", "The game must have started for this option to work.");
 				return;
 			}
 
@@ -272,7 +308,7 @@ namespace HydraMenu
 			return PlayerControl.LocalPlayer.Data.OwnerId != (int)OwnerIds.Host;
 		}
 
-		public static string GetPlayerColor(NetworkedPlayerInfo player)
+		public static string GetPlayerColorString(NetworkedPlayerInfo player)
 		{
 			int colorId = player.DefaultOutfit.ColorId;
 
@@ -299,25 +335,25 @@ namespace HydraMenu
 			if(AmongUsClient.Instance.AmHost)
 			{
 				AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
-				Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.", 5);
+				Lunar.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.", 5);
 				return;
 			}
 
 			if(player.OwnerId == AmongUsClient.Instance.HostId)
 			{
-				Hydra.notifications.Send("Kick Player", "You are not able to kick out the host of the lobby.");
+				Lunar.notifications.Send("Kick Player", "You are not able to kick out the host of the lobby.");
 				return;
 			}
 
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Kick Player", "The game must have started in order for this feature to work.");
+				Lunar.notifications.Send("Kick Player", "The game must have started in order for this feature to work.");
 				return;
 			}
 
 			if(!IsAnticheatPresent())
 			{
-				Hydra.notifications.Send("Kick Player", "This feature only works in server-authoritative lobbies.");
+				Lunar.notifications.Send("Kick Player", "This feature only works in server-authoritative lobbies.");
 				return;
 			}
 
@@ -325,7 +361,7 @@ namespace HydraMenu
 
 			if(!skipFirstStage)
 			{
-				Hydra.Log.LogInfo($"Sending Enter ventilation system update to {player.OwnerId}");
+				Lunar.Log.LogInfo($"Sending Enter ventilation system update to {player.OwnerId}");
 
 				MessageWriter writer = MessageWriter.Get(SendOption.Reliable);
 				writer.Write((ushort)0);
@@ -336,7 +372,7 @@ namespace HydraMenu
 				writer.Recycle();
 			}
 
-			Hydra.Log.LogInfo($"Sending BootImposters ventilation system update to {player.OwnerId}");
+			Lunar.Log.LogInfo($"Sending BootImposters ventilation system update to {player.OwnerId}");
 
 			MessageWriter writer2 = MessageWriter.Get(SendOption.Reliable);
 			writer2.Write((ushort)1);
@@ -348,7 +384,7 @@ namespace HydraMenu
 
 			batch.FinishBatch();
 
-			Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.", 5);
+			Lunar.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.", 5);
 		}
 	}
 }

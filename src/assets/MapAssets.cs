@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HydraMenu.assets
+namespace LunarMenu.assets
 {
 	internal class MapAssets
 	{

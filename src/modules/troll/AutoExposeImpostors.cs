@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HydraMenu.modules.troll
+namespace LunarMenu.modules.troll
 {
 	internal class AutoExposeImpostors : Module
 	{
@@ -22,7 +22,7 @@ namespace HydraMenu.modules.troll
 			Vent selectedVent = FindClosestVent(murderer, MIN_KILL_DISTANCE, MAX_DISTANCE);
 			if(selectedVent == null)
 			{
-				Hydra.Log.LogMessage("Found no applicable vents to teleport player to");
+				Lunar.Log.LogMessage("Found no applicable vents to teleport player to");
 				return;
 			}
 
@@ -41,7 +41,7 @@ namespace HydraMenu.modules.troll
 			Vent selectedVent = FindClosestVent(shapeshifter, MIN_KILL_DISTANCE, MAX_DISTANCE);
 			if(selectedVent == null)
 			{
-				Hydra.Log.LogMessage("Found no applicable vents to teleport player to");
+				Lunar.Log.LogMessage("Found no applicable vents to teleport player to");
 				return;
 			}
 
@@ -60,7 +60,7 @@ namespace HydraMenu.modules.troll
 			Vent selectedVent = FindClosestVent(phantom, 0.0f, MAX_DISTANCE);
 			if(selectedVent == null)
 			{
-				Hydra.Log.LogMessage("Found no applicable vents to teleport player to");
+				Lunar.Log.LogMessage("Found no applicable vents to teleport player to");
 				return;
 			}
 
@@ -76,7 +76,7 @@ namespace HydraMenu.modules.troll
 		{
 			foreach(Vent vent in ShipStatus.Instance.AllVents) {
 				float distance = Vector2.Distance(player.transform.position, vent.transform.position);
-				Hydra.Log.LogMessage($"Vent ID {vent.Id} has a distance of {distance}");
+				Lunar.Log.LogMessage($"Vent ID {vent.Id} has a distance of {distance}");
 
 				// If the kill is too far away from the vent, then the teleported players will not be able to see the kill
 				// If the kill is too close, then players will not be able to determine who killed in the stack

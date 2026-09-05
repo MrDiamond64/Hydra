@@ -1,4 +1,4 @@
-﻿namespace HydraMenu.modules.troll
+﻿namespace LunarMenu.modules.troll
 {
 	internal class DisableVents : Module
 	{

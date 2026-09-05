@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HydraMenu.modules.visuals
+namespace LunarMenu.modules.visuals
 {
 	internal class ShowGhostMessages : Module
 	{

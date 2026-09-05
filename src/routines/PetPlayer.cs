@@ -1,9 +1,9 @@
 ﻿using Hazel;
-using HydraMenu.modules;
+using LunarMenu.modules;
 using InnerNet;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 
 	public class PetPlayerRoutine : Routine
@@ -48,7 +48,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Pet Player", "Pet Player was disabled as you left the game.", 10);
+			Lunar.notifications.Send("Pet Player", "Pet Player was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -56,7 +56,7 @@ namespace HydraMenu.routines
 		{
 			if(client.Character != target) return;
 
-			Hydra.notifications.Send("Pet Player", "Pet Player was disabled as the player you were petting left the game");
+			Lunar.notifications.Send("Pet Player", "Pet Player was disabled as the player you were petting left the game");
 			Enabled = false;
 		}
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json;
 
-namespace HydraMenu.modules
+namespace LunarMenu.modules
 {
 	internal abstract class Module
 	{
@@ -61,7 +61,7 @@ namespace HydraMenu.modules
 				PropertyInfo property = type.GetProperty(propertyName);
 				if(property == null)
 				{
-					Hydra.Log.LogWarning($"Config has setting {propertyName} for module {name} when this module has no such setting");
+					Lunar.Log.LogWarning($"Config has setting {propertyName} for module {name} when this module has no such setting");
 					continue;
 				}
 

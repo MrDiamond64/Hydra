@@ -2,7 +2,7 @@
 using HarmonyLib;
 using Il2CppSystem.Collections.Generic;
 
-namespace HydraMenu.modules.host
+namespace LunarMenu.modules.host
 {
 	internal class AssignRoles : Module
 	{
@@ -24,7 +24,7 @@ namespace HydraMenu.modules.host
 				if(!Instance.Enabled || !AmongUsClient.Instance.AmHost) return;
 
 				RoleTypes assignedRole = Instance.AssignedRole;
-				Hydra.Log.LogInfo($"Attempting to assign ourselves the {assignedRole} role");
+				Lunar.Log.LogInfo($"Attempting to assign ourselves the {assignedRole} role");
 
 				// Stupid shenanigans to deal with IL2Cpp interop
 				Il2CppSystem.Predicate<NetworkedPlayerInfo> predicate = (Il2CppSystem.Predicate<NetworkedPlayerInfo>)(player => player == PlayerControl.LocalPlayer.Data);
@@ -34,23 +34,23 @@ namespace HydraMenu.modules.host
 				// If our NetworkedPlayerInfo does not exist in this playerlist, then we shouldn't assign our role now
 				if(playerIndex == -1)
 				{
-					Hydra.Log.LogInfo("Our NetworkedPlayerInfo does not exist in this list, skipping");
+					Lunar.Log.LogInfo("Our NetworkedPlayerInfo does not exist in this list, skipping");
 					return;
 				}
 
-				Hydra.Log.LogInfo($"Found our NetworkedPlayerInfo in the players list at index {playerIndex}, removing from the list");
+				Lunar.Log.LogInfo($"Found our NetworkedPlayerInfo in the players list at index {playerIndex}, removing from the list");
 				players.RemoveAt(playerIndex);
 
 				Il2CppSystem.Predicate<RoleTypes> predicate2 = (Il2CppSystem.Predicate<RoleTypes>)(roleType => roleType == assignedRole);
 				int roleIndex = roleList.FindIndex(predicate2);
 
-				Hydra.Log.LogMessage($"Player index is {roleIndex}");
+				Lunar.Log.LogMessage($"Player index is {roleIndex}");
 
 				// If the role we want to assign ourselves exists in the roleList, then remove it
 				// We don't want there to be four imposters in the game when we intend for three imposters
 				if(roleIndex != -1)
 				{
-					Hydra.Log.LogInfo($"Found an instance of our role in the roles list at index {roleIndex}, removing from the list");
+					Lunar.Log.LogInfo($"Found an instance of our role in the roles list at index {roleIndex}, removing from the list");
 					roleList.RemoveAt(roleIndex);
 				}
 
@@ -68,14 +68,14 @@ namespace HydraMenu.modules.host
 				PlayerControl.LocalPlayer.RpcSetRole(assignedRole);
 				rolesAssigned++;
 
-				Hydra.Log.LogInfo($"Assigned ourself the {assignedRole} role!");
+				Lunar.Log.LogInfo($"Assigned ourself the {assignedRole} role!");
 			}
 		}
 
 		private void OnGameStart()
 		{
 			if(AmongUsClient.Instance.AmHost || Utilities.IsAnticheatPresent()) return;
-			Hydra.Log.LogMessage($"We are in a host-authoritative lobby, we can hijack the assigned roles");
+			Lunar.Log.LogMessage($"We are in a host-authoritative lobby, we can hijack the assigned roles");
 
 			// If we are in Hide and Seek, we can assign everyone the Engineer role so the host doesn't assign a second impostor
 			if(GameManager.Instance.IsHideAndSeek() && RoleManager.IsImpostorRole(AssignedRole))

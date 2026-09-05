@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class MenuSection : Section
 	{
@@ -13,7 +13,7 @@ namespace HydraMenu.ui.sections
 		public override void Render()
 		{
 			// GUILayout.Label($"Texture 2D memory usage: {Texture2D.currentTextureMemory}");
-			Hydra.notifications.disableNotifications = GUILayout.Toggle(Hydra.notifications.disableNotifications, "Disable Notifications");
+			Lunar.notifications.disableNotifications = GUILayout.Toggle(Lunar.notifications.disableNotifications, "Disable Notifications");
 
 			GUILayout.Label($"Primary Color: {Styles.primaryColor}");
 			Styles.primaryColor = (Styles.UIColors)GUILayout.HorizontalSlider((float)Styles.primaryColor, 0, Styles.ColorValues.Count - 1);
@@ -31,44 +31,44 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Eject"))
 			{
-				Hydra.Eject();
+				Lunar.Eject();
 			}
 
 			GUILayout.Space(5);
-			GUILayout.Label($"Config:\nCurrent Config: {Hydra.config.currentConfig}");
+			GUILayout.Label($"Config:\nCurrent Config: {Lunar.config.currentConfig}");
 
-			GUILayout.Label($"Selected Config: {Hydra.config.configList[configIndex]}");
-			configIndex = (byte)GUILayout.HorizontalSlider(configIndex, 0, Hydra.config.configList.Count - 1);
+			GUILayout.Label($"Selected Config: {Lunar.config.configList[configIndex]}");
+			configIndex = (byte)GUILayout.HorizontalSlider(configIndex, 0, Lunar.config.configList.Count - 1);
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Save"))
 			{
-				Hydra.config.SaveConfig(Hydra.config.configList[configIndex]);
+				Lunar.config.SaveConfig(Lunar.config.configList[configIndex]);
 			}
 
 			if(GUILayout.Button("Load"))
 			{
-				Hydra.config.LoadConfig(Hydra.config.configList[configIndex]);
+				Lunar.config.LoadConfig(Lunar.config.configList[configIndex]);
 			}
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("New Config"))
 			{
-				string configName = Hydra.config.GetUnusedConfigName();
-				// I doubt anyone will actually have 255 configs with the pattern of "Hydra [1-255]", but just in case...
+				string configName = Lunar.config.GetUnusedConfigName();
+				// I doubt anyone will actually have 255 configs with the pattern of "Lunar [1-255]", but just in case...
 				if(configName == null)
 				{
-					Hydra.notifications.Send("Config", "Failed to find an unused config name.");
+					Lunar.notifications.Send("Config", "Failed to find an unused config name.");
 					return;
 				}
 
-				Hydra.config.CreateNewConfig(configName);
+				Lunar.config.CreateNewConfig(configName);
 			}
 
 			if(GUILayout.Button("Open Config Folder"))
 			{
-				Process.Start("explorer.exe", Hydra.config.CONFIG_PATH);
+				Process.Start("explorer.exe", Lunar.config.CONFIG_PATH);
 			}
 			GUILayout.EndHorizontal();
 		}

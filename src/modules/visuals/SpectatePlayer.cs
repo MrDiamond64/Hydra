@@ -1,7 +1,7 @@
 ﻿using InnerNet;
 using UnityEngine;
 
-namespace HydraMenu.modules.visuals
+namespace LunarMenu.modules.visuals
 {
 	internal class SpectatePlayer : Module
 	{
@@ -13,7 +13,7 @@ namespace HydraMenu.modules.visuals
 		{
 			if(client.Character != target) return;
 
-			Hydra.notifications.Send("Spectate Player", "Spectate Player was disabled as the player you were spectating left the game.");
+			Lunar.notifications.Send("Spectate Player", "Spectate Player was disabled as the player you were spectating left the game.");
 			Enabled = false;
 		}
 

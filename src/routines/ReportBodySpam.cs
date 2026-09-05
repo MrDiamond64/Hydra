@@ -1,7 +1,7 @@
-﻿using HydraMenu.modules;
+﻿using LunarMenu.modules;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	public class ReportBodySpam : Routine
 	{
@@ -30,7 +30,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Report Body Spam", "Report Body Spam was disabled as you left the game.", 10);
+			Lunar.notifications.Send("Report Body Spam", "Report Body Spam was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -38,14 +38,14 @@ namespace HydraMenu.routines
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Report Body Spam", "Report Body Spam can only be used once the game has started.", 10);
+				Lunar.notifications.Send("Report Body Spam", "Report Body Spam can only be used once the game has started.", 10);
 				Enabled = false;
 				return;
 			}
 
 			if(!AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Report Body Spam", "Report Body Spam can only be used if you are the host of the lobby.", 10);
+				Lunar.notifications.Send("Report Body Spam", "Report Body Spam can only be used if you are the host of the lobby.", 10);
 				Enabled = false;
 				return;
 			}

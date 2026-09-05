@@ -1,6 +1,6 @@
 ﻿using Hazel;
 
-namespace HydraMenu.network
+namespace LunarMenu.network
 {
 	// Shorthand, and more convenient way, of sending RPCs without having to create a new batch through BatchedMessage
 	internal class RPCEmitter

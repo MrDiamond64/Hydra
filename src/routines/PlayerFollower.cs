@@ -1,8 +1,8 @@
-﻿using HydraMenu.modules;
+﻿using LunarMenu.modules;
 using InnerNet;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	public class PlayerFollowerRoutine : Routine
 	{
@@ -18,7 +18,7 @@ namespace HydraMenu.routines
 			float distance = Vector3.Distance(target.transform.position, PlayerControl.LocalPlayer.transform.position);
 			if(distance > 2)
 			{
-				Hydra.Log.LogInfo($"We drifted too far away from the player we are following, teleporting back to course. Distance: {distance}");
+				Lunar.Log.LogInfo($"We drifted too far away from the player we are following, teleporting back to course. Distance: {distance}");
 				Teleporter.TeleportTo(target.transform.position);
 			}
 			*/
@@ -29,7 +29,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Player Follower", "Player Follower was disabled as you left the game.", 10);
+			Lunar.notifications.Send("Player Follower", "Player Follower was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -37,7 +37,7 @@ namespace HydraMenu.routines
 		{
 			if(client.Character != target) return;
 
-			Hydra.notifications.Send("Follow Player", "Follow Player was disabled as the player you were following left the game.");
+			Lunar.notifications.Send("Follow Player", "Follow Player was disabled as the player you were following left the game.");
 			Enabled = false;
 		}
 

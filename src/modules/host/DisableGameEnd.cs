@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.host
+namespace LunarMenu.modules.host
 {
 	internal class DisableGameEnd : Module
 	{

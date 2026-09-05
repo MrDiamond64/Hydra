@@ -1,6 +1,6 @@
 ﻿using AmongUs.GameOptions;
 
-namespace HydraMenu.modules.protections
+namespace LunarMenu.modules.protections
 {
 	internal class BypassShapeshiftRatelimits : Module
 	{

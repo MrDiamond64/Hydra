@@ -1,19 +1,23 @@
-﻿using HydraMenu.modules.host;
-using HydraMenu.modules.protections;
-using HydraMenu.modules.roles;
-using HydraMenu.modules.self;
-using HydraMenu.modules.spoofer;
-using HydraMenu.modules.troll;
-using HydraMenu.modules.visuals;
+﻿using LunarMenu.modules.general;
+using LunarMenu.modules.host;
+using LunarMenu.modules.protections;
+using LunarMenu.modules.roles;
+using LunarMenu.modules.self;
+using LunarMenu.modules.spoofer;
+using LunarMenu.modules.troll;
+using LunarMenu.modules.visuals;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using UnityEngine;
 
-namespace HydraMenu.modules
+namespace LunarMenu.modules
 {
 	internal class ModuleManager : MonoBehaviour
 	{
+		// General
+		public static UnlockCosmetics unlockCosmetics = new UnlockCosmetics();
+
 		// Host
 		public static AssignRoles assignRoles = new AssignRoles();
 		public static BanMidGame banMidGame = new BanMidGame();
@@ -76,12 +80,15 @@ namespace HydraMenu.modules
 		public static ShowProtections showProtections = new ShowProtections();
 		public static SkipShhhAnimation skipShhhAnimation = new SkipShhhAnimation();
 		public static SpectatePlayer spectatePlayer = new SpectatePlayer();
+        public static ShowFPS showFPS = new ShowFPS();
 
-		public static readonly Module[] moduleList;
+        public static readonly Module[] moduleList;
 
 		static ModuleManager()
 		{
 			moduleList = [
+				unlockCosmetics,
+
 				assignRoles,
 				banMidGame,
 				blockLowLevels,
@@ -136,7 +143,8 @@ namespace HydraMenu.modules
 				showGhosts,
 				showProtections,
 				skipShhhAnimation,
-				spectatePlayer
+				spectatePlayer,
+				showFPS
 			];
 		}
 
@@ -160,7 +168,7 @@ namespace HydraMenu.modules
 				int moduleIndex = Array.FindIndex(moduleList, r => r.name == moduleName);
 				if(moduleIndex == -1)
 				{
-					Hydra.Log.LogWarning($"Config has entry for module {moduleName} when there is no such module");
+					Lunar.Log.LogWarning($"Config has entry for module {moduleName} when there is no such module");
 					continue;
 				}
 

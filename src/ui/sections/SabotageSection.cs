@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class SabotageSection : Section
 	{
@@ -23,13 +23,13 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Sabotage All"))
 			{
 				Sabotage.SabotageAll();
-				Hydra.notifications.Send("Sabotage", "All sabotages have been enabled.", 5);
+				Lunar.notifications.Send("Sabotage", "All sabotages have been enabled.", 5);
 			}
 
 			if(GUILayout.Button("Close All Doors"))
 			{
 				Sabotage.LockAll();
-				Hydra.notifications.Send("Sabotage", "All doors have been closed.", 5);
+				Lunar.notifications.Send("Sabotage", "All doors have been closed.", 5);
 			}
 			GUILayout.EndHorizontal();
 
@@ -37,7 +37,7 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Fix All Sabotages"))
 			{
 				Sabotage.FixAllSabotages();
-				Hydra.notifications.Send("Sabotage", "All sabotages have been repaired.", 5);
+				Lunar.notifications.Send("Sabotage", "All sabotages have been repaired.", 5);
 			}
 
 			if(GUILayout.Button("Unlock All Doors"))
@@ -45,11 +45,11 @@ namespace HydraMenu.ui.sections
 				if(Sabotage.CanUnlockDoors())
 				{
 					Sabotage.UnlockAll();
-					Hydra.notifications.Send("Sabotage", "All doors have been unlocked.", 5);
+					Lunar.notifications.Send("Sabotage", "All doors have been unlocked.", 5);
 				}
 				else
 				{
-					Hydra.notifications.Send("Sabotage", "The map you are currently on does not support unlocking doors.", 10);
+					Lunar.notifications.Send("Sabotage", "The map you are currently on does not support unlocking doors.", 10);
 				}
 			}
 			GUILayout.EndHorizontal();
@@ -79,13 +79,13 @@ namespace HydraMenu.ui.sections
 		{
 			if(PlayerControl.LocalPlayer == null)
 			{
-				Hydra.notifications.Send("Sabotage", "This option can only be used inside of a game.");
+				Lunar.notifications.Send("Sabotage", "This option can only be used inside of a game.");
 				return;
 			}
 
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Sabotage", "There must be an instance of ShipStatus for this feature to work.");
+				Lunar.notifications.Send("Sabotage", "There must be an instance of ShipStatus for this feature to work.");
 				return;
 			}
 
@@ -94,12 +94,12 @@ namespace HydraMenu.ui.sections
 			if(currentEvent.button == 0)
 			{
 				Sabotage.SabotageSystem(system);
-				Hydra.notifications.Send("Sabotage", $"{system} has been sabotaged.", 5);
+				Lunar.notifications.Send("Sabotage", $"{system} has been sabotaged.", 5);
 			}
 			else if(currentEvent.button == 1)
 			{
 				Sabotage.FixSabotage(system);
-				Hydra.notifications.Send("Sabotage", $"{system} has been fixed.", 5);
+				Lunar.notifications.Send("Sabotage", $"{system} has been fixed.", 5);
 			}
 		}
 
@@ -107,13 +107,13 @@ namespace HydraMenu.ui.sections
 		{
 			if(PlayerControl.LocalPlayer == null)
 			{
-				Hydra.notifications.Send("Sabotage", "This option can only be used inside of a game.");
+				Lunar.notifications.Send("Sabotage", "This option can only be used inside of a game.");
 				return;
 			}
 
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Sabotage", "There must be an instance of ShipStatus for this feature to work.");
+				Lunar.notifications.Send("Sabotage", "There must be an instance of ShipStatus for this feature to work.");
 				return;
 			}
 
@@ -127,7 +127,7 @@ namespace HydraMenu.ui.sections
 
 			if(!Sabotage.CanUnlockDoors())
 			{
-				Hydra.notifications.Send("Sabotage", "You can only unlock doors if you are the host or if the map is Polus, Airship, or Fungle.");
+				Lunar.notifications.Send("Sabotage", "You can only unlock doors if you are the host or if the map is Polus, Airship, or Fungle.");
 				return;
 			}
 

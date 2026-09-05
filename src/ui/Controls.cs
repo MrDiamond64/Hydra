@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace HydraMenu.ui
+namespace LunarMenu.ui
 {
 	internal class Controls
 	{
@@ -160,7 +160,7 @@ namespace HydraMenu.ui
 
 		public static void DrawCrewmateColorBox(Rect rect, NetworkedPlayerInfo player)
 		{
-			string colorName = Utilities.GetPlayerColor(player);
+			string colorName = Utilities.GetPlayerColorString(player);
 			GUI.Box(rect, "", Styles.CreateCrewmateColorBox(colorName, colorName != "Fortegreen" ? player.Color : Color.black));
 		}
 

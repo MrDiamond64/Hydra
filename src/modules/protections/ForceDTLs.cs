@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using InnerNet;
 
-namespace HydraMenu.modules.protections
+namespace LunarMenu.modules.protections
 {
 	internal class ForceDTLs : Module
 	{

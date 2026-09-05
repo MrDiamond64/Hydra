@@ -1,10 +1,10 @@
-﻿using HydraMenu.modules;
-using HydraMenu.network;
+﻿using LunarMenu.modules;
+using LunarMenu.network;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	public class DiscoHostRoutine : Routine
 	{
@@ -65,7 +65,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Disco Party", "Disco Party was disabled as you left the game.", 10);
+			Lunar.notifications.Send("Disco Party", "Disco Party was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -73,14 +73,14 @@ namespace HydraMenu.routines
 		{
 			if(PlayerControl.LocalPlayer == null)
 			{
-				Hydra.notifications.Send("Disco Party", "Disco Party can only be used inside of a game.", 10);
+				Lunar.notifications.Send("Disco Party", "Disco Party can only be used inside of a game.", 10);
 				Enabled = false;
 				return;
 			}
 
 			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Disco Party", "Disco Party can only be used if you are the host of the lobby.", 10);
+				Lunar.notifications.Send("Disco Party", "Disco Party can only be used if you are the host of the lobby.", 10);
 				Enabled = false;
 				return;
 			}

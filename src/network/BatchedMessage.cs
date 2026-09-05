@@ -4,7 +4,7 @@ using Hazel;
 using InnerNet;
 using UnityEngine;
 
-namespace HydraMenu.network
+namespace LunarMenu.network
 {
 	internal class BatchedMessage
 	{
@@ -489,12 +489,12 @@ namespace HydraMenu.network
 			int packingLimit = AmongUsClient.Instance.GetMaxMessagePackingLimit();
 			if(msgCount > packingLimit)
 			{
-				Hydra.Log.LogWarning($"BatchedMessage has {msgCount} packed messages, which exceeds the packed message limit of {packingLimit}. This may result in anticheat disconnections");
+				Lunar.Log.LogWarning($"BatchedMessage has {msgCount} packed messages, which exceeds the packed message limit of {packingLimit}. This may result in anticheat disconnections");
 			}
 
 			if(writer.Length > 1201)
 			{
-				Hydra.Log.LogWarning($"BatchedMessage has a size of {writer.Length} bytes, which exceeds the vanilla limit of 1201 bytes. This may result in anticheat disconnections");
+				Lunar.Log.LogWarning($"BatchedMessage has a size of {writer.Length} bytes, which exceeds the vanilla limit of 1201 bytes. This may result in anticheat disconnections");
 			}
 
 			if(msgCount > 0)

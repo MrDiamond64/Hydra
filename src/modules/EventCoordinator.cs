@@ -1,12 +1,12 @@
 ﻿using HarmonyLib;
 using Hazel;
-using HydraMenu.ui.sections;
+using LunarMenu.ui.sections;
 using Il2CppInterop.Runtime;
 using InnerNet;
 using System;
 using System.Collections.Generic;
 
-namespace HydraMenu.modules
+namespace LunarMenu.modules
 {
 	internal class EventCoordinator
 	{
@@ -69,7 +69,7 @@ namespace HydraMenu.modules
 		{
 			static void Prefix()
 			{
-				Hydra.Log.LogInfo("[Disconnect Logger] Our player was disconnected from the lobby");
+				Lunar.Log.LogInfo("[Disconnect Logger] Our player was disconnected from the lobby");
 
 				HostSection.lobbyList.Clear();
 				HostSection.shipList.Clear();
@@ -92,7 +92,7 @@ namespace HydraMenu.modules
 		{
 			static void Prefix(Minigame __instance)
 			{
-				Hydra.Log.LogMessage($"Minigame of type {__instance.GetIl2CppType().Name} was opened");
+				Lunar.Log.LogMessage($"Minigame of type {__instance.GetIl2CppType().Name} was opened");
 
 				PublishEvent(OnOpenMinigame, __instance);
 			}
@@ -104,7 +104,7 @@ namespace HydraMenu.modules
 		{
 			static void Postfix(Ladder __instance)
 			{
-				Hydra.Log.LogMessage($"Ladder {__instance.Id} was used");
+				Lunar.Log.LogMessage($"Ladder {__instance.Id} was used");
 
 				PublishEvent(OnUseLadder, __instance.Destination);
 			}
@@ -120,7 +120,7 @@ namespace HydraMenu.modules
 				ZiplineConsole console = __instance.lastUsedConsole;
 				if(console == null) return;
 
-				Hydra.Log.LogMessage("Zipline " + (__instance.lastUsedConsole.atTop ? "at top" : "at bottom") + " was used");
+				Lunar.Log.LogMessage("Zipline " + (__instance.lastUsedConsole.atTop ? "at top" : "at bottom") + " was used");
 
 				PublishEvent(OnUseZipline, console);
 			}
@@ -137,13 +137,13 @@ namespace HydraMenu.modules
 				if(clientData != null)
 				{
 					PlatformSpecificData platformData = clientData.PlatformData;
-					Hydra.Log.LogMessage($"[PlayerLogger] {clientData.PlayerName} ({__instance.NetId}) joined on {platformData.Platform}. Friendcode {clientData.FriendCode}, PUID {clientData.ProductUserId}");
+					Lunar.Log.LogMessage($"[PlayerLogger] {clientData.PlayerName} ({__instance.NetId}) joined on {platformData.Platform}. Friendcode {clientData.FriendCode}, PUID {clientData.ProductUserId}");
 				}
 				else
 				{
 					// We should use NetworkedPlayerInfo::PlayerName instead of PlayerControl::name whenever possible to get the player's name
 					// however if the PlayerControl object has just spawned, then it is unlikely that a NetworkedPlayerInfo object has spawned yet
-					Hydra.Log.LogMessage($"[PlayerLogger] {__instance.name} ({__instance.NetId}) joined.");
+					Lunar.Log.LogMessage($"[PlayerLogger] {__instance.name} ({__instance.NetId}) joined.");
 				}
 
 				PublishEvent(OnPlayerJoin, __instance, clientData);
@@ -157,7 +157,7 @@ namespace HydraMenu.modules
 			{
 				if(data.Character == null) return;
 
-				Hydra.Log.LogInfo($"[Disconnect Logger] {data.Character.Data.PlayerName} was disconnected with reason {reason}");
+				Lunar.Log.LogInfo($"[Disconnect Logger] {data.Character.Data.PlayerName} was disconnected with reason {reason}");
 
 				PublishEvent(OnPlayerDisconnect, data, reason);
 			}
@@ -168,7 +168,7 @@ namespace HydraMenu.modules
 		{
 			static void Prefix(PlayerControl sourcePlayer, string chatText)
 			{
-				Hydra.Log.LogMessage($"[ChatLogger] {sourcePlayer.Data.PlayerName}: {chatText}");
+				Lunar.Log.LogMessage($"[ChatLogger] {sourcePlayer.Data.PlayerName}: {chatText}");
 
 				PublishEvent(OnPlayerChat, sourcePlayer, chatText);
 			}
@@ -209,17 +209,17 @@ namespace HydraMenu.modules
 
 					if(!inOld && inNew)
 					{
-						Hydra.Log.LogMessage($"{player.Data.PlayerName} entered vent {newVent}");
+						Lunar.Log.LogMessage($"{player.Data.PlayerName} entered vent {newVent}");
 						PublishEvent(OnPlayerEnterVent, player, newVent);
 					}
 					else if(inOld && !inNew)
 					{
-						Hydra.Log.LogMessage($"{player.Data.PlayerName} left vent {oldVent}");
+						Lunar.Log.LogMessage($"{player.Data.PlayerName} left vent {oldVent}");
 						PublishEvent(OnPlayerExitVent, player, oldVent);
 					}
 					else if(oldVent != newVent)
 					{
-						Hydra.Log.LogMessage($"{player.Data.PlayerName} moved from vent {oldVent} to {newVent}");
+						Lunar.Log.LogMessage($"{player.Data.PlayerName} moved from vent {oldVent} to {newVent}");
 						PublishEvent(OnPlayerMoveVent, player, oldVent, newVent);
 					}
 				}
@@ -351,7 +351,7 @@ namespace HydraMenu.modules
 		{
 			static void Postfix(int srcClient, int clientId)
 			{
-				Hydra.Log.LogInfo($"[VotekickLogger] {srcClient} voted to kick out {clientId}");
+				Lunar.Log.LogInfo($"[VotekickLogger] {srcClient} voted to kick out {clientId}");
 
 				ClientData source = AmongUsClient.Instance.FindClientById(srcClient);
 				ClientData target = AmongUsClient.Instance.FindClientById(clientId);
@@ -359,7 +359,7 @@ namespace HydraMenu.modules
 
 				if(clientId == AmongUsClient.Instance.ClientId)
 				{
-					Hydra.notifications.Send("Votekick Logger", $"{source.PlayerName} has voted to kick you out.");
+					Lunar.notifications.Send("Votekick Logger", $"{source.PlayerName} has voted to kick you out.");
 				}
 
 				PublishEvent(OnPlayerVotekick, source, target);

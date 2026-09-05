@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.roles
+namespace LunarMenu.modules.roles
 {
 	internal class NoShapeshiftAnimation : Module
 	{

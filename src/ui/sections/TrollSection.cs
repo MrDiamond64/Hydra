@@ -1,14 +1,14 @@
 ﻿using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Hazel;
-using HydraMenu.assets;
-using HydraMenu.modules;
-using HydraMenu.network;
+using LunarMenu.assets;
+using LunarMenu.modules;
+using LunarMenu.network;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class TrollSection : Section
 	{
@@ -26,17 +26,17 @@ namespace HydraMenu.ui.sections
 
 			ModuleManager.crashLobby.Enabled = GUILayout.Toggle(ModuleManager.crashLobby.Enabled, "Queue Lobby Crash");
 			ModuleManager.autoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies", PlayerControl.LocalPlayer, ref ModuleManager.autoReportBodies.target);
-			Hydra.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Hydra.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
+			Lunar.routines.autoTriggerSpores.Enabled = GUILayout.Toggle(Lunar.routines.autoTriggerSpores.Enabled, "Auto Trigger Spores");
 			ModuleManager.disableCameras.Enabled = GUILayout.Toggle(ModuleManager.disableCameras.Enabled, "Disable Security Cameras");
 			ModuleManager.disableCloseDoors.Enabled = GUILayout.Toggle(ModuleManager.disableCloseDoors.Enabled, "Disable Close Doors");
 			ModuleManager.disableSabotages.Enabled = GUILayout.Toggle(ModuleManager.disableSabotages.Enabled, "Disable Sabotages");
 			ModuleManager.disableVents.Enabled = GUILayout.Toggle(ModuleManager.disableVents.Enabled, "Disable Vents");
-			Hydra.routines.glitterBomb.Enabled = GUILayout.Toggle(Hydra.routines.glitterBomb.Enabled, "Glitterbomb");
-			Hydra.routines.ziplineSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Zipline Spammer", Hydra.routines.ziplineSpammer.targets);
+			Lunar.routines.glitterBomb.Enabled = GUILayout.Toggle(Lunar.routines.glitterBomb.Enabled, "Glitterbomb");
+			Lunar.routines.ziplineSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Zipline Spammer", Lunar.routines.ziplineSpammer.targets);
 
 			if(GUILayout.Button("Kick All Players"))
 			{
-				Hydra.Log.LogInfo($"Sending Enter ventilation system update to all players");
+				Lunar.Log.LogInfo($"Sending Enter ventilation system update to all players");
 
 				MessageWriter writer = MessageWriter.Get(SendOption.Reliable);
 				writer.Write((ushort)0);
@@ -67,7 +67,7 @@ namespace HydraMenu.ui.sections
 			{
 				if(Utilities.GetCurrentMap() != MapNames.Fungle)
 				{
-					Hydra.notifications.Send("Trigger Spores", "This option only works on the Fungle map.");
+					Lunar.notifications.Send("Trigger Spores", "This option only works on the Fungle map.");
 				}
 				else
 				{
@@ -78,7 +78,7 @@ namespace HydraMenu.ui.sections
 						PlayerControl.LocalPlayer.RpcTriggerSpores(mushroom);
 					}
 
-					Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
+					Lunar.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
 				}
 			}
 
@@ -91,7 +91,7 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Space(5);
 			GUILayout.Label($"Vent Teleport:");
-			Hydra.routines.teleportSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Teleport Flooder", Hydra.routines.teleportSpammer.targets);
+			Lunar.routines.teleportSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Teleport Flooder", Lunar.routines.teleportSpammer.targets);
 
 			GUILayout.Label($"Teleport everyone to vent: {vents.GetValueOrDefault(selectedVent, "N/A")}");
 			selectedVent = Controls.HorizontalVentSlider(vents, selectedVent);
@@ -119,10 +119,10 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			// Automatically close and open all doors at a set interval
 			GUILayout.Label("Door Troller:");
-			Hydra.routines.doorTroller.Enabled = GUILayout.Toggle(Hydra.routines.doorTroller.Enabled, "Enabled");
+			Lunar.routines.doorTroller.Enabled = GUILayout.Toggle(Lunar.routines.doorTroller.Enabled, "Enabled");
 
-			GUILayout.Label($"Lock and Unlock Delay: {Hydra.routines.doorTroller.LockAndUnlockDelay:F2}s");
-			Hydra.routines.doorTroller.LockAndUnlockDelay = GUILayout.HorizontalSlider(Hydra.routines.doorTroller.LockAndUnlockDelay, 0.1f, 2.0f);
+			GUILayout.Label($"Lock and Unlock Delay: {Lunar.routines.doorTroller.LockAndUnlockDelay:F2}s");
+			Lunar.routines.doorTroller.LockAndUnlockDelay = GUILayout.HorizontalSlider(Lunar.routines.doorTroller.LockAndUnlockDelay, 0.1f, 2.0f);
 
 			GUILayout.Space(5);
 			GUILayout.Label("Auto Expose Impostors:");
@@ -139,7 +139,7 @@ namespace HydraMenu.ui.sections
 		{
 			if(!GameManager.Instance.IsHideAndSeek())
 			{
-				Hydra.notifications.Send("Deplete HnS Timer", "This feature can only be used in Hide and Seek.");
+				Lunar.notifications.Send("Deplete HnS Timer", "This feature can only be used in Hide and Seek.");
 				yield break;
 			}
 
@@ -155,7 +155,7 @@ namespace HydraMenu.ui.sections
 			PlayerTask task = PlayerControl.LocalPlayer.myTasks[0];
 			if(task == null)
 			{
-				Hydra.notifications.Send("Deplete HnS Timer", "This feature requires you to have at least one task.");
+				Lunar.notifications.Send("Deplete HnS Timer", "This feature requires you to have at least one task.");
 				yield break;
 			}
 
@@ -163,7 +163,7 @@ namespace HydraMenu.ui.sections
 			NormalPlayerTask normalTask = task.TryCast<NormalPlayerTask>();
 			if(normalTask == null)
 			{
-				Hydra.notifications.Send("Deplete HnS Timer", "This feature cannot be used during the final hide time.");
+				Lunar.notifications.Send("Deplete HnS Timer", "This feature cannot be used during the final hide time.");
 				yield break;
 			}
 
@@ -188,7 +188,7 @@ namespace HydraMenu.ui.sections
 			int totalCompletions = 0;
 			int requiredCompletions = (int)Math.Ceiling(gameFlow.currentHideTime / completeDeduction);
 
-			Hydra.Log.LogInfo($"Current escape time is {gameFlow.currentHideTime} and each task completion reduces the timer by {completeDeduction}s. We need to send the CompleteTask RPC {requiredCompletions} times to deplete the HnS timer.");
+			Lunar.Log.LogInfo($"Current escape time is {gameFlow.currentHideTime} and each task completion reduces the timer by {completeDeduction}s. We need to send the CompleteTask RPC {requiredCompletions} times to deplete the HnS timer.");
 
 			while(totalCompletions < requiredCompletions)
 			{

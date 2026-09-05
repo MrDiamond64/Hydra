@@ -1,7 +1,7 @@
-﻿using HydraMenu.anticheat;
+﻿using LunarMenu.anticheat;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class AnticheatSection : Section
 	{
@@ -9,7 +9,7 @@ namespace HydraMenu.ui.sections
 
 		public override void Render()
 		{
-			Anticheat.Enabled = GUILayout.Toggle(Anticheat.Enabled, "Enable Hydra Anticheat");
+			Anticheat.Enabled = GUILayout.Toggle(Anticheat.Enabled, "Enable Lunar Anticheat");
 
 			Anticheat.CheckSpoofedPlatforms = GUILayout.Toggle(Anticheat.CheckSpoofedPlatforms, "Flag Spoofed Platform Data");
 

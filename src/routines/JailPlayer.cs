@@ -1,8 +1,8 @@
-﻿using HydraMenu.modules;
+﻿using LunarMenu.modules;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	// This could be implemented as a postfix patch of CustomNetworkTransform::Deserialize or as a routine
 	// It took me a while, but I concluded that using a routine is a more elegant design choice
@@ -96,7 +96,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Jail Player", "Jail Player has been disabled as you left the game.", 10);
+			Lunar.notifications.Send("Jail Player", "Jail Player has been disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -104,7 +104,7 @@ namespace HydraMenu.routines
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Jail Player", "Jail Player can only be used inside of a game.", 10);
+				Lunar.notifications.Send("Jail Player", "Jail Player can only be used inside of a game.", 10);
 				Enabled = false;
 				return;
 			}

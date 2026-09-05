@@ -1,7 +1,7 @@
 ﻿using Hazel;
-using HydraMenu.network;
+using LunarMenu.network;
 
-namespace HydraMenu.modules.troll
+namespace LunarMenu.modules.troll
 {
 	internal class DisableCameras : Module
 	{
@@ -14,7 +14,7 @@ namespace HydraMenu.modules.troll
 			// If we update Comms for the host, then everybody will be affected by Comms
 			if(player.OwnerId == AmongUsClient.Instance.HostId || player == PlayerControl.LocalPlayer) return;
 
-			Hydra.Log.LogMessage($"{player.Data.PlayerName} started to watch cameras, sending Comms system update");
+			Lunar.Log.LogMessage($"{player.Data.PlayerName} started to watch cameras, sending Comms system update");
 
 			EnableCommsFor(player);
 		}
@@ -30,11 +30,11 @@ namespace HydraMenu.modules.troll
 				// There is an edge case where if someone is on the security cameras panel when comms are actively sabotaged, and the sabotage is fixed,
 				// then the player will be able to watch the security cameras
 				// I don't think it is worthwhile to fix this edge case considering this feature is unlikely to even be used by anyone
-				Hydra.Log.LogMessage($"{player.Data.name} updated security cameras, we do not need to do anything as the Comms sabotage is already active");
+				Lunar.Log.LogMessage($"{player.Data.name} updated security cameras, we do not need to do anything as the Comms sabotage is already active");
 				return;
 			}
 
-			Hydra.Log.LogMessage($"{player.Data.PlayerName} stopped watching cameras, sending Comms system update");
+			Lunar.Log.LogMessage($"{player.Data.PlayerName} stopped watching cameras, sending Comms system update");
 
 			DisableCommsFor(player);
 		}

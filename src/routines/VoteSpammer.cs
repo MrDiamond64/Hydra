@@ -1,9 +1,9 @@
-﻿using HydraMenu.modules;
-using HydraMenu.network;
+﻿using LunarMenu.modules;
+using LunarMenu.network;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	internal class VoteSpammer : Routine
 	{
@@ -46,13 +46,13 @@ namespace HydraMenu.routines
 
 		private void OnMeetingEnd()
 		{
-			Hydra.notifications.Send("Vote Spammer", "Vote Spammer was disabled as the current meeting has ended.");
+			Lunar.notifications.Send("Vote Spammer", "Vote Spammer was disabled as the current meeting has ended.");
 			Enabled = false;
 		}
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Vote Spammer", "Vote Spammer was disabled as you left the game.");
+			Lunar.notifications.Send("Vote Spammer", "Vote Spammer was disabled as you left the game.");
 			Enabled = false;
 		}
 
@@ -60,14 +60,14 @@ namespace HydraMenu.routines
 		{
 			if(MeetingHud.Instance == null)
 			{
-				Hydra.notifications.Send("Vote Spammer", "There must be an active meeting for this feature to work.");
+				Lunar.notifications.Send("Vote Spammer", "There must be an active meeting for this feature to work.");
 				Enabled = false;
 				return;
 			}
 
 			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Vote Spammer", "Vote Spammer can only be used if you are the host of the lobby.");
+				Lunar.notifications.Send("Vote Spammer", "Vote Spammer can only be used if you are the host of the lobby.");
 				Enabled = false;
 				return;
 			}

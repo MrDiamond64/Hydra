@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HydraMenu.modules.host
+namespace LunarMenu.modules.host
 {
 	internal class VoteImmune : Module
 	{
@@ -12,7 +12,7 @@ namespace HydraMenu.modules.host
 		{
 			if(!targets.Contains(votee.Object.GetHashCode())) return;
 
-			Hydra.Log.LogMessage($"{voter.PlayerName} voted for a vote immune player, changing their vote to Skip");
+			Lunar.Log.LogMessage($"{voter.PlayerName} voted for a vote immune player, changing their vote to Skip");
 
 			// Find the player that voted for the vote immune player, and make them change their vote to Skip
 			// Democracy at its finest :P

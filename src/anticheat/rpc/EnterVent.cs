@@ -1,7 +1,7 @@
 ﻿using Hazel;
 using System;
 
-namespace HydraMenu.anticheat.rpc
+namespace LunarMenu.anticheat.rpc
 {
 	internal class EnterVent : RpcCheck
 	{

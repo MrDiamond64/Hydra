@@ -1,8 +1,8 @@
 ﻿using HarmonyLib;
 using Hazel;
-using HydraMenu.network;
+using LunarMenu.network;
 
-namespace HydraMenu.modules.troll
+namespace LunarMenu.modules.troll
 {
 	internal class DisableCloseDoors : Module
 	{
@@ -66,7 +66,7 @@ namespace HydraMenu.modules.troll
 		{
 			if(!Sabotage.CanUnlockDoors())
 			{
-				Hydra.notifications.Send("Disable Close Doors", "Disable Close Doors only works if you are the host of the lobby, or you are playing on Polus, Airship, or The Fungle.");
+				Lunar.notifications.Send("Disable Close Doors", "Disable Close Doors only works if you are the host of the lobby, or you are playing on Polus, Airship, or The Fungle.");
 			}
 		}
 	}

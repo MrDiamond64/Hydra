@@ -1,12 +1,12 @@
 ﻿using AmongUs.InnerNet.GameDataMessages;
 using HarmonyLib;
 using Hazel;
-using HydraMenu.anticheat.gamedata;
-using HydraMenu.anticheat.rpc;
+using LunarMenu.anticheat.gamedata;
+using LunarMenu.anticheat.rpc;
 using System;
 using System.Collections.Generic;
 
-namespace HydraMenu.anticheat
+namespace LunarMenu.anticheat
 {
 	internal class Anticheat
 	{
@@ -140,12 +140,12 @@ namespace HydraMenu.anticheat
 		{
 			// Sanity check, make sure that we are not flagging ourselves
 			// On servers without net object impersonation checks, it may be possible to send an invalid RPC on the behalf of the host
-			// which would result in Hydra Anticheat flagging ourselves and banning us from our own lobby
+			// which would result in Lunar Anticheat flagging ourselves and banning us from our own lobby
 			if(player == PlayerControl.LocalPlayer) return;
 
 			if(sendNotification)
 			{
-				Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
+				Lunar.notifications.Send("Anticheat", reason, NotificationDuration);
 			}
 
 			if(AmongUsClient.Instance.AmHost && shouldPunish)
@@ -159,7 +159,7 @@ namespace HydraMenu.anticheat
 		{
 			if(sendNotification)
 			{
-				Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
+				Lunar.notifications.Send("Anticheat", reason, NotificationDuration);
 			}
 		}
 
@@ -172,7 +172,7 @@ namespace HydraMenu.anticheat
 
 				case Punishments.Kick:
 				case Punishments.ErrorKick:
-					Hydra.Log.LogMessage($"{player.Data.PlayerName} was kicked by Hydra Anticheat for hacking");
+					Lunar.Log.LogMessage($"{player.Data.PlayerName} was kicked by Lunar Anticheat for hacking");
 
 					// The vanilla anticheat prevents using the ErrorKick method if the game has not started yet
 					if(punishment == Punishments.Kick || AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
@@ -191,7 +191,7 @@ namespace HydraMenu.anticheat
 					break;
 
 				case Punishments.Ban:
-					Hydra.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Hydra Anticheat for hacking");
+					Lunar.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Lunar Anticheat for hacking");
 					AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
 					break;
 			}

@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.self
+namespace LunarMenu.modules.self
 {
 	internal class SpeedModifier : Module
 	{

@@ -1,8 +1,8 @@
 ﻿using AmongUs.GameOptions;
-using HydraMenu.modules;
+using LunarMenu.modules;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class RolesSection : Section
 	{
@@ -44,7 +44,7 @@ namespace HydraMenu.ui.sections
 
 		public static void UpdateRole(RoleTypes role)
 		{
-			Hydra.Log.LogInfo($"Updating role to {role}");
+			Lunar.Log.LogInfo($"Updating role to {role}");
 
 			bool isGhost = RoleManager.IsGhostRole(role);
 
@@ -57,11 +57,11 @@ namespace HydraMenu.ui.sections
 
 			if(AmongUsClient.Instance.AmHost)
 			{
-				Hydra.Log.LogInfo("Since we are host, we can send the SetRole RPC to sync the new role to the server");
+				Lunar.Log.LogInfo("Since we are host, we can send the SetRole RPC to sync the new role to the server");
 				PlayerControl.LocalPlayer.RpcSetRole(role, true);
 			}
 
-			Hydra.notifications.Send("Update Role", $"Your role has been updated to {role}.");
+			Lunar.notifications.Send("Update Role", $"Your role has been updated to {role}.");
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using InnerNet;
 
-namespace HydraMenu.anticheat
+namespace LunarMenu.anticheat
 {
 	internal class PlatformSpoofer
 	{

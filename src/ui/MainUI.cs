@@ -1,8 +1,8 @@
-﻿using HydraMenu.ui.sections;
+﻿using LunarMenu.ui.sections;
 using System;
 using UnityEngine;
 
-namespace HydraMenu.ui
+namespace LunarMenu.ui
 {
 	public class MainUI : MonoBehaviour
 	{
@@ -77,7 +77,7 @@ namespace HydraMenu.ui
 			if(Input.GetKeyDown(KeyCode.F6))
 			{
 				System.Random random = new System.Random();
-				Hydra.notifications.Send("Test", $"The quick brown fox jumps over the lazy dog. {random.Next(0, 100)}");
+				Lunar.notifications.Send("Test", $"The quick brown fox jumps over the lazy dog. {random.Next(0, 100)}");
 			}
 
 			if(!visible) return;
@@ -202,7 +202,7 @@ namespace HydraMenu.ui
 				PrimaryColor = Styles.primaryColor,
 				MenuOpacity = Styles.menuOpacity,
 				UiScale = scale,
-				DisableNotifications = Hydra.notifications.disableNotifications
+				DisableNotifications = Lunar.notifications.disableNotifications
 			};
 		}
 
@@ -212,13 +212,13 @@ namespace HydraMenu.ui
 
 			if(configData.MenuKey != KeyCode.None)
 			{
-				Hydra.mainUI.menuKey = configData.MenuKey;
+				Lunar.mainUI.menuKey = configData.MenuKey;
 			}
 
 			Styles.primaryColor = (Styles.UIColors)Math.Clamp((int)configData.PrimaryColor, 0, Styles.ColorValues.Count - 1);
 			Styles.menuOpacity = Mathf.Clamp(configData.MenuOpacity, 0.0f, 1.0f);
 			scale = Mathf.Clamp(configData.UiScale, 0.5f, 2.0f);
-			Hydra.notifications.disableNotifications = configData.DisableNotifications;
+			Lunar.notifications.disableNotifications = configData.DisableNotifications;
 		}
 	}
 }

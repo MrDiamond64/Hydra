@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.troll
+namespace LunarMenu.modules.troll
 {
 	internal class DisableSabotages : Module
 	{
@@ -37,14 +37,14 @@ namespace HydraMenu.modules.troll
 			{
 				if(!Instance.Enabled || AmongUsClient.Instance.AmHost || __instance.Timer > Instance.MINIMUM_TIMER_DURATION || MeetingHud.Instance) return;
 
-				Hydra.Log.LogMessage($"Sabotage cooldown has depleted to {__instance.Timer}, sending Sabotage system update");
+				Lunar.Log.LogMessage($"Sabotage cooldown has depleted to {__instance.Timer}, sending Sabotage system update");
 				ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Sabotage, Instance.INVALID_SYSTEM_TYPE);
 			}
 		}
 
 		private void OnMeetingEnd()
 		{
-			Hydra.Log.LogMessage($"Meeting has ended, sending Sabotage system update");
+			Lunar.Log.LogMessage($"Meeting has ended, sending Sabotage system update");
 			ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Sabotage, Instance.INVALID_SYSTEM_TYPE);
 		}
 

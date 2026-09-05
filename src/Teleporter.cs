@@ -1,9 +1,9 @@
 ﻿using Hazel;
-using HydraMenu.network;
+using LunarMenu.network;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu
+namespace LunarMenu
 {
 	internal class Teleporter
 	{
@@ -183,7 +183,7 @@ namespace HydraMenu
 		{
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Vent TP", "The game must have started in order for this feature to work.");
+				Lunar.notifications.Send("Vent TP", "The game must have started in order for this feature to work.");
 				return;
 			}
 

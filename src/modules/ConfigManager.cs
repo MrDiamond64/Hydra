@@ -1,19 +1,19 @@
 ﻿using BepInEx;
-using HydraMenu.anticheat;
-using HydraMenu.ui;
+using LunarMenu.anticheat;
+using LunarMenu.ui;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace HydraMenu.modules
+namespace LunarMenu.modules
 {
 	internal class ConfigManager
 	{
-		public readonly string CONFIG_PATH = Path.Combine(Paths.ConfigPath, "Hydra");
+		public readonly string CONFIG_PATH = Path.Combine(Paths.ConfigPath, "Lunar");
 
 		public readonly List<string> configList = new List<string>();
-		public string currentConfig = "Hydra";
+		public string currentConfig = "Lunar";
 
 		public class ConfigData
 		{
@@ -27,7 +27,7 @@ namespace HydraMenu.modules
 		{
 			if(!Directory.Exists(CONFIG_PATH))
 			{
-				Hydra.Log.LogInfo("No config folder was found, creating...");
+				Lunar.Log.LogInfo("No config folder was found, creating...");
 				Directory.CreateDirectory(CONFIG_PATH);
 
 				configList.Add(currentConfig);
@@ -36,14 +36,14 @@ namespace HydraMenu.modules
 			}
 
 			string[] configFiles = Directory.GetFiles(CONFIG_PATH, "*.json");
-			Hydra.Log.LogInfo($"Discovered {configFiles.Length} config files");
+			Lunar.Log.LogInfo($"Discovered {configFiles.Length} config files");
 
 			foreach(string file in configFiles)
 			{
 				configList.Add(Path.GetFileNameWithoutExtension(file));
 			}
 
-			// There should always be a config named "Hydra" present
+			// There should always be a config named "Lunar" present
 			if(!configList.Contains(currentConfig))
 			{
 				configList.Add(currentConfig);
@@ -65,7 +65,7 @@ namespace HydraMenu.modules
 			string configLocation = GetConfigPath(configName);
 			if(!File.Exists(configLocation))
 			{
-				Hydra.Log.LogWarning($"Tried to load config {configName} when no such config exists");
+				Lunar.Log.LogWarning($"Tried to load config {configName} when no such config exists");
 				// Let's just carry on with our current config
 				return;
 			}
@@ -79,17 +79,17 @@ namespace HydraMenu.modules
 			}
 			catch
 			{
-				Hydra.Log.LogError($"Failed to load config at {configLocation}");
+				Lunar.Log.LogError($"Failed to load config at {configLocation}");
 				return;
 			}
 
-			Hydra.mainUI.LoadConfigData(configData.Menu);
-			Hydra.modules.LoadConfigData(configData.Modules);
-			Hydra.routines.LoadConfigData(configData.Routines);
+			Lunar.mainUI.LoadConfigData(configData.Menu);
+			Lunar.modules.LoadConfigData(configData.Modules);
+			Lunar.routines.LoadConfigData(configData.Routines);
 			Anticheat.LoadConfigData(configData.Anticheat);
 
 			currentConfig = configName;
-			Hydra.Log.LogInfo($"Loaded config {configName}");
+			Lunar.Log.LogInfo($"Loaded config {configName}");
 		}
 
 		public void SaveConfig(string configName)
@@ -97,9 +97,9 @@ namespace HydraMenu.modules
 			string configLocation = GetConfigPath(configName);
 
 			ConfigData configData = new ConfigData();
-			configData.Menu = Hydra.mainUI.GetConfigData();
-			configData.Modules = Hydra.modules.GetConfigData();
-			configData.Routines = Hydra.routines.GetConfigData();
+			configData.Menu = Lunar.mainUI.GetConfigData();
+			configData.Modules = Lunar.modules.GetConfigData();
+			configData.Routines = Lunar.routines.GetConfigData();
 			configData.Anticheat = Anticheat.GetConfigData();
 
 			JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
@@ -108,7 +108,7 @@ namespace HydraMenu.modules
 			string configString = JsonSerializer.Serialize(configData, serializerOptions);
 			File.WriteAllText(configLocation, configString);
 
-			Hydra.Log.LogInfo($"Config {configName} has been saved to {configLocation}");
+			Lunar.Log.LogInfo($"Config {configName} has been saved to {configLocation}");
 		}
 
 		public string GetUnusedConfigName()

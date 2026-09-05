@@ -1,8 +1,8 @@
-﻿using HydraMenu.modules;
-using HydraMenu.network;
+﻿using LunarMenu.modules;
+using LunarMenu.network;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	public class GlitterBomb : Routine
 	{
@@ -27,7 +27,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Glitter Bomb", "Glitter Bomb was disabled as you left the game.", 10);
+			Lunar.notifications.Send("Glitter Bomb", "Glitter Bomb was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -35,7 +35,7 @@ namespace HydraMenu.routines
 		{
 			if(target != PlayerControl.LocalPlayer) return;
 
-			Hydra.notifications.Send("Glitter Bomb", "Glitter Bomb was disabled as you have been killed.", 10);
+			Lunar.notifications.Send("Glitter Bomb", "Glitter Bomb was disabled as you have been killed.", 10);
 			Enabled = false;
 		}
 
@@ -43,14 +43,14 @@ namespace HydraMenu.routines
 		{
 			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null)
 			{
-				Hydra.notifications.Send("Glitter Bomb", "You must be inside of a game in order for this feature to work.", 10);
+				Lunar.notifications.Send("Glitter Bomb", "You must be inside of a game in order for this feature to work.", 10);
 				Enabled = false;
 				return;
 			}
 
 			if(PlayerControl.LocalPlayer.Data.RoleType != AmongUs.GameOptions.RoleTypes.Phantom)
 			{
-				Hydra.notifications.Send("Glitter Bomb", "You must be Phantom in order for this feature to work.", 10);
+				Lunar.notifications.Send("Glitter Bomb", "You must be Phantom in order for this feature to work.", 10);
 				Enabled = false;
 				return;
 			}

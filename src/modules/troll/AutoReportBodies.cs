@@ -1,4 +1,4 @@
-﻿namespace HydraMenu.modules.troll
+﻿namespace LunarMenu.modules.troll
 {
 	internal class AutoReportBodies : Module
 	{
@@ -19,7 +19,7 @@
 
 			if(PlayerControl.LocalPlayer.Data.IsDead) return;
 
-			Hydra.notifications.Send("Auto Report Bodies", $"{victim.Data.PlayerName} was killed by {murderer.Data.PlayerName} ({Utilities.GetPlayerColor(murderer.Data)}), their body has been automatically reported.");
+			Lunar.notifications.Send("Auto Report Bodies", $"{victim.Data.PlayerName} was killed by {murderer.Data.PlayerName} ({Utilities.GetPlayerColorString(murderer.Data)}), their body has been automatically reported.");
 			PlayerControl.LocalPlayer.CmdReportDeadBody(victim.Data);
 		}
 

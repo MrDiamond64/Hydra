@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
-namespace HydraMenu.modules.roles
+namespace LunarMenu.modules.roles
 {
 	internal class VentAsCrewmate : Module
 	{

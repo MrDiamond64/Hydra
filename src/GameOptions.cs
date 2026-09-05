@@ -1,9 +1,9 @@
 ﻿using AmongUs.GameOptions;
 using Hazel;
-using HydraMenu.modules;
-using HydraMenu.network;
+using LunarMenu.modules;
+using LunarMenu.network;
 
-namespace HydraMenu
+namespace LunarMenu
 {
 	internal class GameOptions
 	{
@@ -50,14 +50,14 @@ namespace HydraMenu
 			{
 				GameLogicComponent component = GameManager.Instance.LogicComponents[i];
 
-				Hydra.Log.LogMessage($"Found component {component.GetType()} at index {i}");
+				Lunar.Log.LogMessage($"Found component {component.GetType()} at index {i}");
 				if(component.GetType() != typeof(LogicOptions)) continue;
 
 				logicIndex = i;
 				break;
 			}
 
-			Hydra.Log.LogMessage($"Found LogicOptions at index {logicIndex}");
+			Lunar.Log.LogMessage($"Found LogicOptions at index {logicIndex}");
 			return logicIndex;
 		}
 	}

@@ -2,7 +2,7 @@
 using Hazel;
 using InnerNet;
 
-namespace HydraMenu.anticheat.gamedata
+namespace LunarMenu.anticheat.gamedata
 {
 	internal class SceneChange : GameDataCheck
 	{

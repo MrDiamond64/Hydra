@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
-using HydraMenu.network;
+using LunarMenu.network;
 
-namespace HydraMenu.modules.roles
+namespace LunarMenu.modules.roles
 {
 	internal class NoKillChecks : Module
 	{

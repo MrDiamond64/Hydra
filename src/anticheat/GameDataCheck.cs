@@ -1,7 +1,7 @@
 ﻿using AmongUs.InnerNet.GameDataMessages;
 using Hazel;
 
-namespace HydraMenu.anticheat
+namespace LunarMenu.anticheat
 {
 	internal abstract class GameDataCheck : ICheck
 	{

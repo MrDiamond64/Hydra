@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.ui
+namespace LunarMenu.ui
 {
 	public class Styles
 	{
@@ -140,7 +140,7 @@ namespace HydraMenu.ui
 			CachedTextures.TryGetValue(textureName, out Texture2D background);
 			if(background != null) return background;
 
-			Hydra.Log.LogInfo($"Cache lookup for texture {textureName} returned a miss, creating the required texture...");
+			Lunar.Log.LogInfo($"Cache lookup for texture {textureName} returned a miss, creating the required texture...");
 
 			background = new Texture2D(1, 1);
 			background.SetPixel(0, 0, color.SetAlpha(opacity));

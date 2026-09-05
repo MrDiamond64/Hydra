@@ -1,13 +1,13 @@
 ﻿using AmongUs.Data;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using HydraMenu.assets;
-using HydraMenu.modules;
-using HydraMenu.network;
+using LunarMenu.assets;
+using LunarMenu.modules;
+using LunarMenu.network;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class SelfSection : Section
 	{
@@ -65,13 +65,13 @@ namespace HydraMenu.ui.sections
 				{
 					Utilities.RandomizePlayer(true);
 
-					Hydra.notifications.Send("Player Randomizer", "Your avatar has been randomized for this game.", 5);
+					Lunar.notifications.Send("Player Randomizer", "Your avatar has been randomized for this game.", 5);
 				}
 				else
 				{
 					Utilities.RandomizePlayer();
 
-					Hydra.notifications.Send("Player Randomizer", "Your name and avatar has been randomized.", 5);
+					Lunar.notifications.Send("Player Randomizer", "Your name and avatar has been randomized.", 5);
 				}
 			}
 
@@ -94,16 +94,16 @@ namespace HydraMenu.ui.sections
 		{
 			Il2CppSystem.Collections.Generic.List<PlayerTask> allTasks = PlayerControl.LocalPlayer.myTasks;
 
-			Hydra.Log.LogInfo("Completing all tasks...");
+			Lunar.Log.LogInfo("Completing all tasks...");
 			foreach(PlayerTask task in allTasks)
 			{
 				if(task.IsComplete)
 				{
-					Hydra.Log.LogInfo($"Task {task.Id} has already been completed, skipping");
+					Lunar.Log.LogInfo($"Task {task.Id} has already been completed, skipping");
 					continue;
 				}
 
-				Hydra.Log.LogInfo($"Sent CompleteTask RPC for task {task.Id}");
+				Lunar.Log.LogInfo($"Sent CompleteTask RPC for task {task.Id}");
 				PlayerControl.LocalPlayer.RpcCompleteTask(task.Id);
 
 				// If we want to complete more than six tasks then a delay needs to be implemented
@@ -111,20 +111,20 @@ namespace HydraMenu.ui.sections
 				yield return Effects.Wait(0.05f);
 			}
 
-			Hydra.notifications.Send("Task Finisher", "All your tasks have been finished.", 5);
+			Lunar.notifications.Send("Task Finisher", "All your tasks have been finished.", 5);
 		}
 
 		public void PlayAnimation(TaskTypes task)
 		{
 			if(PlayerControl.LocalPlayer == null)
 			{
-				Hydra.notifications.Send("Play Animation", "This option can only be used inside of a game.");
+				Lunar.notifications.Send("Play Animation", "This option can only be used inside of a game.");
 				return;
 			}
 
 			if(ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Play Animation", "There must be an instance of ShipStatus for this feature to work.");
+				Lunar.notifications.Send("Play Animation", "There must be an instance of ShipStatus for this feature to work.");
 				return;
 			}
 

@@ -1,4 +1,4 @@
-﻿namespace HydraMenu.modules.self
+﻿namespace LunarMenu.modules.self
 {
 	internal class NoZiplineCooldown : Module
 	{

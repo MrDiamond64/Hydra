@@ -1,6 +1,6 @@
 ﻿using UnityEngine.AddressableAssets;
 
-namespace HydraMenu.modules.host
+namespace LunarMenu.modules.host
 {
 	internal class FlipSkeld : Module
 	{

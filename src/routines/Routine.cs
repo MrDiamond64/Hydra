@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	public abstract class Routine
 	{
@@ -63,7 +63,7 @@ namespace HydraMenu.routines
 				PropertyInfo property = type.GetProperty(propertyName);
 				if(property == null)
 				{
-					Hydra.Log.LogWarning($"Config has setting {propertyName} for routine {name} when this routine has no such setting");
+					Lunar.Log.LogWarning($"Config has setting {propertyName} for routine {name} when this routine has no such setting");
 					continue;
 				}
 

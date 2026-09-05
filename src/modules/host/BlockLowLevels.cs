@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.host
+namespace LunarMenu.modules.host
 {
 	internal class BlockLowLevels : Module
 	{
@@ -26,7 +26,7 @@ namespace HydraMenu.modules.host
 
 		private static void KickPlayer(PlayerControl player, uint level)
 		{
-			Hydra.notifications.Send("Block Low Levels", $"{player.Data.PlayerName} is level {level}, which is below the level threshold. They will be kicked from the game.");
+			Lunar.notifications.Send("Block Low Levels", $"{player.Data.PlayerName} is level {level}, which is below the level threshold. They will be kicked from the game.");
 			AmongUsClient.Instance.KickPlayer(player.OwnerId, false);
 		}
 

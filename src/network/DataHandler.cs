@@ -1,11 +1,11 @@
 ﻿using AmongUs.InnerNet.GameDataMessages;
 using HarmonyLib;
 using Hazel;
-using HydraMenu.anticheat;
-using HydraMenu.modules;
+using LunarMenu.anticheat;
+using LunarMenu.modules;
 using InnerNet;
 
-namespace HydraMenu.network
+namespace LunarMenu.network
 {
 	internal class DataHandler
 	{

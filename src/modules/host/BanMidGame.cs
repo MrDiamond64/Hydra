@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using InnerNet;
 
-namespace HydraMenu.modules.host
+namespace LunarMenu.modules.host
 {
 	internal class BanMidGame : Module
 	{

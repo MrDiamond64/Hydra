@@ -1,8 +1,8 @@
-﻿using HydraMenu.modules;
+﻿using LunarMenu.modules;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	public class TeleportSpammer : Routine
 	{
@@ -39,7 +39,7 @@ namespace HydraMenu.routines
 
 		private void OnDisconnect()
 		{
-			Hydra.notifications.Send("Teleport Spammer", "Teleport Spammer was disabled as you left the game.", 10);
+			Lunar.notifications.Send("Teleport Spammer", "Teleport Spammer was disabled as you left the game.", 10);
 			Enabled = false;
 		}
 
@@ -47,7 +47,7 @@ namespace HydraMenu.routines
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
 			{
-				Hydra.notifications.Send("Teleport Spammer", "Teleport Spammer can only be used once the game has started.", 10);
+				Lunar.notifications.Send("Teleport Spammer", "Teleport Spammer can only be used once the game has started.", 10);
 				Enabled = false;
 				return;
 			}

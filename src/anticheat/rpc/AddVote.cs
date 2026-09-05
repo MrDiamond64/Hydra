@@ -2,7 +2,7 @@
 using InnerNet;
 using System;
 
-namespace HydraMenu.anticheat.rpc
+namespace LunarMenu.anticheat.rpc
 {
 	internal class AddVote : RpcCheck
 	{
@@ -14,7 +14,7 @@ namespace HydraMenu.anticheat.rpc
 			ClientData client = AmongUsClient.Instance.FindClientById(source);
 			if(client == null || client.Character == null)
 			{
-				Hydra.Log.LogInfo($"An unknown client id ({source}) attempted to votekick {target}");
+				Lunar.Log.LogInfo($"An unknown client id ({source}) attempted to votekick {target}");
 				return false;
 			}
 

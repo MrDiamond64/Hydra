@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.self
+namespace LunarMenu.modules.self
 {
 	internal class Immortality : Module
 	{
@@ -36,10 +36,10 @@ namespace HydraMenu.modules.self
 			{
 				if(Instance.Enabled && ventId != CUSTOM_VENT_ID && (op == VentilationSystem.Operation.Enter || op == VentilationSystem.Operation.Exit || op == VentilationSystem.Operation.Move))
 				{
-					// Hydra.Log.LogInfo($"Our client send VentilationSystem operation {op} for vent {ventId}. Resending Immortality RPC");
+					// Lunar.Log.LogInfo($"Our client send VentilationSystem operation {op} for vent {ventId}. Resending Immortality RPC");
 					// VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
 
-					Hydra.Log.LogInfo($"Our client sent VentilationSystem operation {op} for vent {ventId}, cancelling..");
+					Lunar.Log.LogInfo($"Our client sent VentilationSystem operation {op} for vent {ventId}, cancelling..");
 					return false;
 				}
 
@@ -49,7 +49,7 @@ namespace HydraMenu.modules.self
 
 		private void OnGameLoad()
 		{
-			Hydra.Log.LogMessage($"A new instance of ShipStatus has spawned, sending the immortality RPC");
+			Lunar.Log.LogMessage($"A new instance of ShipStatus has spawned, sending the immortality RPC");
 			VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
 		}
 
@@ -57,14 +57,14 @@ namespace HydraMenu.modules.self
 		{
 			if(victim != PlayerControl.LocalPlayer) return;
 
-			Hydra.notifications.Send("Immortality", $"{murderer.Data.PlayerName} attempted to kill you!", 5);
+			Lunar.notifications.Send("Immortality", $"{murderer.Data.PlayerName} attempted to kill you!", 5);
 		}
 
 		private void OnMeetingEnd()
 		{
 			if(PlayerControl.LocalPlayer.Data.IsDead) return;
 
-			Hydra.Log.LogInfo("Meeting has ended, resending Immortality RPC to retain immortal status");
+			Lunar.Log.LogInfo("Meeting has ended, resending Immortality RPC to retain immortal status");
 			VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
 		}
 
@@ -76,7 +76,7 @@ namespace HydraMenu.modules.self
 
 			if(PlayerControl.LocalPlayer != null)
 			{
-				Hydra.Log.LogInfo("Immortality was enabled, sending a VentilationSystem update with operation Enter");
+				Lunar.Log.LogInfo("Immortality was enabled, sending a VentilationSystem update with operation Enter");
 				VentilationSystem.Update(VentilationSystem.Operation.Enter, CUSTOM_VENT_ID);
 			}
 		}
@@ -89,7 +89,7 @@ namespace HydraMenu.modules.self
 
 			if(PlayerControl.LocalPlayer != null)
 			{
-				Hydra.Log.LogInfo("Immortality was disabled, sending a VentilationSystem update with operation Exit");
+				Lunar.Log.LogInfo("Immortality was disabled, sending a VentilationSystem update with operation Exit");
 				VentilationSystem.Update(VentilationSystem.Operation.Exit, CUSTOM_VENT_ID);
 			}
 		}

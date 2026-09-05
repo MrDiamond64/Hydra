@@ -1,8 +1,8 @@
-﻿using HydraMenu.modules;
+﻿using LunarMenu.modules;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class MovementSection : Section
 	{

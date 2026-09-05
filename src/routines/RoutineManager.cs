@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using UnityEngine;
 
-namespace HydraMenu.routines
+namespace LunarMenu.routines
 {
 	internal class RoutineManager : MonoBehaviour
 	{
@@ -56,7 +56,7 @@ namespace HydraMenu.routines
 				int routineIndex = Array.FindIndex(routineList, r => r.name == routineName);
 				if(routineIndex == -1)
 				{
-					Hydra.Log.LogWarning($"Config has entry for routine {routineName} when there is no such routine");
+					Lunar.Log.LogWarning($"Config has entry for routine {routineName} when there is no such routine");
 					continue;
 				}
 

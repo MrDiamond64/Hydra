@@ -1,8 +1,8 @@
-﻿using HydraMenu.network;
+﻿using LunarMenu.network;
 using Il2CppInterop.Runtime;
 using System.Collections.Generic;
 
-namespace HydraMenu
+namespace LunarMenu
 {
 	internal class Sabotage
 	{
@@ -176,7 +176,7 @@ namespace HydraMenu
 					break;
 
 				default:
-					Hydra.Log.LogError($"Attempted to sabotage unknown system {system}");
+					Lunar.Log.LogError($"Attempted to sabotage unknown system {system}");
 					break;
 			}
 
@@ -207,12 +207,12 @@ namespace HydraMenu
 				case SystemTypes.Electrical:
 					SwitchSystem switches = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
 
-					// Hydra.Log.LogMessage($"Actual: {switches.ActualSwitches}, expected: {switches.ExpectedSwitches}");
+					// Lunar.Log.LogMessage($"Actual: {switches.ActualSwitches}, expected: {switches.ExpectedSwitches}");
 					int amount = switches.ActualSwitches ^ switches.ExpectedSwitches;
 
 					if(amount == 0)
 					{
-						Hydra.Log.LogInfo($"Attempted to fix lights, XOR operation is 0 so that means we have nothing to fix");
+						Lunar.Log.LogInfo($"Attempted to fix lights, XOR operation is 0 so that means we have nothing to fix");
 						break;
 					}
 
@@ -226,7 +226,7 @@ namespace HydraMenu
 				case SystemTypes.MushroomMixupSabotage:
 					if(!AmongUsClient.Instance.AmHost)
 					{
-						Hydra.Log.LogInfo("Attempted to fix Mushroom Mixup, we are not the host so nothing can be done");
+						Lunar.Log.LogInfo("Attempted to fix Mushroom Mixup, we are not the host so nothing can be done");
 						break;
 					}
 
@@ -234,18 +234,18 @@ namespace HydraMenu
 
 					if(!mixupSystem.IsActive)
 					{
-						Hydra.Log.LogInfo("Attempted to fix Mushroom Mixup, the sabotage is not enabled so we have nothing to fix");
+						Lunar.Log.LogInfo("Attempted to fix Mushroom Mixup, the sabotage is not enabled so we have nothing to fix");
 						break;
 					}
 
-					Hydra.Log.LogInfo("Attempted to fix Mushroom Mixup, we are the host so it can be fixed");
+					Lunar.Log.LogInfo("Attempted to fix Mushroom Mixup, we are the host so it can be fixed");
 
 					mixupSystem.currentSecondsUntilHeal = 0.1f;
 					mixupSystem.IsDirty = true;
 					break;
 
 				default:
-					Hydra.Log.LogError($"Attempted to fix unknown sabotage system {system}");
+					Lunar.Log.LogError($"Attempted to fix unknown sabotage system {system}");
 					break;
 			}
 
@@ -260,7 +260,7 @@ namespace HydraMenu
 			IActivatable activableSystem = systemType.TryCast<IActivatable>();
 			if(activableSystem == null)
 			{
-				Hydra.Log.LogError($"All sabotage types should extend from IActivatable, but yet {system} doesn't");
+				Lunar.Log.LogError($"All sabotage types should extend from IActivatable, but yet {system} doesn't");
 				return false;
 			}
 
@@ -323,7 +323,7 @@ namespace HydraMenu
 			}
 			else
 			{
-				Hydra.Log.LogError($"Door type {doorType.FullName} is unknown, cannot mark it dirty");
+				Lunar.Log.LogError($"Door type {doorType.FullName} is unknown, cannot mark it dirty");
 			}
 		}
 

@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.visuals
+namespace LunarMenu.modules.visuals
 {
 	internal class ShowProtections : Module
 	{

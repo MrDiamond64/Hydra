@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using Hazel;
 
-namespace HydraMenu.modules.protections
+namespace LunarMenu.modules.protections
 {
 	internal class AntiOverload : Module
 	{

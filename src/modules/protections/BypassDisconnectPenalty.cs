@@ -1,7 +1,7 @@
 ﻿using AmongUs.Data.Player;
 using HarmonyLib;
 
-namespace HydraMenu.modules.protections
+namespace LunarMenu.modules.protections
 {
 	internal class BypassDisconnectPenalty : Module
 	{

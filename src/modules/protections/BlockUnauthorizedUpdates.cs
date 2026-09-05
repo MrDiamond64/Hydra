@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.protections
+namespace LunarMenu.modules.protections
 {
 	internal class BlockUnauthorizedUpdates : Module
 	{

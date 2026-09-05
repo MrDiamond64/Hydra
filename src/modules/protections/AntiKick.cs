@@ -3,7 +3,7 @@ using Hazel;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 
-namespace HydraMenu.modules.protections
+namespace LunarMenu.modules.protections
 {
 	internal class AntiKick : Module
 	{
@@ -34,7 +34,7 @@ namespace HydraMenu.modules.protections
 				bool shouldBlock = false;
 				if(system == SystemTypes.Ventilation && !AmongUsClient.Instance.AmHost)
 				{
-					Hydra.notifications.Send("Protections Alert", $"{player.Data.PlayerName} attempted to use the VentilationSystem kick exploit on you!");
+					Lunar.notifications.Send("Protections Alert", $"{player.Data.PlayerName} attempted to use the VentilationSystem kick exploit on you!");
 					shouldBlock = true;
 				}
 

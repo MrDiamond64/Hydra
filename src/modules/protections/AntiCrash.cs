@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.protections
+namespace LunarMenu.modules.protections
 {
 	internal class AntiCrash : Module
 	{
@@ -29,7 +29,7 @@ namespace HydraMenu.modules.protections
 			{
 				if(!Instance.Enabled || Instance.gameFullyLoaded) return true;
 
-				Hydra.notifications.Send("Protections Alert", $"{__instance.Data.PlayerName} attempted to use a lobby crash exploit!");
+				Lunar.notifications.Send("Protections Alert", $"{__instance.Data.PlayerName} attempted to use a lobby crash exploit!");
 				return false;
 			}
 		}

@@ -1,16 +1,16 @@
 ﻿using AmongUs.Data;
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using HydraMenu.assets;
-using HydraMenu.modules;
-using HydraMenu.network;
+using LunarMenu.assets;
+using LunarMenu.modules;
+using LunarMenu.network;
 using InnerNet;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class PlayersSection : Section
 	{
@@ -134,7 +134,7 @@ namespace HydraMenu.ui.sections
 			// If we want to get a player's name, we have to use NetworkedPlayerInfo::PlayerName instead of PlayerControl::name to avoid
 			// getting the incorrect name if the player is shapeshifted to another player
 			string playerInfo =
-				$"Name: {target.Data.PlayerName} ({Utilities.GetPlayerColor(target.Data)})" +
+				$"Name: {target.Data.PlayerName} ({Utilities.GetPlayerColorString(target.Data)})" +
 				$"\nRole: {target.Data.RoleType}" +
 				$"\nState: " + (target.Data.IsDead ? "Dead" : "Alive");
 
@@ -156,11 +156,11 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label(playerInfo);
 
 			ModuleManager.spectatePlayer.Enabled = Controls.PlayerSpecificToggle("Spectate", target, ref ModuleManager.spectatePlayer.target);
-			Hydra.routines.petPlayer.Enabled = Controls.PlayerSpecificToggle("Pet Player", target, ref Hydra.routines.petPlayer.target);
-			Hydra.routines.playerFollower.Enabled = Controls.PlayerSpecificToggle("Follow", target, ref Hydra.routines.playerFollower.target);
-			Hydra.routines.jailPlayer.Enabled = Controls.PlayerSpecificToggle("Place in Jail", target, Hydra.routines.jailPlayer.targets);
-			Hydra.routines.teleportSpammer.Enabled = Controls.PlayerSpecificToggle("Spam Teleports", target, Hydra.routines.teleportSpammer.targets);
-			Hydra.routines.ziplineSpammer.Enabled = Controls.PlayerSpecificToggle("Spam Zipline", target, Hydra.routines.ziplineSpammer.targets);
+			Lunar.routines.petPlayer.Enabled = Controls.PlayerSpecificToggle("Pet Player", target, ref Lunar.routines.petPlayer.target);
+			Lunar.routines.playerFollower.Enabled = Controls.PlayerSpecificToggle("Follow", target, ref Lunar.routines.playerFollower.target);
+			Lunar.routines.jailPlayer.Enabled = Controls.PlayerSpecificToggle("Place in Jail", target, Lunar.routines.jailPlayer.targets);
+			Lunar.routines.teleportSpammer.Enabled = Controls.PlayerSpecificToggle("Spam Teleports", target, Lunar.routines.teleportSpammer.targets);
+			Lunar.routines.ziplineSpammer.Enabled = Controls.PlayerSpecificToggle("Spam Zipline", target, Lunar.routines.ziplineSpammer.targets);
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Teleport"))
@@ -213,9 +213,9 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label("Host Only Features:" + (AmongUsClient.Instance.AmHost ? "" : "\n(Using these will get you kicked!)"));
 
 			ModuleManager.autoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies As", target, ref ModuleManager.autoReportBodies.target);
-			Hydra.routines.discoHost.Enabled = Controls.PlayerSpecificToggle("Disco Mode", target, Hydra.routines.discoHost.targets);
+			Lunar.routines.discoHost.Enabled = Controls.PlayerSpecificToggle("Disco Mode", target, Lunar.routines.discoHost.targets);
 			ModuleManager.voteImmune.Enabled = Controls.PlayerSpecificToggle("Vote Immune", target, ModuleManager.voteImmune.targets);
-			Hydra.routines.voteSpammer.Enabled = Controls.PlayerSpecificToggle("Spam Votes As", target, Hydra.routines.voteSpammer.targets);
+			Lunar.routines.voteSpammer.Enabled = Controls.PlayerSpecificToggle("Spam Votes As", target, Lunar.routines.voteSpammer.targets);
 
 			if(GUILayout.Button("Force Meeting As"))
 			{
@@ -227,7 +227,7 @@ namespace HydraMenu.ui.sections
 			{
 				if(MeetingHud.Instance == null)
 				{
-					Hydra.notifications.Send("Vote Forcer", "This option can only be used when there is an active meeting.");
+					Lunar.notifications.Send("Vote Forcer", "This option can only be used when there is an active meeting.");
 				}
 				else
 				{
@@ -385,60 +385,60 @@ namespace HydraMenu.ui.sections
 
 			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
 			{
-				Hydra.notifications.Send("Murder Player", $"You can only kill players once the game has started.");
+				Lunar.notifications.Send("Murder Player", $"You can only kill players once the game has started.");
 				return;
 			}
 
 			if(AmongUsClient.Instance.AmHost)
 			{
-				Hydra.Log.LogInfo($"Attempting to murder {target.Data.PlayerName}, we are the host so we can use the MurderPlayer RPC");
+				Lunar.Log.LogInfo($"Attempting to murder {target.Data.PlayerName}, we are the host so we can use the MurderPlayer RPC");
 				PlayerControl.LocalPlayer.RpcMurderPlayer(target, true);
-				Hydra.notifications.Send("Murder Player", $"Killed {target.Data.PlayerName}.", 5);
+				Lunar.notifications.Send("Murder Player", $"Killed {target.Data.PlayerName}.", 5);
 				return;
 			}
 
 			if(!hasAnticheat)
 			{
-				Hydra.Log.LogInfo($"Attempting to murder {target.Data.PlayerName}, we are are in a host-authoritative lobby so we can use the MurderPlayer RPC");
+				Lunar.Log.LogInfo($"Attempting to murder {target.Data.PlayerName}, we are are in a host-authoritative lobby so we can use the MurderPlayer RPC");
 				PlayerControl.LocalPlayer.RpcMurderPlayer(target, true);
-				Hydra.notifications.Send("Murder Player", $"Killed {target.Data.PlayerName}.", 5);
+				Lunar.notifications.Send("Murder Player", $"Killed {target.Data.PlayerName}.", 5);
 				return;
 			}
 
-			Hydra.Log.LogInfo($"Attempting to kill {target.Data.PlayerName}, we are not the host so we have to use the CheckMurder RPC");
+			Lunar.Log.LogInfo($"Attempting to kill {target.Data.PlayerName}, we are not the host so we have to use the CheckMurder RPC");
 
 			// The CheckMurder RPC handler will not authorize kills if you are not the imposter, or you are inside a meeting
 			// There are more checks, but I do not think it is worth adding them all here
 			if(!RoleManager.IsImpostorRole(PlayerControl.LocalPlayer.Data.RoleType))
 			{
-				Hydra.notifications.Send("Murder Player", "You can only murder players when you are an Impostor, unless you are the host of the lobby.");
+				Lunar.notifications.Send("Murder Player", "You can only murder players when you are an Impostor, unless you are the host of the lobby.");
 				return;
 			}
 
 			if(MeetingHud.Instance != null)
 			{
-				Hydra.notifications.Send("Murder Player", "You can only murder players outside of meetings, unless you are the host of the lobby.");
+				Lunar.notifications.Send("Murder Player", "You can only murder players outside of meetings, unless you are the host of the lobby.");
 				return;
 			}
 
-			Hydra.notifications.Send("Murder Player", $"Attempted to kill {target.Data.PlayerName}.", 5);
+			Lunar.notifications.Send("Murder Player", $"Attempted to kill {target.Data.PlayerName}.", 5);
 			PlayerControl.LocalPlayer.CmdCheckMurder(target);
 		}
 
 		private static IEnumerator AttemptFrameForKillingAll(PlayerControl target)
 		{
-			Hydra.Log.LogInfo($"Attempting to frame {target.Data.PlayerName} for killing all players...");
+			Lunar.Log.LogInfo($"Attempting to frame {target.Data.PlayerName} for killing all players...");
 
 			bool hasAnticheat = Utilities.IsAnticheatPresent();
 			if(hasAnticheat && !AmongUsClient.Instance.AmHost)
 			{
-				Hydra.notifications.Send("Framer", "You must be the host of the lobby in order to use this option.");
+				Lunar.notifications.Send("Framer", "You must be the host of the lobby in order to use this option.");
 				yield break;
 			}
 
 			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
 			{
-				Hydra.notifications.Send("Framer", "The game must have started for this option for this option to work.");
+				Lunar.notifications.Send("Framer", "The game must have started for this option for this option to work.");
 				yield break;
 			}
 
@@ -462,7 +462,7 @@ namespace HydraMenu.ui.sections
 			yield return Effects.Wait(3.0f);
 
 			ModuleManager.disableGameEnd.Enabled = false;
-			Hydra.notifications.Send("Framer", $"Framed {target.Data.PlayerName} for killing all players!");
+			Lunar.notifications.Send("Framer", $"Framed {target.Data.PlayerName} for killing all players!");
 		}
 	}
 }

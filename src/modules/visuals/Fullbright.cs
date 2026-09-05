@@ -1,4 +1,4 @@
-namespace HydraMenu.modules.visuals
+namespace LunarMenu.modules.visuals
 {
 	internal class Fullbright : Module
 	{

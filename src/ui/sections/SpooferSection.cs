@@ -1,10 +1,10 @@
-﻿using HydraMenu.modules;
+﻿using LunarMenu.modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace HydraMenu.ui.sections
+namespace LunarMenu.ui.sections
 {
 	internal class SpooferSection : Section
 	{
@@ -72,7 +72,7 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Send Level Update"))
 			{
 				PlayerControl.LocalPlayer.RpcSetLevel(ModuleManager.spoofLevel.SpoofedLevel - 1);
-				Hydra.notifications.Send("Level Updater", $"Your level has been changed to {ModuleManager.spoofLevel.SpoofedLevel}", 5);
+				Lunar.notifications.Send("Level Updater", $"Your level has been changed to {ModuleManager.spoofLevel.SpoofedLevel}", 5);
 			}
 
 			GUILayout.Space(5);

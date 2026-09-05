@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
-using HydraMenu.network;
+using LunarMenu.network;
 
-namespace HydraMenu.modules.self
+namespace LunarMenu.modules.self
 {
 	internal class AlwaysShowTaskAnimations : Module
 	{

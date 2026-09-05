@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydraMenu.ui
+namespace LunarMenu.ui
 {
 	internal class NotificationManager : MonoBehaviour
 	{
@@ -88,7 +88,7 @@ namespace HydraMenu.ui
 		// The time to live value for a notification should be five seconds if it is a success message, and ten seconds if it is a failure message
 		public void Send(string title, string message, float ttl = 10)
 		{
-			Hydra.Log.LogMessage($"[Notification] [{title}] {message}");
+			Lunar.Log.LogMessage($"[Notification] [{title}] {message}");
 
 			if(disableNotifications) return;
 

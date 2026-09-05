@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HydraMenu.network
+namespace LunarMenu.network
 {
 	internal class Constants
 	{

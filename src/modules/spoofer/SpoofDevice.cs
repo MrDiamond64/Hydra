@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HydraMenu.modules.spoofer
+namespace LunarMenu.modules.spoofer
 {
 	internal class SpoofDevice : Module
 	{

@@ -1,7 +1,7 @@
 ﻿using AmongUs.Data.Player;
 using HarmonyLib;
 
-namespace HydraMenu.modules.self
+namespace LunarMenu.modules.self
 {
 	internal class UpdateStatsFreeplay : Module
 	{

@@ -4,9 +4,9 @@ using InnerNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static HydraMenu.network.Constants;
+using static LunarMenu.network.Constants;
 
-namespace HydraMenu.anticheat.rpc
+namespace LunarMenu.anticheat.rpc
 {
 	internal class UpdateSystem : RpcCheck
 	{
@@ -171,7 +171,7 @@ namespace HydraMenu.anticheat.rpc
 			SwitchSystem system = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
 			if(system.ExpectedSwitches == system.ActualSwitches)
 			{
-				Hydra.Log.LogInfo($"Blocked switch update from {player.Data.PlayerName} as lights are not currently sabotaged");
+				Lunar.Log.LogInfo($"Blocked switch update from {player.Data.PlayerName} as lights are not currently sabotaged");
 				return false;
 			}
 
@@ -179,7 +179,7 @@ namespace HydraMenu.anticheat.rpc
 			// Maybe we can check to see what state the meeting is in, and if it is after the meeting was animated then flag the player?
 			if(MeetingHud.Instance)
 			{
-				Hydra.Log.LogInfo($"Blocked switch update from {player.Data.PlayerName} as there is a currently active meeting");
+				Lunar.Log.LogInfo($"Blocked switch update from {player.Data.PlayerName} as there is a currently active meeting");
 				return false;
 			}
 
