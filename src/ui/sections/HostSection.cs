@@ -292,7 +292,8 @@ namespace HydraMenu.ui.sections
 				yield break;
 			}
 
-			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			PlayerControl[] allPlayers = PlayerControl.AllPlayerControls.ToArray();
+			foreach(PlayerControl player in allPlayers)
 			{
 				if(player == target || player.shapeshiftTargetPlayerId == target.PlayerId) continue;
 
@@ -311,7 +312,8 @@ namespace HydraMenu.ui.sections
 				yield break;
 			}
 
-			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			PlayerControl[] allPlayers = PlayerControl.AllPlayerControls.ToArray();
+			foreach(PlayerControl player in allPlayers)
 			{
 				if(player.shapeshiftTargetPlayerId == -1) continue;
 
