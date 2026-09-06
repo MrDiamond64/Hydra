@@ -73,10 +73,14 @@ namespace HydraMenu.ui.sections
 				{
 					FungleShipStatus shipStatus = ShipStatus.Instance.Cast<FungleShipStatus>();
 
+					BatchedMessage batch = new BatchedMessage();
+
 					foreach(Mushroom mushroom in shipStatus.sporeMushrooms.Values)
 					{
-						PlayerControl.LocalPlayer.RpcTriggerSpores(mushroom);
+						batch.QueueTriggerSpore(PlayerControl.LocalPlayer, mushroom);
 					}
+
+					batch.FinishBatch();
 
 					Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
 				}
