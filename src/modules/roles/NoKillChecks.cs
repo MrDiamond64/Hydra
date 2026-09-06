@@ -55,10 +55,10 @@ namespace HydraMenu.modules.roles
 		private static bool IsValidTarget(NetworkedPlayerInfo target)
 		{
 			return target != null &&
-			       target != PlayerControl.LocalPlayer.Data &&
-			       !target.Disconnected &&
-			       (!target.IsDead || Instance.KillGhosts) &&
-			       (!RoleManager.IsImpostorRole(target.RoleType) || Instance.KillOtherImpostors);
+					target != PlayerControl.LocalPlayer.Data &&
+					!target.Disconnected &&
+					(!target.IsDead || Instance.KillGhosts) &&
+					(!RoleManager.IsImpostorRole(target.RoleType) || Instance.KillOtherImpostors);
 		}
 
 		// The CheckMurder RPC handler has checks against killing ghosts
@@ -103,7 +103,7 @@ namespace HydraMenu.modules.roles
 				if(!Instance.Enabled || !Instance.KillAsPhantom) return true;
 
 				BatchedMessage batch = new BatchedMessage();
-				batch.QueueAppear(__instance,  shouldAnimate);
+				batch.QueueAppear(__instance, shouldAnimate);
 				batch.FinishBatch();
 				return false;
 			}

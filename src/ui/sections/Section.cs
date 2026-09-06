@@ -7,7 +7,7 @@ namespace HydraMenu.ui.sections
 		public readonly string name;
 		public Vector2 scrollVector;
 
-		public Section(string name)
+		protected Section(string name)
 		{
 			this.name = name;
 		}

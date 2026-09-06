@@ -30,6 +30,8 @@
 
 		protected override void OnDisable()
 		{
+			target = null;
+
 			EventCoordinator.OnPlayerMurder -= OnPlayerMurder;
 		}
 	}

@@ -53,7 +53,7 @@ internal class Hydra : BasePlugin
 		notifications.ClearNotifications();
 
 		// Some modules and routines include cleanup in the OnDisable method, which we need to trigger
-		foreach(Module module in ModuleManager.moduleList)
+		foreach(Module module in modules.moduleList)
 		{
 			module.Enabled = false;
 		}

@@ -29,7 +29,7 @@ namespace HydraMenu.routines
 			}
 		}
 
-		public Routine(string name)
+		protected Routine(string name)
 		{
 			this.name = name;
 		}
