@@ -1,33 +1,24 @@
+using HarmonyLib;
+using UnityEngine;
+
 namespace LunarMenu.modules.visuals
 {
 	internal class Fullbright : Module
 	{
 		public Fullbright() : base("Fullbright") { }
 
-		private void OnGameLoad()
+		private static Fullbright Instance
 		{
-			HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
+			get { return ModuleManager.fullbright; }
 		}
 
-		protected override void OnEnable()
+		[HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+		class HideShadows
 		{
-			if(PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data != null)
+			static void Postfix(HudManager __instance)
 			{
-				HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
+				__instance.ShadowQuad.gameObject.SetActive(!ModuleManager.spectatePlayer.Enabled && !RoleManager.IsGhostRole(PlayerControl.LocalPlayer.Data.RoleType) && !Instance.Enabled && !(Camera.main.orthographicSize > 3f));
 			}
-
-			EventCoordinator.OnGameLoad += OnGameLoad;
-		}
-
-		protected override void OnDisable()
-		{
-			if(PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data != null)
-			{
-				bool shouldBeEnabled = !ModuleManager.spectatePlayer.Enabled && !RoleManager.IsGhostRole(PlayerControl.LocalPlayer.Data.RoleType);
-				HudManager.Instance.ShadowQuad.gameObject.SetActive(shouldBeEnabled);
-			}
-
-			EventCoordinator.OnGameLoad -= OnGameLoad;
 		}
 	}
 }

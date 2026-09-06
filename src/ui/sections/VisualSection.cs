@@ -38,6 +38,8 @@ namespace LunarMenu.ui.sections
             ModuleManager.showPlayersInVents.Enabled = GUILayout.Toggle(ModuleManager.showPlayersInVents.Enabled, "Show Players in Vents");
 
             ModuleManager.showLobbyInfo.Enabled = GUILayout.Toggle(ModuleManager.showLobbyInfo.Enabled, "Show Lobby Info");
+
+			ModuleManager.zoomOut.Enabled = GUILayout.Toggle(ModuleManager.zoomOut.Enabled, "Zoom Out");
         }
 	}
 }

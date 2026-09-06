@@ -147,6 +147,11 @@ namespace LunarMenu
             };
         }
 
+		public static void AdjustResolution()
+		{
+			ResolutionManager.ResolutionChanged.Invoke((float)Screen.width / Screen.height, Screen.width, Screen.height, Screen.fullScreen);
+		}
+
         public static string RemoveHTMLTags(string html_str)
 		{
 			return Regex.Replace(html_str, "<[^>]*>", "");

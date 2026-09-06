@@ -89,6 +89,7 @@ namespace LunarMenu.modules
         public static ShowProtections showProtections = new ShowProtections();
 		public static SkipShhhAnimation skipShhhAnimation = new SkipShhhAnimation();
 		public static SpectatePlayer spectatePlayer = new SpectatePlayer();
+		public static ZoomOut zoomOut = new ZoomOut();
 
         public static readonly Module[] moduleList;
 
@@ -160,6 +161,7 @@ namespace LunarMenu.modules
 				showProtections,
 				skipShhhAnimation,
 				spectatePlayer,
+				zoomOut
 			];
 		}
 
