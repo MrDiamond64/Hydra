@@ -46,7 +46,7 @@ namespace HydraMenu.modules.protections
 
 		private void OnPlayerVotekick(ClientData source, ClientData target)
 		{
-			if(!BlockVotekicks || !AmongUsClient.Instance.AmHost || source.Id != AmongUsClient.Instance.ClientId) return;
+			if(!BlockVotekicks || !AmongUsClient.Instance.AmHost || target.Id != AmongUsClient.Instance.ClientId) return;
 
 			// Remove our votes, as if nothing ever happened
 			VoteBanSystem.Instance.Votes[AmongUsClient.Instance.ClientId] = new Il2CppStructArray<int>(0);
