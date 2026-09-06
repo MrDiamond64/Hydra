@@ -1,4 +1,5 @@
 ﻿using HydraMenu.modules.host;
+using HydraMenu.modules.misc;
 using HydraMenu.modules.protections;
 using HydraMenu.modules.roles;
 using HydraMenu.modules.self;
@@ -24,6 +25,9 @@ namespace HydraMenu.modules
 		public static FakeShapeshiftBubble fakeShapeshiftBubble = new FakeShapeshiftBubble();
 		public static FlipSkeld flipSkeld = new FlipSkeld();
 		public static VoteImmune voteImmune = new VoteImmune();
+
+		// Misc
+		public static ChatLogger chatLogger = new ChatLogger();
 
 		// Protections
 		public static AntiCrash antiCrash = new AntiCrash();
@@ -91,6 +95,8 @@ namespace HydraMenu.modules
 				fakeShapeshiftBubble,
 				flipSkeld,
 				voteImmune,
+
+				chatLogger,
 
 				antiCrash,
 				antiKick,

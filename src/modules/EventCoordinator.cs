@@ -168,8 +168,6 @@ namespace HydraMenu.modules
 		{
 			static void Prefix(PlayerControl sourcePlayer, string chatText)
 			{
-				Hydra.Log.LogMessage($"[ChatLogger] {sourcePlayer.Data.PlayerName}: {chatText}");
-
 				PublishEvent(OnPlayerChat, sourcePlayer, chatText);
 			}
 		}
