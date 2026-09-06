@@ -4,7 +4,10 @@ namespace LunarMenu.modules.general
 {
     internal class UnlockCosmetics : Module
     {
-        public UnlockCosmetics() : base("UnlockCosmetics") { }
+        public UnlockCosmetics() : base("UnlockCosmetics")
+        {
+            base.Enabled = true;
+        }
 
         private static UnlockCosmetics Instance
         {

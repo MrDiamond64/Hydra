@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using AmongUs.GameOptions;
+using HarmonyLib;
 using UnityEngine;
 
 namespace LunarMenu.modules.roles
@@ -22,31 +23,81 @@ namespace LunarMenu.modules.roles
 		{
 			static bool Prefix(Vent __instance, NetworkedPlayerInfo pc, ref bool canUse, ref bool couldUse, ref float __result)
 			{
-				if(!Instance.Enabled) return true;
+				if (Instance.Enabled || PlayerControl.LocalPlayer.inVent)
+				{
+					var pObject = pc.Object;
+					if (!pObject) return true;
 
-				PlayerControl player = pc.Object;
-				if(pc.IsDead) return true;
+					var ventVector = __instance.transform.position;
 
-				couldUse = true;
-				__result = Vector2.Distance(player.Collider.bounds.center, __instance.transform.position);
+					float ventDistance = Vector2.Distance(pObject.GetTruePosition(), new Vector2(ventVector.x, ventVector.y));
+					if (pc.IsDead)
+					{
+						canUse = false;
+						couldUse = false;
+					}
+					else
+					{
+						canUse = (ventDistance < __instance.UsableDistance);
+						couldUse = true;
+					}
 
-				bool isObstructed = PhysicsHelpers.AnythingBetween(player.Collider, player.Collider.bounds.center, __instance.transform.position, Constants.ShipOnlyMask, false);
-				if(__result <= __instance.UsableDistance && !isObstructed) canUse = true;
-
-				return false;
+					__result = ventDistance;
+					return false;
+				}
+				return true;
 			}
 		}
 
-		protected override void OnDisable()
+		private static bool bChatAlwaysActivePrevious = false;
+
+		[HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+		class VentButtonPatch
 		{
-			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null || RoleManager.IsImpostorRole(PlayerControl.LocalPlayer.Data.RoleType)) return;
-
-			HudManager.Instance.ImpostorVentButton.gameObject.SetActive(false);
-			if(Vent.currentVent != null)
+			static void Prefix(HudManager __instance)
 			{
-				Vent.currentVent.SetButtons(false);
-				PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
+				try
+				{
+					if (bChatAlwaysActivePrevious != ModuleManager.alwaysVisibleChat.Enabled)
+					{
+						if (ModuleManager.alwaysVisibleChat.Enabled)
+							__instance.Chat.SetVisible(true);
+						else if (!GameState.InMeeting && !Utilities.InLobby())
+							__instance.Chat.SetVisible(ModuleManager.alwaysVisibleChat.chatActiveOriginalState);
+						bChatAlwaysActivePrevious = ModuleManager.alwaysVisibleChat.Enabled;
+					}
+
+					if (Utilities.InGame() || Utilities.InLobby())
+					{
+						var localData = PlayerControl.LocalPlayer?.Data;
+						if (!localData) return;
+
+						if (!GameState.InMeeting)
+						{
+							var kbjPlayer = KeyboardJoystick.player;
+
+							RoleBehaviour playerRole = localData.Role;
+							RoleTypes role = playerRole != null ? playerRole.Role : RoleTypes.Crewmate;
+							GameObject ImpostorVentButton = __instance.ImpostorVentButton.gameObject;
+
+							if (ImpostorVentButton != null)
+							{
+								bool forceShowVentButton = Instance.Enabled || (PlayerControl.LocalPlayer.inVent && role != RoleTypes.Engineer);
+
+                                var gameOptions = GameOptionsManager.Instance.CurrentGameOptions;
+                                if ((role != RoleTypes.Engineer || !Instance.Enabled) && (localData.IsDead || Utilities.InLobby()))
+									ImpostorVentButton.SetActive(false);
+								else
+									ImpostorVentButton.SetActive(forceShowVentButton || (Utilities.IsImpostor(localData) && gameOptions.GameMode == GameModes.Normal));
+
+								if (kbjPlayer != null && forceShowVentButton && !(Utilities.IsImpostor(localData) && gameOptions.GameMode == GameModes.Normal) &&
+									kbjPlayer.GetButton(50) && (PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.inVent))
+									__instance.ImpostorVentButton.DoClick();
+							}
+						}
+					}
+				} catch { }
 			}
 		}
-	}
+    }
 }

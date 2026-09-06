@@ -13,12 +13,13 @@ namespace LunarMenu.modules.visuals
         }
 
         public bool ShowHost { get; set; } = false;
+        public bool ShowVoteKicks { get; set; } = false;
 
         private static int fps;
         private static int fpsDelay = 0;
 
         [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
-        class ShowFPSPing
+        class ShowPingInfo
         {
             static void Prefix(PingTracker __instance)
             {
@@ -36,7 +37,8 @@ namespace LunarMenu.modules.visuals
                 }
                 try
                 {
-                    string sep = " • "
+                    string sep = " • ";
+                    string ping = __instance.text.text;
                     int currentFps = (int)Mathf.Round(1f / Time.deltaTime);
                     if (fpsDelay <= 0 || currentFps <= 30)
                     {
@@ -53,8 +55,13 @@ namespace LunarMenu.modules.visuals
                     }
                     string noClip = PlayerControl.LocalPlayer.Collider.enabled ? "" : (sep + "Noclip");
                     var host = AmongUsClient.Instance.GetHost();
-                    string hostText = Instance.ShowHost && Utilities.inGame ? (AmongUsClient.Instance.AmHost ? (sep + "You are Host") : $"{sep}Host: <#{ColorUtility.ToHtmlStringRGB()}>")
-                }
+                    string hostText = Instance.ShowHost && Utilities.InGame() ? (AmongUsClient.Instance.AmHost ? (sep + "You are Host") : $"{sep}Host: {Utilities.GetHostUsername(true)}") : "";
+                    string voteKicksText = (Instance.ShowVoteKicks && GameState.VoteKicks > 0) ? $"{sep}Votekicks: {GameState.VoteKicks}" : "";
+                    string pingText = (isFreeplay ? "<size=150%><#0000>0</color></size>\n" : "") +
+                        $"<#fff>{ping}{fpsText}{hostText}{voteKicksText}{noClip}</color>";
+                    __instance.text.alignment = TMPro.TextAlignmentOptions.Top;
+                    __instance.text.text = pingText;
+                } catch { }
             }
         }
     }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static LunarMenu.network.Constants;
+using System.Text.RegularExpressions;
 
 namespace LunarMenu
 {
@@ -39,18 +40,141 @@ namespace LunarMenu
 
 		public static string GetHostUsername(bool colored = false)
 		{
-			if (Utilities.InGame() || Utilities.InLobby() && !colored)
+			if (InGame() || InLobby() && !colored)
 				return AmongUsClient.Instance.GetHost().PlayerName;
-			if (Utilities.InGame() || Utilities.InLobby())
+			if (InGame() || InLobby())
 			{
-				Color color = 
+				Color color = GetPlayerColor(GetPlayerOutfit(AmongUsClient.Instance.GetHost().Character.Data).ColorId);
+				string username = AmongUsClient.Instance.GetHost().PlayerName;
+				return $"<#{ColorUtility.ToHtmlStringRGB(color)}>{RemoveHTMLTags(username)}</color>";
 			}
+			return "";
+		}
+
+		public static Color GetRoleColor(RoleBehaviour roleBehaviour)
+		{
+			if (roleBehaviour == null) return Palette.White;
+
+			return roleBehaviour.TeamColor;
+		}
+
+		public static bool IsImpostor(NetworkedPlayerInfo player)
+		{
+			if (player.Role == null) return false;
+
+			var role = player.RoleType;
+			return role == RoleTypes.ImpostorGhost || RoleManager.IsImpostorRole(role);
+		}
+
+		public static PlayerControl GetPlayerControlById(byte id)
+		{
+			foreach (var player in PlayerControl.AllPlayerControls)
+			{
+				if (player.PlayerId == id) return player;
+			}
+
+			return null;
+		}
+
+		public static List<NormalPlayerTask> GetNormalPlayerTasks(PlayerControl player)
+		{
+			try
+			{
+				var playerTasks = player.myTasks;
+				if (playerTasks == null) return [];
+
+				List<NormalPlayerTask> normalPlayerTasks = [];
+
+				foreach (var playerTask in playerTasks)
+				{
+					var normalTask = playerTask.TryCast<NormalPlayerTask>();
+					if (normalTask != null) normalPlayerTasks.Add(normalTask);
+				}
+
+				return normalPlayerTasks;
+			}
+			catch
+			{
+				return [];
+			}
+		}
+
+		public static string GetRoleName(RoleBehaviour roleBehaviour)
+		{
+			if (roleBehaviour == null) return "Unknown";
+
+			const ushort trackerRoleId = 55050;
+
+			if ((roleBehaviour.Role == RoleTypes.Tracker || roleBehaviour.Role == (RoleTypes)trackerRoleId) && roleBehaviour.StringName != (StringNames)1681)
+				roleBehaviour.StringName = (StringNames)1681;
+
+			return roleBehaviour.Role switch
+			{
+				RoleTypes.Crewmate => "Crewmate",
+                RoleTypes.CrewmateGhost => "Crewmate Ghost",
+                RoleTypes.Detective => "Detective",
+                RoleTypes.Engineer => "Engineer",
+                RoleTypes.GuardianAngel => "Guardian Angel",
+                RoleTypes.Impostor => "Impostor",
+                RoleTypes.ImpostorGhost => "Impostor Ghost",
+                RoleTypes.Judge => "Judge",
+                RoleTypes.Noisemaker => "Noisemaker",
+                RoleTypes.Phantom => "Phantom",
+                RoleTypes.Scientist => "Scientist",
+                RoleTypes.Shapeshifter => "Shapeshifter",
+                RoleTypes.Tracker => "Tracker",
+				var r when r == (RoleTypes)trackerRoleId => "Tracker",
+                RoleTypes.Viper => "Viper",
+				_ => "Unknown"
+            };
+		}
+
+        public static string GetPlatformString(Platforms platform)
+        {
+            return platform switch
+            {
+                Platforms.Android => "Android",
+                Platforms.IPhone => "iOS",
+                Platforms.Playstation => "PlayStation",
+                Platforms.StandaloneEpicPC => "Epic Games",
+                Platforms.StandaloneItch => "Itch.io",
+                Platforms.StandaloneMac => "MacOS",
+                Platforms.StandaloneSteamPC => "Steam",
+                Platforms.StandaloneWin10 => "Microsoft Store",
+                Platforms.Switch => "Nintendo Switch",
+                Platforms.Xbox => "Xbox",
+				_ => "Unknown",
+            };
+        }
+
+        public static string RemoveHTMLTags(string html_str)
+		{
+			return Regex.Replace(html_str, "<[^>]*>", "");
 		}
 
 		public static Color GetPlayerColor(int colorId)
 		{
 			var colorArray = Palette.PlayerColors;
-			if ((colorId < 0 || colorId > 17))
+			if (colorId < 0 || colorId >= colorArray.Length)
+			{
+				return new Color32(38, 166, 98, 255);
+			}
+			return colorArray[colorId];
+		}
+
+		public static NetworkedPlayerInfo.PlayerOutfit GetPlayerOutfit(NetworkedPlayerInfo player, bool includeShapeshifted = false)
+		{
+			if (!player) return null;
+			var dic = player.Outfits;
+			if (includeShapeshifted && dic.ContainsKey(PlayerOutfitType.Shapeshifted))
+			{
+				var playerOutfit = dic[PlayerOutfitType.Shapeshifted];
+				if (playerOutfit != null && !string.IsNullOrEmpty(player.PlayerName))
+				{
+					return playerOutfit;
+				}
+			}
+			return dic[PlayerOutfitType.Default];
 		}
 
         public static int GetRandomUnusedColor()

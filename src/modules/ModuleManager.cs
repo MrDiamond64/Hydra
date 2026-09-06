@@ -1,4 +1,5 @@
-﻿using LunarMenu.modules.general;
+﻿using HarmonyLib;
+using LunarMenu.modules.general;
 using LunarMenu.modules.host;
 using LunarMenu.modules.protections;
 using LunarMenu.modules.roles;
@@ -16,6 +17,7 @@ namespace LunarMenu.modules
 	internal class ModuleManager : MonoBehaviour
 	{
 		// General
+		public static AutoCopyLobbyCode autoCopyLobbyCode = new AutoCopyLobbyCode();
 		public static UnlockCosmetics unlockCosmetics = new UnlockCosmetics();
 
 		// Host
@@ -40,6 +42,7 @@ namespace LunarMenu.modules
 		public static ForceDTLs forceDtls = new ForceDTLs();
 
 		// Roles
+		public static BypassComms bypassComms = new BypassComms();
 		public static MoveInVents moveInVents = new MoveInVents();
 		public static NoKillChecks noKillChecks = new NoKillChecks();
 		public static NoSabotageCooldown noSabotageCooldown = new NoSabotageCooldown();
@@ -75,18 +78,24 @@ namespace LunarMenu.modules
 		public static AlwaysVisibleChat alwaysVisibleChat = new AlwaysVisibleChat();
 		public static Fullbright fullbright = new Fullbright();
 		public static NoSeekerAnimation noSeekerAnimation = new NoSeekerAnimation();
-		public static ShowGhostMessages showGhostMessages = new ShowGhostMessages();
+        public static RevealRoles revealRoles = new RevealRoles();
+		public static RevealVotes revealVotes = new RevealVotes();
+        public static ShowFPS showFPS = new ShowFPS();
+        public static ShowGhostMessages showGhostMessages = new ShowGhostMessages();
 		public static ShowGhosts showGhosts = new ShowGhosts();
-		public static ShowProtections showProtections = new ShowProtections();
+		public static ShowLobbyInfo showLobbyInfo = new ShowLobbyInfo();
+        public static ShowPhantoms showPhantoms = new ShowPhantoms();
+		public static ShowPlayersInVents showPlayersInVents = new ShowPlayersInVents();
+        public static ShowProtections showProtections = new ShowProtections();
 		public static SkipShhhAnimation skipShhhAnimation = new SkipShhhAnimation();
 		public static SpectatePlayer spectatePlayer = new SpectatePlayer();
-        public static ShowFPS showFPS = new ShowFPS();
 
         public static readonly Module[] moduleList;
 
 		static ModuleManager()
 		{
 			moduleList = [
+				autoCopyLobbyCode,
 				unlockCosmetics,
 
 				assignRoles,
@@ -108,6 +117,7 @@ namespace LunarMenu.modules
 				bypassShapeshiftRatelimits,
 				forceDtls,
 
+				bypassComms,
 				moveInVents,
 				noKillChecks,
 				noSabotageCooldown,
@@ -139,12 +149,17 @@ namespace LunarMenu.modules
 				alwaysVisibleChat,
 				fullbright,
 				noSeekerAnimation,
+				revealRoles,
+				revealVotes,
+				showFPS,
 				showGhostMessages,
 				showGhosts,
+				showLobbyInfo,
+				showPhantoms,
+				showPlayersInVents,
 				showProtections,
 				skipShhhAnimation,
 				spectatePlayer,
-				showFPS
 			];
 		}
 
@@ -190,9 +205,40 @@ namespace LunarMenu.modules
 			// I tried modifying `MatchInfoButton.transform.position` and the likes to try and shift the button towards the left
 			// however that only moved the collider of the button, not the icon
 			// So we just use this workaround to hide the Match Info Button in situations where it will not overlap with the Chat button
-			if(alwaysVisibleChat.Enabled)
+			/* if(alwaysVisibleChat.Enabled)
 			{
 				HudManager.Instance.MatchInfoButton.gameObject.SetActive(MeetingHud.Instance != null);
+			} */
+		}
+
+		[HarmonyPatch(typeof(GameObject), nameof(GameObject.SetActive))]
+		class EnableNameObject
+		{
+			static void Prefix(GameObject __instance, ref bool value)
+			{
+				try
+				{
+					if ((Utilities.InGame() || Utilities.InLobby()) && !value)
+					{
+						foreach (var player in PlayerControl.AllPlayerControls)
+						{
+							var playerInfo = player?.Data;
+							if (!playerInfo || !player.cosmetics || player.visibilityItems != null) break;
+
+                            var nameObject = player.cosmetics.nameText.gameObject;
+                            if (((playerInfo.IsDead && showGhosts.Enabled) || (!playerInfo.IsDead && player.shouldAppearInvisible && showPhantoms.Enabled)) || (!playerInfo.IsDead && revealRoles.Enabled) && nameObject == __instance)
+							{
+								value = true;
+								break;
+							}
+							else if ((playerInfo.IsDead || (!playerInfo.IsDead && player.shouldAppearInvisible)) && !revealRoles.Enabled && nameObject == __instance)
+							{
+                                value = false;
+                                break;
+                            }
+						}
+					}
+				} catch { }
 			}
 		}
 	}
