@@ -17,7 +17,7 @@ namespace HydraMenu.modules.troll
 
 		private void OnPlayerMurder(PlayerControl murderer, PlayerControl target, MurderResultFlags flags)
 		{
-			if(!ExposeOnMurder || ShipStatus.Instance == null || !flags.HasFlag(MurderResultFlags.Succeeded) || Sabotage.IsSabotageActive(SystemTypes.Electrical)) return;
+			if(!ExposeOnMurder || ShipStatus.Instance == null || !flags.HasFlag(MurderResultFlags.Succeeded) || Sabotage.IsSabotageActive(SystemTypes.Electrical) || murderer.shapeshiftTargetPlayerId != -1) return;
 
 			Vent selectedVent = FindClosestVent(murderer, MIN_KILL_DISTANCE, MAX_DISTANCE);
 			if(selectedVent == null)
@@ -55,7 +55,7 @@ namespace HydraMenu.modules.troll
 
 		private void OnPlayerPhantom(PlayerControl phantom)
 		{
-			if(!ExposeOnPhantom || ShipStatus.Instance == null || Sabotage.IsSabotageActive(SystemTypes.Electrical)) return;
+			if(!ExposeOnPhantom || ShipStatus.Instance == null || Sabotage.IsSabotageActive(SystemTypes.Electrical) || phantom.shapeshiftTargetPlayerId != -1) return;
 
 			Vent selectedVent = FindClosestVent(phantom, 0.0f, MAX_DISTANCE);
 			if(selectedVent == null)
