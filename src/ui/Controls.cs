@@ -168,7 +168,7 @@ namespace HydraMenu.ui
 		{
 			int currentColumn = 0;
 
-			foreach(var (key, value) in buttons)
+			foreach((TKey key, TValue value) in buttons)
 			{
 				if(currentColumn == 0)
 				{

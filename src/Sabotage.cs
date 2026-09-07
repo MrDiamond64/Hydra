@@ -14,7 +14,7 @@ namespace HydraMenu
 		*/
 		public static bool UpdateSystemsDirectly { get; set; } = true;
 
-		public static Dictionary<string, SystemTypes> skeldSabotages = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> skeldSabotages = new Dictionary<string, SystemTypes>()
 		{
 			{ "Reactor", SystemTypes.Reactor },
 			{ "Oxygen", SystemTypes.LifeSupp },
@@ -22,7 +22,7 @@ namespace HydraMenu
 			{ "Communications", SystemTypes.Comms }
 		};
 
-		public static Dictionary<string, SystemTypes> skeldDoors = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> skeldDoors = new Dictionary<string, SystemTypes>()
 		{
 			{ "Cafeteria", SystemTypes.Cafeteria },
 			{ "Storage", SystemTypes.Storage },
@@ -33,7 +33,7 @@ namespace HydraMenu
 			{ "Electrical", SystemTypes.Electrical }
 		};
 
-		public static Dictionary<string, SystemTypes> miraSabotages = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> miraSabotages = new Dictionary<string, SystemTypes>()
 		{
 			{ "Reactor", SystemTypes.Reactor },
 			{ "Oxygen", SystemTypes.LifeSupp },
@@ -41,14 +41,14 @@ namespace HydraMenu
 			{ "Communications", SystemTypes.Comms }
 		};
 
-		public static Dictionary<string, SystemTypes> polusSabotages = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> polusSabotages = new Dictionary<string, SystemTypes>()
 		{
 			{ "Reactor", SystemTypes.Laboratory },
 			{ "Lights", SystemTypes.Electrical },
 			{ "Communications", SystemTypes.Comms }
 		};
 
-		public static Dictionary<string, SystemTypes> polusDoors = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> polusDoors = new Dictionary<string, SystemTypes>()
 		{
 			{ "Office", SystemTypes.Office },
 			{ "Communications", SystemTypes.Comms },
@@ -60,14 +60,14 @@ namespace HydraMenu
 			{ "Storage", SystemTypes.Storage }
 		};
 
-		public static Dictionary<string, SystemTypes> airshipSabotages = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> airshipSabotages = new Dictionary<string, SystemTypes>()
 		{
 			{ "Reactor", SystemTypes.HeliSabotage },
 			{ "Lights", SystemTypes.Electrical },
 			{ "Communications", SystemTypes.Comms }
 		};
 
-		public static Dictionary<string, SystemTypes> airshipDoors = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> airshipDoors = new Dictionary<string, SystemTypes>()
 		{
 			{ "Brig", SystemTypes.Brig },
 			{ "Records", SystemTypes.Records },
@@ -78,14 +78,14 @@ namespace HydraMenu
 			{ "Lounge", SystemTypes.Lounge }
 		};
 
-		public static Dictionary<string, SystemTypes> fungleSabotages = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> fungleSabotages = new Dictionary<string, SystemTypes>()
 		{
 			{ "Reactor", SystemTypes.Reactor },
 			{ "Communications", SystemTypes.Comms },
 			{ "Mushroom Mixup", SystemTypes.MushroomMixupSabotage }
 		};
 
-		public static Dictionary<string, SystemTypes> fungleDoors = new Dictionary<string, SystemTypes>()
+		public static readonly Dictionary<string, SystemTypes> fungleDoors = new Dictionary<string, SystemTypes>()
 		{
 			{ "Storage", SystemTypes.Storage },
 			{ "Kitchen", SystemTypes.Kitchen },
@@ -197,7 +197,7 @@ namespace HydraMenu
 					batch.QueueUpdateSystem(PlayerControl.LocalPlayer, system, 16);
 					break;
 
-				// Comms in Mira HQ and HeliSabotage require two different updates in order to complete
+				// Comms in Mira HQ, and HeliSabotage require two different updates in order to complete
 				case SystemTypes.Comms:
 				case SystemTypes.HeliSabotage:
 					batch.QueueUpdateSystem(PlayerControl.LocalPlayer, system, 16 | 0);

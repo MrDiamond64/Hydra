@@ -243,7 +243,7 @@ namespace HydraMenu.ui.sections
 				return;
 			}
 
-			InnerNetObject lobbyPrefab = AmongUsClient.Instance.NonAddressableSpawnableObjects.First((obj) => obj.SpawnId == (uint)network.Constants.SpawnType.LobbyBehavior);
+			InnerNetObject lobbyPrefab = AmongUsClient.Instance.NonAddressableSpawnableObjects.First((obj) => obj.SpawnId == (uint)SpawnType.LobbyBehavior);
 			if(lobbyPrefab == null)
 			{
 				Hydra.Log.LogError($"Failed to find LobbyBehavior prefab in NonAddressableSpawnableObjects");
@@ -256,7 +256,7 @@ namespace HydraMenu.ui.sections
 			batch.QueueSpawn(lobby, -2, SpawnFlags.None);
 			batch.FinishBatch();
 
-			Hydra.notifications.Send("Lobby Spawner", "A new instance of the lobby has been spawned", 5);
+			Hydra.notifications.Send("Lobby Spawner", "A new instance of the lobby has been spawned.", 5);
 		}
 
 		private static IEnumerator SpawnMap(byte mapId)

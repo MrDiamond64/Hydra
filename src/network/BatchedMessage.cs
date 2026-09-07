@@ -12,12 +12,12 @@ namespace HydraMenu.network
 		public readonly int targetClientId;
 		public int msgCount = 0;
 
-		public BatchedMessage(int targetClientId = (int)Constants.OwnerIds.Everyone)
+		public BatchedMessage(int targetClientId = (int)OwnerIds.Everyone)
 		{
 			writer = MessageWriter.Get(SendOption.Reliable);
 
 			this.targetClientId = targetClientId;
-			if(targetClientId == (int)Constants.OwnerIds.Everyone)
+			if(targetClientId == (int)OwnerIds.Everyone)
 			{
 				writer.StartMessage(InnerNet.Tags.GameData);
 				writer.Write(AmongUsClient.Instance.GameId);
@@ -32,7 +32,7 @@ namespace HydraMenu.network
 
 		private bool IsGlobal
 		{
-			get { return targetClientId == (int)Constants.OwnerIds.Everyone; }
+			get { return targetClientId == (int)OwnerIds.Everyone; }
 		}
 
 		private bool AmTarget
@@ -50,7 +50,7 @@ namespace HydraMenu.network
 			msgCount++;
 		}
 
-		public void QueueSpawn(InnerNetObject netObject, int ownerId = (int)Constants.OwnerIds.Host, SpawnFlags flags = SpawnFlags.None)
+		public void QueueSpawn(InnerNetObject netObject, int ownerId = (int)OwnerIds.Host, SpawnFlags flags = SpawnFlags.None)
 		{
 			SpawnGameDataMessage spawn = AmongUsClient.Instance.CreateSpawnMessage(netObject, ownerId, flags);
 			spawn.Serialize(writer);

@@ -5,7 +5,6 @@ using InnerNet;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static HydraMenu.network.Constants;
 
 namespace HydraMenu
 {
@@ -33,11 +32,11 @@ namespace HydraMenu
 			return colors.Count != 0 ? colors[rnd.Next(0, colors.Count)] : rnd.Next(0, 18);
 		}
 
-		public static void RandomizePlayer(bool ingame = false)
+		public static void RandomizePlayer(bool inGame = false)
 		{
 			System.Random rnd = new System.Random();
 
-			if(ingame)
+			if(inGame)
 			{
 				PlayerControl.LocalPlayer.CmdCheckColor((byte)GetRandomUnusedColor());
 

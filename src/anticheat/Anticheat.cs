@@ -211,7 +211,7 @@ namespace HydraMenu.anticheat
 			{
 				AcEnabled = Enabled,
 				SendNotification = sendNotification,
-				DiscardRpc =  discardRpc,
+				DiscardRpc = discardRpc,
 				Punishment = punishment,
 			};
 		}

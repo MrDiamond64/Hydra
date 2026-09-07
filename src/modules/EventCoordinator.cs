@@ -1,11 +1,11 @@
 ﻿using HarmonyLib;
 using Hazel;
+using HydraMenu.network;
 using HydraMenu.ui.sections;
 using Il2CppInterop.Runtime;
 using InnerNet;
 using System;
 using System.Collections.Generic;
-using static HydraMenu.network.Constants;
 
 namespace HydraMenu.modules
 {
@@ -180,7 +180,8 @@ namespace HydraMenu.modules
 		[HarmonyPatch(typeof(VentilationSystem), nameof(VentilationSystem.Deserialize))]
 		class PlayerVentNonHost
 		{
-			static void Prefix(VentilationSystem __instance, MessageReader reader) {
+			static void Prefix(VentilationSystem __instance, MessageReader reader)
+			{
 				int oldReadPosition = reader.Position;
 
 				int ventCleans = reader.ReadPackedInt32();

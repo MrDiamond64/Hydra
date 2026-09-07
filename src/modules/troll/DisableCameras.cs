@@ -101,7 +101,7 @@ namespace HydraMenu.modules.troll
 		{
 			if(ShipStatus.Instance == null) return;
 
-			ISystemType system = ShipStatus.Instance.Systems[SystemTypes.Security];
+			ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Security, out ISystemType system);
 			if(system == null) return;
 
 			SecurityCameraSystemType securitySystem = system.Cast<SecurityCameraSystemType>();

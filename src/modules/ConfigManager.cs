@@ -72,7 +72,7 @@ namespace HydraMenu.modules
 
 			string configString = File.ReadAllText(configLocation);
 
-			ConfigData configData = null;
+			ConfigData configData;
 			try
 			{
 				configData = JsonSerializer.Deserialize<ConfigData>(configString);

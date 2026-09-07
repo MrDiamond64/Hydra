@@ -56,7 +56,7 @@ namespace HydraMenu.routines
 		{
 			if(client.Character != target) return;
 
-			Hydra.notifications.Send("Pet Player", "Pet Player was disabled as the player you were petting left the game");
+			Hydra.notifications.Send("Pet Player", "Pet Player was disabled as the player you were petting left the game.");
 			Enabled = false;
 		}
 
