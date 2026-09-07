@@ -8,7 +8,10 @@ namespace HydraMenu.ui.sections
 	{
 		public MenuSection() : base("Menu") { }
 
+		private Vector2 dropdownScroll = Vector2.zero;
+		private bool showConfigDropdown = false;
 		private byte configIndex = 0;
+		private string[] configNamesCache = null;
 
 		public override void Render()
 		{
@@ -37,8 +40,41 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label($"Config:\nCurrent Config: {Hydra.config.currentConfig}");
 
-			GUILayout.Label($"Selected Config: {Hydra.config.configList[configIndex]}");
-			configIndex = (byte)GUILayout.HorizontalSlider(configIndex, 0, Hydra.config.configList.Count - 1);
+			if(configNamesCache == null || configNamesCache.Length != Hydra.config.configList.Count)
+			{
+				configNamesCache = Hydra.config.configList.ToArray();
+			}
+
+			if(GUILayout.Button(configNamesCache[configIndex]))
+			{
+				showConfigDropdown = !showConfigDropdown;
+			}
+
+			if(showConfigDropdown)
+			{
+				float itemHeight = 25f;
+				float maxHeight = 150f;
+				float contentHeight = configNamesCache.Length * itemHeight;
+				float boxHeight = Mathf.Min(contentHeight, maxHeight);
+
+				dropdownScroll = GUILayout.BeginScrollView(dropdownScroll, GUILayout.Height(boxHeight));
+				GUILayout.BeginVertical("box");
+				for(int i = 0; i < configNamesCache.Length; i++)
+				{
+					if(GUILayout.Button(configNamesCache[i]))
+					{
+						configIndex = (byte)i;
+						showConfigDropdown = false;
+						dropdownScroll = Vector2.zero;
+					}
+				}
+				GUILayout.EndVertical();
+				GUILayout.EndScrollView();
+			}
+			else
+			{
+				dropdownScroll = Vector2.zero;
+			}
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Save"))
