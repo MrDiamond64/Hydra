@@ -5,6 +5,7 @@ using Il2CppInterop.Runtime;
 using InnerNet;
 using System;
 using System.Collections.Generic;
+using static HydraMenu.network.Constants;
 
 namespace HydraMenu.modules
 {
@@ -39,6 +40,10 @@ namespace HydraMenu.modules
 		public static event Action<ClientData, ClientData> OnPlayerVotekick;
 
 		public static event Action<NetworkedPlayerInfo, NetworkedPlayerInfo> OnPlayerCastVote;
+
+		// Sabotage Events
+		public static event Action OnHudOverrideSabotage;
+		public static event Action OnHudOverrideRepair;
 
 		// Network Events
 		public static event Action<InnerNetObject> OnNetObjectSpawn;
@@ -374,6 +379,50 @@ namespace HydraMenu.modules
 				if(voter == null || votee == null) return;
 
 				PublishEvent(OnPlayerCastVote, voter, votee);
+			}
+		}
+
+		[HarmonyPatch(typeof(HudOverrideSystemType), nameof(HudOverrideSystemType.UpdateSystem))]
+		class UpdateHudOverrideHost
+		{
+			static void Postfix(MessageReader msgReader)
+			{
+				msgReader.Position--;
+				HudOverrideSystemOperation operation = (HudOverrideSystemOperation)msgReader.ReadByte();
+				msgReader.Position++;
+
+				if(operation.HasFlag(HudOverrideSystemOperation.Sabotage))
+				{
+					Hydra.Log.LogMessage($"HudOverride system was sabotaged");
+					PublishEvent(OnHudOverrideSabotage);
+				}
+				else
+				{
+					Hydra.Log.LogMessage($"HudOverride system was repaired");
+					PublishEvent(OnHudOverrideRepair);
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(HudOverrideSystemType), nameof(HudOverrideSystemType.Deserialize))]
+		class UpdateHudOverrideNonHost
+		{
+			static void Prefix(HudOverrideSystemType __instance, MessageReader reader)
+			{
+				bool isActive = reader.ReadBoolean();
+				bool wasActive = __instance.IsActive;
+				reader.Position--;
+
+				if(!wasActive && isActive)
+				{
+					Hydra.Log.LogMessage($"HudOverride system was sabotaged");
+					PublishEvent(OnHudOverrideSabotage);
+				}
+				else if(wasActive && !isActive)
+				{
+					Hydra.Log.LogMessage($"HudOverride system was repaired");
+					PublishEvent(OnHudOverrideRepair);
+				}
 			}
 		}
 
