@@ -168,7 +168,8 @@ namespace HydraMenu.ui
 				mousePos.y >= windowPosition.y &&
 				mousePos.y <= (windowPosition.y + WindowSize.y);
 		}
-
+		
+		[HideFromIl2Cpp]
 		private void RenderTab(byte position, Section section)
 		{
 			Rect rect = new Rect(
@@ -193,7 +194,8 @@ namespace HydraMenu.ui
 			public float UiScale { get; set; }
 			public bool DisableNotifications { get; set; }
 		}
-
+		
+		[HideFromIl2Cpp]
 		public MainUIConfig GetConfigData()
 		{
 			return new MainUIConfig
@@ -205,7 +207,8 @@ namespace HydraMenu.ui
 				DisableNotifications = Hydra.notifications.disableNotifications
 			};
 		}
-
+		
+		[HideFromIl2Cpp]
 		public void LoadConfigData(MainUIConfig configData)
 		{
 			if(configData == null) return;

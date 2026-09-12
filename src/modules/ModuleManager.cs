@@ -147,6 +147,7 @@ namespace HydraMenu.modules
 		}
 
 		// Return a dictionary of each module with its name, and another dictionary with names and values of each property
+		[HideFromIl2Cpp]
 		public Dictionary<string, Dictionary<string, JsonElement>> GetConfigData()
 		{
 			Dictionary<string, Dictionary<string, JsonElement>> moduleConfig = new Dictionary<string, Dictionary<string, JsonElement>>();
@@ -158,7 +159,8 @@ namespace HydraMenu.modules
 
 			return moduleConfig;
 		}
-
+		
+    	[HideFromIl2Cpp]
 		public void LoadConfigData(Dictionary<string, Dictionary<string, JsonElement>> moduleConfig)
 		{
 			foreach((string moduleName, Dictionary<string, JsonElement> configData) in moduleConfig)

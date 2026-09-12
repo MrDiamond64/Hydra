@@ -48,7 +48,8 @@ namespace HydraMenu.routines
 
 			return routineConfig;
 		}
-
+		
+		[HideFromIl2Cpp]
 		public void LoadConfigData(Dictionary<string, Dictionary<string, JsonElement>> routineConfig)
 		{
 			foreach((string routineName, Dictionary<string, JsonElement> configData) in routineConfig)
