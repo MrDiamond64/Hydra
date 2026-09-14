@@ -7,7 +7,7 @@ namespace HydraMenu.ui
 {
 	internal class NotificationManager : MonoBehaviour
 	{
-		public readonly List<Notification> notifications = new List<Notification>();
+		private readonly List<Notification> notifications = new List<Notification>();
 		public bool disableNotifications = false;
 
 		public static Vector2 BoxSize
