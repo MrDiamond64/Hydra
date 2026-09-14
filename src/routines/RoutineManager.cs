@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using UnityEngine;
+using Il2CppInterop.Runtime.Attributes;
 
 namespace HydraMenu.routines
 {
@@ -37,6 +38,7 @@ namespace HydraMenu.routines
 		}
 
 		// Return a dictionary of each routine with its name, and another dictionary with names and values of each property
+		[HideFromIl2Cpp]
 		public Dictionary<string, Dictionary<string, JsonElement>> GetConfigData()
 		{
 			Dictionary<string, Dictionary<string, JsonElement>> routineConfig = new Dictionary<string, Dictionary<string, JsonElement>>();
@@ -48,7 +50,8 @@ namespace HydraMenu.routines
 
 			return routineConfig;
 		}
-
+		
+		[HideFromIl2Cpp]
 		public void LoadConfigData(Dictionary<string, Dictionary<string, JsonElement>> routineConfig)
 		{
 			foreach((string routineName, Dictionary<string, JsonElement> configData) in routineConfig)
