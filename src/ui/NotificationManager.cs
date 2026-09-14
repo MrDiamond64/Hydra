@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Il2CppInterop.Runtime.Attributes;
 
 namespace HydraMenu.ui
 {
 	internal class NotificationManager : MonoBehaviour
 	{
-		private readonly List<Notification> notifications = new List<Notification>();
+		public readonly List<Notification> notifications = new List<Notification>();
 		public bool disableNotifications = false;
 
 		public static Vector2 BoxSize
@@ -67,7 +68,8 @@ namespace HydraMenu.ui
 				RenderNotification(i, notifications[i]);
 			}
 		}
-
+		
+		[HideFromIl2Cpp]
 		private void RenderNotification(byte position, Notification notification)
 		{
 			float boxX = Screen.width - BoxSize.x;
