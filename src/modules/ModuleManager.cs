@@ -1,4 +1,4 @@
-﻿using HydraMenu.modules.host;
+using HydraMenu.modules.host;
 using HydraMenu.modules.misc;
 using HydraMenu.modules.protections;
 using HydraMenu.modules.roles;
@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using UnityEngine;
+using Il2CppInterop.Runtime.Attributes;
 
 namespace HydraMenu.modules
 {
@@ -151,6 +152,7 @@ namespace HydraMenu.modules
 		}
 
 		// Return a dictionary of each module with its name, and another dictionary with names and values of each property
+		[HideFromIl2Cpp]
 		public Dictionary<string, Dictionary<string, JsonElement>> GetConfigData()
 		{
 			Dictionary<string, Dictionary<string, JsonElement>> moduleConfig = new Dictionary<string, Dictionary<string, JsonElement>>();
@@ -162,7 +164,8 @@ namespace HydraMenu.modules
 
 			return moduleConfig;
 		}
-
+		
+    	[HideFromIl2Cpp]
 		public void LoadConfigData(Dictionary<string, Dictionary<string, JsonElement>> moduleConfig)
 		{
 			foreach((string moduleName, Dictionary<string, JsonElement> configData) in moduleConfig)

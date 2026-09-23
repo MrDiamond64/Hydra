@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Il2CppInterop.Runtime.Attributes;
 
 namespace HydraMenu.ui
 {
@@ -67,7 +68,8 @@ namespace HydraMenu.ui
 				RenderNotification(i, notifications[i]);
 			}
 		}
-
+		
+		[HideFromIl2Cpp]
 		private void RenderNotification(byte position, Notification notification)
 		{
 			float boxX = Screen.width - BoxSize.x;
