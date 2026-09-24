@@ -14,6 +14,11 @@ namespace HydraMenu.ui
 		// When true, the next key the user presses is captured and set as the new menu key (see Update).
 		public bool isRebinding = false;
 
+		// A general one-shot keybind capture: when set, the next key press is passed to this callback instead of
+		// being handled normally. Used by ability rebind buttons (e.g. Laser Blast) so they can reuse the menu's
+		// reliable key-capture without each one reimplementing it.
+		public Action<KeyCode> pendingKeybind = null;
+
 		// Optional self-only FPS counter drawn in the top-left corner regardless of whether the menu is open.
 		public static bool showFps = false;
 		private float smoothedFps = 0.0f;
@@ -96,6 +101,22 @@ namespace HydraMenu.ui
 					}
 
 					isRebinding = false;
+				}
+
+				return;
+			}
+
+			// A generic one-shot keybind capture used by ability rebind buttons.
+			if(pendingKeybind != null)
+			{
+				if(currentEvent.type == EventType.KeyDown && currentEvent.keyCode != KeyCode.None)
+				{
+					if(currentEvent.keyCode != KeyCode.Escape)
+					{
+						pendingKeybind(currentEvent.keyCode);
+					}
+
+					pendingKeybind = null;
 				}
 
 				return;
