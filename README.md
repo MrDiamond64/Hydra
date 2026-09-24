@@ -25,6 +25,10 @@ Hydra Anticheat is quite possibly the heart of this mod. It is able to detect wh
 
 Hydra Anticheat comes with a basic baseline: the backend server must be able to prevent player impersonation. If cheaters are able to send RPCs on the behalf of other players, then Hydra Anticheat will not be able to accurately determine who is cheating or not and flag the wrong players. The vanilla Among Us servers already come with impersonation checks, so this should not be much of a concern in those servers.
 
+To keep innocent players safe, Hydra Anticheat separates *detecting* a cheater from *punishing* one. Punishments only ever apply when you are the host, and they are gated behind a configurable **strike threshold**: a player must be flagged a chosen number of times in a game before Hydra kicks or bans them. Setting the threshold above one makes it very unlikely that an honest player is punished over a single ambiguous detection, while real cheaters — who tend to trip many checks at once — still get caught. Strikes reset at the start of every game. Every individual check can also be toggled on or off from the Anticheat tab.
+
+For a full explanation of how the anticheat works, the available punishments, and how to add your own checks, see [docs/ANTICHEAT.md](docs/ANTICHEAT.md).
+
 # Installation and Usage
 > [!WARNING]
 > Before using Hydra, please make sure to understand and fully consent to the warnings provided in the [Disclaimer](https://github.com/MrDiamond64/Hydra?tab=readme-ov-file#disclaimer) section.

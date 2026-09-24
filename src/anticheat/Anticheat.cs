@@ -3,13 +3,25 @@ using HarmonyLib;
 using Hazel;
 using HydraMenu.anticheat.gamedata;
 using HydraMenu.anticheat.rpc;
+using HydraMenu.modules;
 using System;
 using System.Collections.Generic;
 
 namespace HydraMenu.anticheat
 {
+	/// <summary>
+	/// The core of Hydra Anticheat. Intercepts incoming RPCs and game data messages, hands them to the
+	/// relevant <see cref="RpcCheck"/> / <see cref="GameDataCheck"/> for validation, and decides what to
+	/// do when a check flags a player.
+	///
+	/// Detection is decoupled from enforcement: any check can call <see cref="Flag(PlayerControl, string, bool)"/>,
+	/// but a player is only ever punished when we are the host. To avoid penalising innocent players for a
+	/// single ambiguous detection, punishment is gated behind a configurable strike threshold
+	/// (<see cref="strikesBeforePunishment"/>) that accumulates over the course of a game.
+	/// </summary>
 	internal class Anticheat
 	{
+		/// <summary>Master switch for the whole anticheat. When false, no checks run and no RPCs are discarded.</summary>
 		public static bool Enabled { get; set; } = true;
 
 		public static readonly Dictionary<GameDataTypes, GameDataCheck> GameDataHandlers = new Dictionary<GameDataTypes, GameDataCheck>()
@@ -56,6 +68,31 @@ namespace HydraMenu.anticheat
 		public static Punishments punishment = Punishments.None;
 		public static bool sendNotification = true;
 		public static bool discardRpc = true;
+
+		// The number of times a single player must be flagged before a punishment is applied to them.
+		// A value of 1 preserves the original behaviour of punishing on the very first flag.
+		// Higher values make the anticheat more forgiving: a player has to trip multiple checks (or the
+		// same check repeatedly) before being kicked or banned, which greatly reduces the chance of
+		// punishing an innocent player over one ambiguous detection while still catching real cheaters
+		// who tend to trip many checks in quick succession.
+		public static int strikesBeforePunishment = 1;
+
+		// The maximum value the strike threshold can be set to from the UI or a config file.
+		public const int MaxStrikeThreshold = 10;
+
+		// Tracks how many times each player has been flagged during the current game, keyed by OwnerId.
+		// Strikes are reset at the start of every game and whenever we leave a lobby so detections from
+		// one round never carry over into the next (see ResetStrikes / Initialize).
+		private static readonly Dictionary<int, int> playerStrikes = new Dictionary<int, int>();
+
+		/// <summary>
+		/// Subscribes the anticheat to the lifecycle events it needs. Call this once during plugin load.
+		/// </summary>
+		public static void Initialize()
+		{
+			EventCoordinator.OnGameStart += ResetStrikes;
+			EventCoordinator.OnDisconnect += ResetStrikes;
+		}
 
 		[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
 		class OnPlayerControlRPC
@@ -136,6 +173,16 @@ namespace HydraMenu.anticheat
 			return isValid || !discardRpc;
 		}
 
+		/// <summary>
+		/// Records a detection against a specific player and, when we are the host, punishes them once they
+		/// reach the configured strike threshold.
+		/// </summary>
+		/// <param name="player">The player that tripped the check.</param>
+		/// <param name="reason">A human-readable description of what was detected, shown in the notification.</param>
+		/// <param name="shouldPunish">
+		/// When false the detection is only ever reported and never counts towards a strike or a punishment.
+		/// Use this for low-confidence checks that should inform the host without ever acting on their own.
+		/// </param>
 		public static void Flag(PlayerControl player, string reason, bool shouldPunish = true)
 		{
 			// Sanity check, make sure that we are not flagging ourselves
@@ -143,12 +190,30 @@ namespace HydraMenu.anticheat
 			// which would result in Hydra Anticheat flagging ourselves and banning us from our own lobby
 			if(player == PlayerControl.LocalPlayer) return;
 
-			if(sendNotification)
+			// Only the host can actually enforce a punishment, so strikes are only meaningful for the host.
+			bool canPunish = AmongUsClient.Instance.AmHost && shouldPunish;
+			int strikes = 0;
+
+			if(canPunish)
 			{
-				Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
+				strikes = RegisterStrike(player);
 			}
 
-			if(AmongUsClient.Instance.AmHost && shouldPunish)
+			if(sendNotification)
+			{
+				string message = reason;
+
+				// Let the host see how close a player is to being punished when using a strike threshold,
+				// so an escalating cheater is obvious before the punishment actually lands.
+				if(canPunish && strikesBeforePunishment > 1)
+				{
+					message += $" (strike {strikes}/{strikesBeforePunishment})";
+				}
+
+				Hydra.notifications.Send("Anticheat", message, NotificationDuration);
+			}
+
+			if(canPunish && strikes >= strikesBeforePunishment)
 			{
 				Punish(player);
 			}
@@ -161,6 +226,29 @@ namespace HydraMenu.anticheat
 			{
 				Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
 			}
+		}
+
+		/// <summary>
+		/// Increments and returns the strike count for a player for the current game.
+		/// </summary>
+		private static int RegisterStrike(PlayerControl player)
+		{
+			int ownerId = player.OwnerId;
+
+			playerStrikes.TryGetValue(ownerId, out int strikes);
+			strikes++;
+			playerStrikes[ownerId] = strikes;
+
+			return strikes;
+		}
+
+		/// <summary>
+		/// Clears every player's accumulated strikes. Called automatically when a new game starts or when we
+		/// leave a lobby so that detections do not carry over between rounds.
+		/// </summary>
+		public static void ResetStrikes()
+		{
+			playerStrikes.Clear();
 		}
 
 		private static void Punish(PlayerControl player)
@@ -203,6 +291,7 @@ namespace HydraMenu.anticheat
 			public bool SendNotification { get; set; }
 			public bool DiscardRpc { get; set; }
 			public Punishments Punishment { get; set; }
+			public int StrikesBeforePunishment { get; set; } = 1;
 		}
 
 		public static AnticheatConfigData GetConfigData()
@@ -213,6 +302,7 @@ namespace HydraMenu.anticheat
 				SendNotification = sendNotification,
 				DiscardRpc = discardRpc,
 				Punishment = punishment,
+				StrikesBeforePunishment = strikesBeforePunishment,
 			};
 		}
 
@@ -224,6 +314,8 @@ namespace HydraMenu.anticheat
 			sendNotification = configData.SendNotification;
 			discardRpc = configData.DiscardRpc;
 			punishment = configData.Punishment;
+			// Clamp on load so a hand-edited config can never disable punishment entirely (0) or set an absurd threshold.
+			strikesBeforePunishment = Math.Clamp(configData.StrikesBeforePunishment, 1, MaxStrikeThreshold);
 		}
 	}
 }

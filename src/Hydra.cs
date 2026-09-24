@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using HydraMenu.anticheat;
 using HydraMenu.modules;
 using HydraMenu.routines;
 using HydraMenu.ui;
@@ -40,6 +41,9 @@ internal class Hydra : BasePlugin
 			notifications.Send("Fatal Error", "Harmony patches failed to load, you are likely using an unsupported version. Check https://github.com/MrDiamond64/Hydra for more information.", 9999);
 			throw;
 		}
+
+		// Subscribe the anticheat to game lifecycle events before loading the config so its state is ready to go
+		Anticheat.Initialize();
 
 		config.Initialize();
 
