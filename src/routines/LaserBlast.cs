@@ -1,4 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
+using HydraMenu.network;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -20,6 +21,11 @@ namespace HydraMenu.routines
 		// Persisted automatically by the routine config system.
 		public KeyCode AbilityKey { get; set; } = KeyCode.L;
 		public float Cooldown { get; set; } = 3.0f;
+
+		// When true AND we are the host, the laser kills the player it hits. This reuses the same host murder
+		// authority as the existing "Kill Everyone" host tool, gated to the host of the lobby only. It is off by
+		// default so the ability stays a harmless visual unless the host of a private lobby opts in.
+		public bool LethalWhenHosting { get; set; } = false;
 
 		private float cooldownRemaining = 0.0f;
 		private bool isFiring = false;
@@ -59,6 +65,12 @@ namespace HydraMenu.routines
 			Vector3 endPoint = target != null
 				? target.transform.position
 				: origin + new Vector3(MaxRange, 0.0f, 0.0f);
+
+			// Optionally make the hit lethal, but only for the host of the lobby (see TryKill).
+			if(LethalWhenHosting && target != null)
+			{
+				TryKill(target);
+			}
 
 			GameObject beamObject = null;
 			LineRenderer beam = null;
@@ -108,6 +120,29 @@ namespace HydraMenu.routines
 			}
 
 			isFiring = false;
+		}
+
+		// Kills the target, but only when we are the host, using the same authority and checks as the other host
+		// kill tools. Outside of a lobby we host, this deliberately does nothing but notify.
+		private static void TryKill(PlayerControl target)
+		{
+			bool hasAnticheat = Utilities.IsAnticheatPresent();
+
+			if(hasAnticheat && !AmongUsClient.Instance.AmHost)
+			{
+				Hydra.notifications.Send("Laser Blast", "The lethal laser only works when you are the host of the lobby.");
+				return;
+			}
+
+			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
+			{
+				Hydra.notifications.Send("Laser Blast", "The lethal laser can only be used once the game has started.");
+				return;
+			}
+
+			BatchedMessage batch = new BatchedMessage();
+			batch.QueueMurderPlayer(PlayerControl.LocalPlayer, target, MurderResultFlags.Succeeded);
+			batch.FinishBatch();
 		}
 
 		private static PlayerControl GetNearestPlayer(PlayerControl self)

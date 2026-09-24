@@ -55,6 +55,8 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Label($"Laser Cooldown: {Hydra.routines.laserBlast.Cooldown:F1}s");
 			Hydra.routines.laserBlast.Cooldown = Mathf.Round(GUILayout.HorizontalSlider(Hydra.routines.laserBlast.Cooldown, 0.0f, 10.0f) * 2f) / 2f;
+
+			Hydra.routines.laserBlast.LethalWhenHosting = GUILayout.Toggle(Hydra.routines.laserBlast.LethalWhenHosting, "Laser kills the target (host only)");
 		}
 
 		public static void UpdateRole(RoleTypes role)
