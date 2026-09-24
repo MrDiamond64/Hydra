@@ -64,6 +64,13 @@ and when you leave a lobby, so detections never carry over between rounds.
 | Silent kick (fake timeout) | Removes the player disguised as a connection timeout, so other players see them "leave" due to an error rather than a kick. Falls back to a normal kick before the game has started. |
 | Ban from lobby | Kicks and bans the player so they cannot rejoin. |
 
+When the punishment is set to *Ban*, an optional **orbital strike** can play on the cheater just before the ban
+lands — a beam drops from the sky onto them for a fraction of a second. It is purely cosmetic: the strike's
+completion is what triggers the actual ban, and if the visual ever fails to initialise the ban still happens, so
+the outcome is identical whether the effect is on or off. Toggle it in the Anticheat tab (only shown while the
+punishment is set to Ban). See [`OrbitalStrike.cs`](../src/anticheat/OrbitalStrike.cs) — it is a good template
+for hanging other cosmetic effects off anticheat events.
+
 ## Adding a new check
 
 Checks are small, self-contained classes. See [`RpcCheck`](../src/anticheat/RpcCheck.cs) and

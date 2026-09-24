@@ -53,6 +53,12 @@ namespace HydraMenu.ui.sections
 			Anticheat.punishment = (Anticheat.Punishments)Mathf.RoundToInt(GUILayout.HorizontalSlider((float)Anticheat.punishment, 0, 3));
 			GUILayout.EndHorizontal();
 
+			// A cosmetic orbital strike that plays on a cheater right before a ban lands.
+			if(Anticheat.punishment == Anticheat.Punishments.Ban)
+			{
+				Anticheat.orbitalStrikeOnBan = GUILayout.Toggle(Anticheat.orbitalStrikeOnBan, "Orbital strike cheaters before banning (visual)");
+			}
+
 			// Punishments only take effect for the host; make that obvious so non-host users are not confused.
 			if(Anticheat.punishment != Anticheat.Punishments.None)
 			{

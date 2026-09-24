@@ -1,4 +1,5 @@
 ﻿using AmongUs.InnerNet.GameDataMessages;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HarmonyLib;
 using Hazel;
 using HydraMenu.anticheat.gamedata;
@@ -79,6 +80,10 @@ namespace HydraMenu.anticheat
 
 		// The maximum value the strike threshold can be set to from the UI or a config file.
 		public const int MaxStrikeThreshold = 10;
+
+		// When true, a banned cheater is struck by a visual orbital strike just before the ban is applied.
+		// Purely cosmetic; it never changes whether or how a player is banned.
+		public static bool orbitalStrikeOnBan = true;
 
 		// Tracks how many times each player has been flagged during the current game, keyed by OwnerId.
 		// Strikes are reset at the start of every game and whenever we leave a lobby so detections from
@@ -280,7 +285,17 @@ namespace HydraMenu.anticheat
 
 				case Punishments.Ban:
 					Hydra.Log.LogMessage($"{player.Data.PlayerName} was automatically banned by Hydra Anticheat for hacking");
-					AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
+
+					// Optionally play a dramatic orbital strike on the cheater before the ban lands. The strike's
+					// completion callback performs the actual ban, so the outcome is identical either way.
+					if(orbitalStrikeOnBan)
+					{
+						AmongUsClient.Instance.StartCoroutine(OrbitalStrike.Strike(player, () => AmongUsClient.Instance.KickPlayer(player.OwnerId, true)).WrapToIl2Cpp());
+					}
+					else
+					{
+						AmongUsClient.Instance.KickPlayer(player.OwnerId, true);
+					}
 					break;
 			}
 		}
@@ -292,6 +307,7 @@ namespace HydraMenu.anticheat
 			public bool DiscardRpc { get; set; }
 			public Punishments Punishment { get; set; }
 			public int StrikesBeforePunishment { get; set; } = 1;
+			public bool OrbitalStrikeOnBan { get; set; } = true;
 		}
 
 		public static AnticheatConfigData GetConfigData()
@@ -303,6 +319,7 @@ namespace HydraMenu.anticheat
 				DiscardRpc = discardRpc,
 				Punishment = punishment,
 				StrikesBeforePunishment = strikesBeforePunishment,
+				OrbitalStrikeOnBan = orbitalStrikeOnBan,
 			};
 		}
 
@@ -316,6 +333,7 @@ namespace HydraMenu.anticheat
 			punishment = configData.Punishment;
 			// Clamp on load so a hand-edited config can never disable punishment entirely (0) or set an absurd threshold.
 			strikesBeforePunishment = Math.Clamp(configData.StrikesBeforePunishment, 1, MaxStrikeThreshold);
+			orbitalStrikeOnBan = configData.OrbitalStrikeOnBan;
 		}
 	}
 }
