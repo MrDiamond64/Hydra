@@ -11,10 +11,23 @@ namespace HydraMenu.ui
 		public bool visible = false;
 		public static float scale = 1.0f;
 
+		// When true, the next key the user presses is captured and set as the new menu key (see Update).
+		public bool isRebinding = false;
+
+		// A general one-shot keybind capture: when set, the next key press is passed to this callback instead of
+		// being handled normally. Used by ability rebind buttons (e.g. Laser Blast) so they can reuse the menu's
+		// reliable key-capture without each one reimplementing it.
+		public Action<KeyCode> pendingKeybind = null;
+
+		// Optional self-only FPS counter drawn in the top-left corner regardless of whether the menu is open.
+		public static bool showFps = false;
+		private float smoothedFps = 0.0f;
+
 		private bool isDragging = false;
 		private Vector2 mouseDelta = new Vector2();
 
-		public static Vector2 windowPosition = new Vector2(250, 100);
+		public static readonly Vector2 DefaultWindowPosition = new Vector2(250, 100);
+		public static Vector2 windowPosition = DefaultWindowPosition;
 		public static Vector2 WindowSize
 		{
 			get { return new Vector2(500, 470) * scale; }
@@ -34,6 +47,9 @@ namespace HydraMenu.ui
 		// UI Section Pane
 		private readonly Section[] sections = { new GeneralSection(), new SelfSection(), new TrollSection(), new SabotageSection(), new HostSection(), new RolesSection(), new PlayersSection(), new MovementSection(), new VisualSection(), new ProtectionsSection(), new AnticheatSection(), new SpooferSection(), new MenuSection() };
 		public byte activeTab = 0;
+
+		// Live filter typed into the search box above the section list. Empty means show every section.
+		private string sectionSearch = "";
 
 		public static Vector2 SectionListSize
 		{
@@ -63,8 +79,48 @@ namespace HydraMenu.ui
 
 		public void Update()
 		{
+			// Smooth the framerate reading so the counter does not jump around every frame.
+			if(Time.deltaTime > 0.0f)
+			{
+				smoothedFps = Mathf.Lerp(smoothedFps, 1.0f / Time.deltaTime, 0.1f);
+			}
+
 			Event currentEvent = Event.current;
 			if(currentEvent == null) return;
+
+			// While rebinding, swallow the next key press and use it as the new menu key instead of toggling the menu.
+			if(isRebinding)
+			{
+				if(currentEvent.type == EventType.KeyDown && currentEvent.keyCode != KeyCode.None)
+				{
+					// Escape cancels the rebind and leaves the current key untouched.
+					if(currentEvent.keyCode != KeyCode.Escape)
+					{
+						menuKey = currentEvent.keyCode;
+						Hydra.notifications.Send("Menu", $"Menu key rebound to {menuKey}.");
+					}
+
+					isRebinding = false;
+				}
+
+				return;
+			}
+
+			// A generic one-shot keybind capture used by ability rebind buttons.
+			if(pendingKeybind != null)
+			{
+				if(currentEvent.type == EventType.KeyDown && currentEvent.keyCode != KeyCode.None)
+				{
+					if(currentEvent.keyCode != KeyCode.Escape)
+					{
+						pendingKeybind(currentEvent.keyCode);
+					}
+
+					pendingKeybind = null;
+				}
+
+				return;
+			}
 
 			// Input::GetKeyDown(KeyCodes.Insert) returns true if you press the dedicated Insert key, but not the numpad Insert key
 			// so we have to rely on Event.current here
@@ -103,19 +159,37 @@ namespace HydraMenu.ui
 		public void OnGUI()
 		{
 			// https://docs.unity3d.com/6000.3/Documentation/Manual/GUIScriptingGuide.html
+
+			// The FPS counter is drawn independently of the menu so it can be left on as a HUD.
+			if(showFps)
+			{
+				DrawFpsCounter();
+			}
+
 			if(!visible) return;
 
 			GUI.skin.label.fontSize = (int)(13 * scale);
 
-			// Render UI box
-			GUI.Box(new Rect(windowPosition.x, windowPosition.y, WindowSize.x, WindowSize.y), $"{MyPluginInfo.PLUGIN_NAME} - {MyPluginInfo.PLUGIN_VERSION}", Styles.MainBox);
+			// Render UI box. The title includes the toggle key so users always know how to reopen the menu.
+			GUI.Box(new Rect(windowPosition.x, windowPosition.y, WindowSize.x, WindowSize.y), $"{MyPluginInfo.PLUGIN_NAME} - {MyPluginInfo.PLUGIN_VERSION}  [{menuKey}]", Styles.MainBox);
 
+			// Search box at the top of the section list; the tabs are packed in below it.
+			Rect searchRect = new Rect(SectionListPosition.x, SectionListPosition.y, SectionListSize.x, SectionButtonSize.y);
+			sectionSearch = GUI.TextField(searchRect, sectionSearch, Styles.SearchBox);
+
+			// Row 0 is taken up by the search box, so matching tabs start at row 1.
+			int displayRow = 1;
 			for(byte i = 0; i < sections.Length; i++)
 			{
 				Section section = sections[i];
 
-				// Add the tab to the left-pane
-				RenderTab(i, section);
+				// Only draw a tab when it matches the current search filter, but always render the active
+				// section's content so an open section does not disappear while filtering.
+				if(SectionMatchesSearch(section))
+				{
+					RenderTab(i, displayRow, section);
+					displayRow++;
+				}
 
 				if(i == activeTab)
 				{
@@ -128,6 +202,12 @@ namespace HydraMenu.ui
 					GUILayout.EndArea();
 				}
 			}
+		}
+
+		private bool SectionMatchesSearch(Section section)
+		{
+			return string.IsNullOrEmpty(sectionSearch)
+				|| section.name.IndexOf(sectionSearch, StringComparison.OrdinalIgnoreCase) >= 0;
 		}
 
 		private void HandleBoxMovement()
@@ -169,19 +249,25 @@ namespace HydraMenu.ui
 				mousePos.y <= (windowPosition.y + WindowSize.y);
 		}
 
-		private void RenderTab(byte position, Section section)
+		private void DrawFpsCounter()
+		{
+			Rect rect = new Rect(10, 10, 120 * scale, HeaderSize.y);
+			GUI.Box(rect, $"FPS: {Mathf.RoundToInt(smoothedFps)}", Styles.MainBox);
+		}
+
+		private void RenderTab(byte index, int row, Section section)
 		{
 			Rect rect = new Rect(
 				SectionListPosition.x,
-				SectionListPosition.y + (position * SectionButtonSize.y),
+				SectionListPosition.y + (row * SectionButtonSize.y),
 				SectionButtonSize.x,
 				SectionButtonSize.y
 			);
 
-			GUIStyle style = activeTab == position ? Styles.SectionBoxActive : Styles.SectionBox;
+			GUIStyle style = activeTab == index ? Styles.SectionBoxActive : Styles.SectionBox;
 			if(GUI.Button(rect, section.name, style))
 			{
-				activeTab = position;
+				activeTab = index;
 			}
 		}
 
@@ -192,6 +278,9 @@ namespace HydraMenu.ui
 			public float MenuOpacity { get; set; }
 			public float UiScale { get; set; }
 			public bool DisableNotifications { get; set; }
+			public bool ShowFps { get; set; }
+			public NotificationManager.Corner NotificationCorner { get; set; }
+			public int MaxNotifications { get; set; } = 5;
 		}
 
 		public MainUIConfig GetConfigData()
@@ -202,7 +291,10 @@ namespace HydraMenu.ui
 				PrimaryColor = Styles.primaryColor,
 				MenuOpacity = Styles.menuOpacity,
 				UiScale = scale,
-				DisableNotifications = Hydra.notifications.disableNotifications
+				DisableNotifications = Hydra.notifications.disableNotifications,
+				ShowFps = showFps,
+				NotificationCorner = Hydra.notifications.corner,
+				MaxNotifications = Hydra.notifications.maxNotifications
 			};
 		}
 
@@ -219,6 +311,9 @@ namespace HydraMenu.ui
 			Styles.menuOpacity = Mathf.Clamp(configData.MenuOpacity, 0.0f, 1.0f);
 			scale = Mathf.Clamp(configData.UiScale, 0.5f, 2.0f);
 			Hydra.notifications.disableNotifications = configData.DisableNotifications;
+			showFps = configData.ShowFps;
+			Hydra.notifications.corner = (NotificationManager.Corner)Math.Clamp((int)configData.NotificationCorner, 0, 3);
+			Hydra.notifications.maxNotifications = Math.Clamp(configData.MaxNotifications, 1, 10);
 		}
 	}
 }

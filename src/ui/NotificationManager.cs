@@ -6,8 +6,21 @@ namespace HydraMenu.ui
 {
 	internal class NotificationManager : MonoBehaviour
 	{
+		// The screen corner notifications are anchored to. Order matches the UI slider (0-3).
+		public enum Corner
+		{
+			BottomRight,
+			BottomLeft,
+			TopRight,
+			TopLeft
+		}
+
 		private readonly List<Notification> notifications = new List<Notification>();
 		public bool disableNotifications = false;
+
+		// The corner notifications stack from, and a user-facing cap on how many are shown at once.
+		public Corner corner = Corner.BottomRight;
+		public int maxNotifications = 5;
 
 		public static Vector2 BoxSize
 		{
@@ -36,9 +49,9 @@ namespace HydraMenu.ui
 
 		public void Update()
 		{
-			int notificationCount = Math.Min(GetMaxNotifications(), notifications.Count);
-
-			for(int i = 0; i < notificationCount; i++)
+			// Age every notification, not just the visible ones, so notifications hidden behind the display
+			// cap still expire instead of piling up forever.
+			for(int i = 0; i < notifications.Count; i++)
 			{
 				Notification notification = notifications[i];
 				notification.lifetime += Time.deltaTime;
@@ -46,12 +59,7 @@ namespace HydraMenu.ui
 				if(notification.HasExpired)
 				{
 					notifications.RemoveAt(i);
-
-					// Since we removed an element from the notifications list, we have to decrement both the current notification index
-					// and the max notifications to avoid errors from accessing outside the list length
 					i--;
-					notificationCount--;
-					continue;
 				}
 			}
 		}
@@ -60,18 +68,24 @@ namespace HydraMenu.ui
 		{
 			if(disableNotifications) return;
 
-			int notificationCount = Math.Min(GetMaxNotifications(), notifications.Count);
+			int notificationCount = Math.Min(GetEffectiveMax(), notifications.Count);
 
-			for(byte i = 0; i < notificationCount; i++)
+			for(int i = 0; i < notificationCount; i++)
 			{
 				RenderNotification(i, notifications[i]);
 			}
 		}
 
-		private void RenderNotification(byte position, Notification notification)
+		private void RenderNotification(int position, Notification notification)
 		{
-			float boxX = Screen.width - BoxSize.x;
-			float boxY = Screen.height - (int)(BoxSize.y * (position + 1));
+			bool right = corner == Corner.BottomRight || corner == Corner.TopRight;
+			bool bottom = corner == Corner.BottomRight || corner == Corner.BottomLeft;
+
+			float boxX = right ? Screen.width - BoxSize.x : 0;
+			// Bottom corners stack upwards from the bottom edge; top corners stack downwards from the top edge.
+			float boxY = bottom
+				? Screen.height - (int)(BoxSize.y * (position + 1))
+				: (int)(BoxSize.y * position);
 
 			GUI.Box(new Rect(boxX, boxY, BoxSize.x, BoxSize.y), notification.title);
 
@@ -80,9 +94,16 @@ namespace HydraMenu.ui
 			GUI.HorizontalSlider(new Rect(boxX, boxY + BoxHeaderSize.y + BoxContentSize.y, BoxSize.x, BoxSize.y), notification.ttl - notification.lifetime, 0, notification.ttl);
 		}
 
+		// The most notifications that physically fit stacked in half the screen height.
 		public int GetMaxNotifications()
 		{
 			return Screen.height / 2 / (int)BoxSize.y;
+		}
+
+		// The number of notifications actually shown: the user's cap, but never more than physically fit.
+		public int GetEffectiveMax()
+		{
+			return Math.Max(1, Math.Min(GetMaxNotifications(), maxNotifications));
 		}
 
 		// The time to live value for a notification should be five seconds if it is a success message, and ten seconds if it is a failure message

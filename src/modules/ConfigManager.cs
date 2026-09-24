@@ -142,5 +142,89 @@ namespace HydraMenu.modules
 			SaveConfig(configName);
 			currentConfig = configName;
 		}
+
+		// The default config is always named "Hydra" and is recreated on startup if missing, so it cannot be deleted.
+		public const string DEFAULT_CONFIG = "Hydra";
+
+		public bool DeleteConfig(string configName)
+		{
+			// There should always be a default config to fall back on, so refuse to delete it
+			if(configName == DEFAULT_CONFIG)
+			{
+				Hydra.notifications.Send("Config", "The default config cannot be deleted.");
+				return false;
+			}
+
+			string configLocation = GetConfigPath(configName);
+			if(File.Exists(configLocation))
+			{
+				File.Delete(configLocation);
+			}
+
+			configList.Remove(configName);
+
+			// If we just deleted the config we currently have loaded, fall back to the default config
+			if(currentConfig == configName)
+			{
+				LoadConfig(DEFAULT_CONFIG);
+			}
+
+			Hydra.Log.LogInfo($"Deleted config {configName}");
+			Hydra.notifications.Send("Config", $"Deleted config {configName}.");
+			return true;
+		}
+
+		public bool RenameConfig(string oldName, string newName)
+		{
+			newName = newName?.Trim();
+
+			if(string.IsNullOrEmpty(newName))
+			{
+				Hydra.notifications.Send("Config", "Please enter a name to rename the config to.");
+				return false;
+			}
+
+			// The default config is recreated on startup if missing, so renaming it would just leave a duplicate
+			if(oldName == DEFAULT_CONFIG)
+			{
+				Hydra.notifications.Send("Config", "The default config cannot be renamed.");
+				return false;
+			}
+
+			if(configList.Contains(newName))
+			{
+				Hydra.notifications.Send("Config", $"A config named {newName} already exists.");
+				return false;
+			}
+
+			// Config names become file names, so reject anything that would not be a valid file name
+			if(newName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+			{
+				Hydra.notifications.Send("Config", "That name contains characters that are not allowed.");
+				return false;
+			}
+
+			string oldPath = GetConfigPath(oldName);
+			string newPath = GetConfigPath(newName);
+			if(File.Exists(oldPath))
+			{
+				File.Move(oldPath, newPath);
+			}
+
+			int index = configList.IndexOf(oldName);
+			if(index >= 0)
+			{
+				configList[index] = newName;
+			}
+
+			if(currentConfig == oldName)
+			{
+				currentConfig = newName;
+			}
+
+			Hydra.Log.LogInfo($"Renamed config {oldName} to {newName}");
+			Hydra.notifications.Send("Config", $"Renamed {oldName} to {newName}.");
+			return true;
+		}
 	}
 }

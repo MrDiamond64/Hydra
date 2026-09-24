@@ -40,6 +40,23 @@ namespace HydraMenu.ui.sections
 			}
 
 			GUILayout.EndHorizontal();
+
+			GUILayout.Space(5);
+			GUILayout.Label("Custom Abilities:");
+			Hydra.routines.laserBlast.Enabled = GUILayout.Toggle(Hydra.routines.laserBlast.Enabled, "Laser Blast (press the ability key in-game)");
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label($"Ability Key: {Hydra.routines.laserBlast.AbilityKey}");
+			if(GUILayout.Button(Hydra.mainUI.pendingKeybind != null ? "Press any key... (Esc to cancel)" : "Rebind"))
+			{
+				Hydra.mainUI.pendingKeybind = key => Hydra.routines.laserBlast.AbilityKey = key;
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.Label($"Laser Cooldown: {Hydra.routines.laserBlast.Cooldown:F1}s");
+			Hydra.routines.laserBlast.Cooldown = Mathf.Round(GUILayout.HorizontalSlider(Hydra.routines.laserBlast.Cooldown, 0.0f, 10.0f) * 2f) / 2f;
+
+			Hydra.routines.laserBlast.LethalWhenHosting = GUILayout.Toggle(Hydra.routines.laserBlast.LethalWhenHosting, "Laser kills the target (host only)");
 		}
 
 		public static void UpdateRole(RoleTypes role)

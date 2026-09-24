@@ -3,10 +3,6 @@
   <img src="https://github.com/MrDiamond64/Hydra/blob/main/img/main.png?raw=true" alt="A screenshot showing the Hydra Players UI"/>
 </div>
 
-Hydra is a [BepInEx](https://github.com/BepInEx/BepInEx) Among Us mod built with the intention of enhancing the Among Us playing experience. Hydra adds quality of life features, fun trolling features, and an anticheat to detect players hacking in your lobbies.
-
-We have a Discord server, feel free to join and talk, ask for help, or offer suggestions: https://discord.gg/N7azGPHm5F
-
 # Features
 - Zero AI-generated code
 - In-game notifications
@@ -29,6 +25,10 @@ Hydra Anticheat is quite possibly the heart of this mod. It is able to detect wh
 
 Hydra Anticheat comes with a basic baseline: the backend server must be able to prevent player impersonation. If cheaters are able to send RPCs on the behalf of other players, then Hydra Anticheat will not be able to accurately determine who is cheating or not and flag the wrong players. The vanilla Among Us servers already come with impersonation checks, so this should not be much of a concern in those servers.
 
+To keep innocent players safe, Hydra Anticheat separates *detecting* a cheater from *punishing* one. Punishments only ever apply when you are the host, and they are gated behind a configurable **strike threshold**: a player must be flagged a chosen number of times in a game before Hydra kicks or bans them. Setting the threshold above one makes it very unlikely that an honest player is punished over a single ambiguous detection, while real cheaters — who tend to trip many checks at once — still get caught. Strikes reset at the start of every game. Every individual check can also be toggled on or off from the Anticheat tab.
+
+For a full explanation of how the anticheat works, the available punishments, and how to add your own checks, see [docs/ANTICHEAT.md](docs/ANTICHEAT.md).
+
 # Installation and Usage
 > [!WARNING]
 > Before using Hydra, please make sure to understand and fully consent to the warnings provided in the [Disclaimer](https://github.com/MrDiamond64/Hydra?tab=readme-ov-file#disclaimer) section.
@@ -44,6 +44,14 @@ To download Hydra, you simply need to go to the [Releases](https://github.com/Mr
 ## Using Hydra
 You can access the Hydra UI by pressing `Insert` on your keyboard. Depending on your keyboard, you may have to toggle Num Lock or press the function key alongside the Insert key to get the menu to show up. After pressing Insert, you should see the Hydra UI. The Hydra UI has multiple parts: the sections pane, and the features panes. The sections pane will have a list of tabs such as `Self`, `Host`, and `Anticheat`. Pressing any of these tabs will show the features for this section in the Features Pane. The Features Pane will have sliders, buttons, and checkboxes which can be used to configure Hydra.
 
+The current toggle key is always shown in the menu's title bar. A few quality-of-life controls live in the `Menu` tab:
+- **Search box** at the top of the sections pane to quickly filter the tab list by name.
+- **Rebind** button to change the key that opens the menu without editing any files.
+- **Show FPS Counter** for an optional on-screen framerate readout.
+- **Notification corner** and **max notifications** to control where notifications appear and how many stack at once.
+- **Reset Menu Position** to recover the window if it is ever dragged off-screen.
+- Config management: save, load, create, **rename**, and **delete** named configs (the default `Hydra` config is protected).
+
 # TODO
 - [x] Improve anticheat with more checks (such as sabotaging as crewmate)
 - [ ] Explore the modded vanilla protocol which seems to have a much more lenient anticheat
@@ -51,10 +59,4 @@ You can access the Hydra UI by pressing `Insert` on your keyboard. Depending on 
 
 # Disclaimer
 > [!CAUTION]
-> **Hydra should NEVER, under any circumstances, be used to impair the experiences of other players. If you use some of the trolling features, please make sure you are doing so in a private lobby with consenting players. You are free to join public lobbies with Hydra enabled as long as you use it with the intention of improving your Among Us game. With great power comes great responsibility!**
-
-Something I recognize with utility mods like Hydra is that it opens the door for malicious users to cause destruction in lobbies. I have tried to limit the potential of abuse by removing powerful and abuse-prone features from the public version and adding safeguards to limit abuse. Even with these protections, there is always a chance for abuse and malicious activities. All I can do is to ask you, the person using Hydra, to please do not use Hydra for malicious purposes and follow the [Innersloth Code of Conduct](https://www.innersloth.com/code-of-conduct/) and rules set by the lobby you are playing on. Only use it to detect cheaters in public lobbies, or in use where everyone else consents to the usage of the Hydra's more advanced features.
-
-If you fail to follow my suggestion, then do not expect to receive any kind of support or liability by me. Your account may also be placed in a sanction by Innersloth and you will lose your Among Us account, along with any data associated with it, such as your friends list, unlocked cosmetics, purchases, beans and coins, etc.
-
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
