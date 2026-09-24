@@ -3,6 +3,7 @@ using Hazel;
 using HydraMenu.network;
 using HydraMenu.ui.sections;
 using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,9 @@ namespace HydraMenu.modules
 
 		// Network Events
 		public static event Action<InnerNetObject> OnNetObjectSpawn;
+
+		// The amount of votes the server needs before it kicks a player out of the lobby
+		private const byte VotekickThreshold = 3;
 
 		private static readonly HashSet<Il2CppSystem.Type> ShipNetObjects = [Il2CppType.From(typeof(ShipStatus)), Il2CppType.From(typeof(SkeldShipStatus)), Il2CppType.From(typeof(MiraShipStatus)), Il2CppType.From(typeof(PolusShipStatus)), Il2CppType.From(typeof(AirshipStatus)), Il2CppType.From(typeof(FungleShipStatus))];
 
@@ -353,7 +357,7 @@ namespace HydraMenu.modules
 		[HarmonyPatch(typeof(VoteBanSystem), nameof(VoteBanSystem.AddVote))]
 		class PlayerVotekick
 		{
-			static void Postfix(int srcClient, int clientId)
+			static void Postfix(VoteBanSystem __instance, int srcClient, int clientId)
 			{
 				Hydra.Log.LogInfo($"[VotekickLogger] {srcClient} voted to kick out {clientId}");
 
@@ -363,7 +367,9 @@ namespace HydraMenu.modules
 
 				if(clientId == AmongUsClient.Instance.ClientId)
 				{
-					Hydra.notifications.Send("Votekick Logger", $"{source.PlayerName} has voted to kick you out.");
+					byte voteCount = GetVotekickCount(__instance, clientId);
+
+					Hydra.notifications.Send("Votekick Logger", $"{source.PlayerName} has voted to kick you out. ({voteCount}/{VotekickThreshold})");
 				}
 
 				PublishEvent(OnPlayerVotekick, source, target);
@@ -447,6 +453,19 @@ namespace HydraMenu.modules
 
 				PublishEvent(OnNetObjectSpawn, obj);
 			}
+		}
+
+		private static byte GetVotekickCount(VoteBanSystem system, int clientId)
+		{
+			if(!system.Votes.TryGetValue(clientId, out Il2CppStructArray<int> votes)) return 0;
+
+			byte voteCount = 0;
+			foreach(int voter in votes)
+			{
+				if(voter != 0) voteCount++;
+			}
+
+			return voteCount;
 		}
 
 		// These functions are to simplify having null-checks everywhere
