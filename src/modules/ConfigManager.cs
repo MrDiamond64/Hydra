@@ -173,5 +173,58 @@ namespace HydraMenu.modules
 			Hydra.notifications.Send("Config", $"Deleted config {configName}.");
 			return true;
 		}
+
+		public bool RenameConfig(string oldName, string newName)
+		{
+			newName = newName?.Trim();
+
+			if(string.IsNullOrEmpty(newName))
+			{
+				Hydra.notifications.Send("Config", "Please enter a name to rename the config to.");
+				return false;
+			}
+
+			// The default config is recreated on startup if missing, so renaming it would just leave a duplicate
+			if(oldName == DEFAULT_CONFIG)
+			{
+				Hydra.notifications.Send("Config", "The default config cannot be renamed.");
+				return false;
+			}
+
+			if(configList.Contains(newName))
+			{
+				Hydra.notifications.Send("Config", $"A config named {newName} already exists.");
+				return false;
+			}
+
+			// Config names become file names, so reject anything that would not be a valid file name
+			if(newName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+			{
+				Hydra.notifications.Send("Config", "That name contains characters that are not allowed.");
+				return false;
+			}
+
+			string oldPath = GetConfigPath(oldName);
+			string newPath = GetConfigPath(newName);
+			if(File.Exists(oldPath))
+			{
+				File.Move(oldPath, newPath);
+			}
+
+			int index = configList.IndexOf(oldName);
+			if(index >= 0)
+			{
+				configList[index] = newName;
+			}
+
+			if(currentConfig == oldName)
+			{
+				currentConfig = newName;
+			}
+
+			Hydra.Log.LogInfo($"Renamed config {oldName} to {newName}");
+			Hydra.notifications.Send("Config", $"Renamed {oldName} to {newName}.");
+			return true;
+		}
 	}
 }

@@ -90,6 +90,23 @@ namespace HydraMenu.ui
 			}
 		}
 
+		public static GUIStyle SearchBox
+		{
+			get
+			{
+				// Start from the default text field so it still renders as an editable box, then match our theme.
+				GUIStyle style = new GUIStyle(GUI.skin.textField);
+
+				style.normal.textColor = ColorValues[UIColors.White];
+				style.focused.textColor = Color.white;
+				style.alignment = TextAnchor.MiddleLeft;
+				style.padding.left = (int)(6 * MainUI.scale);
+				style.fontSize = (int)(13 * MainUI.scale);
+
+				return style;
+			}
+		}
+
 		public static GUIStyle PlayerBox
 		{
 			get

@@ -43,6 +43,9 @@ namespace HydraMenu.ui
 		private readonly Section[] sections = { new GeneralSection(), new SelfSection(), new TrollSection(), new SabotageSection(), new HostSection(), new RolesSection(), new PlayersSection(), new MovementSection(), new VisualSection(), new ProtectionsSection(), new AnticheatSection(), new SpooferSection(), new MenuSection() };
 		public byte activeTab = 0;
 
+		// Live filter typed into the search box above the section list. Empty means show every section.
+		private string sectionSearch = "";
+
 		public static Vector2 SectionListSize
 		{
 			get { return new Vector2(100 * scale, WindowSize.y - HeaderSize.y); }
@@ -149,12 +152,23 @@ namespace HydraMenu.ui
 			// Render UI box. The title includes the toggle key so users always know how to reopen the menu.
 			GUI.Box(new Rect(windowPosition.x, windowPosition.y, WindowSize.x, WindowSize.y), $"{MyPluginInfo.PLUGIN_NAME} - {MyPluginInfo.PLUGIN_VERSION}  [{menuKey}]", Styles.MainBox);
 
+			// Search box at the top of the section list; the tabs are packed in below it.
+			Rect searchRect = new Rect(SectionListPosition.x, SectionListPosition.y, SectionListSize.x, SectionButtonSize.y);
+			sectionSearch = GUI.TextField(searchRect, sectionSearch, Styles.SearchBox);
+
+			// Row 0 is taken up by the search box, so matching tabs start at row 1.
+			int displayRow = 1;
 			for(byte i = 0; i < sections.Length; i++)
 			{
 				Section section = sections[i];
 
-				// Add the tab to the left-pane
-				RenderTab(i, section);
+				// Only draw a tab when it matches the current search filter, but always render the active
+				// section's content so an open section does not disappear while filtering.
+				if(SectionMatchesSearch(section))
+				{
+					RenderTab(i, displayRow, section);
+					displayRow++;
+				}
 
 				if(i == activeTab)
 				{
@@ -167,6 +181,12 @@ namespace HydraMenu.ui
 					GUILayout.EndArea();
 				}
 			}
+		}
+
+		private bool SectionMatchesSearch(Section section)
+		{
+			return string.IsNullOrEmpty(sectionSearch)
+				|| section.name.IndexOf(sectionSearch, StringComparison.OrdinalIgnoreCase) >= 0;
 		}
 
 		private void HandleBoxMovement()
@@ -214,19 +234,19 @@ namespace HydraMenu.ui
 			GUI.Box(rect, $"FPS: {Mathf.RoundToInt(smoothedFps)}", Styles.MainBox);
 		}
 
-		private void RenderTab(byte position, Section section)
+		private void RenderTab(byte index, int row, Section section)
 		{
 			Rect rect = new Rect(
 				SectionListPosition.x,
-				SectionListPosition.y + (position * SectionButtonSize.y),
+				SectionListPosition.y + (row * SectionButtonSize.y),
 				SectionButtonSize.x,
 				SectionButtonSize.y
 			);
 
-			GUIStyle style = activeTab == position ? Styles.SectionBoxActive : Styles.SectionBox;
+			GUIStyle style = activeTab == index ? Styles.SectionBoxActive : Styles.SectionBox;
 			if(GUI.Button(rect, section.name, style))
 			{
-				activeTab = position;
+				activeTab = index;
 			}
 		}
 
@@ -238,6 +258,8 @@ namespace HydraMenu.ui
 			public float UiScale { get; set; }
 			public bool DisableNotifications { get; set; }
 			public bool ShowFps { get; set; }
+			public NotificationManager.Corner NotificationCorner { get; set; }
+			public int MaxNotifications { get; set; } = 5;
 		}
 
 		public MainUIConfig GetConfigData()
@@ -249,7 +271,9 @@ namespace HydraMenu.ui
 				MenuOpacity = Styles.menuOpacity,
 				UiScale = scale,
 				DisableNotifications = Hydra.notifications.disableNotifications,
-				ShowFps = showFps
+				ShowFps = showFps,
+				NotificationCorner = Hydra.notifications.corner,
+				MaxNotifications = Hydra.notifications.maxNotifications
 			};
 		}
 
@@ -267,6 +291,8 @@ namespace HydraMenu.ui
 			scale = Mathf.Clamp(configData.UiScale, 0.5f, 2.0f);
 			Hydra.notifications.disableNotifications = configData.DisableNotifications;
 			showFps = configData.ShowFps;
+			Hydra.notifications.corner = (NotificationManager.Corner)Math.Clamp((int)configData.NotificationCorner, 0, 3);
+			Hydra.notifications.maxNotifications = Math.Clamp(configData.MaxNotifications, 1, 10);
 		}
 	}
 }

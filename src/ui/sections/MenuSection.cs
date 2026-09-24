@@ -9,12 +9,19 @@ namespace HydraMenu.ui.sections
 		public MenuSection() : base("Menu") { }
 
 		private byte configIndex = 0;
+		private string renameBuffer = "";
 
 		public override void Render()
 		{
 			// GUILayout.Label($"Texture 2D memory usage: {Texture2D.currentTextureMemory}");
 			Hydra.notifications.disableNotifications = GUILayout.Toggle(Hydra.notifications.disableNotifications, "Disable Notifications");
 			MainUI.showFps = GUILayout.Toggle(MainUI.showFps, "Show FPS Counter");
+
+			GUILayout.Label($"Notification Corner: {Hydra.notifications.corner}");
+			Hydra.notifications.corner = (NotificationManager.Corner)Mathf.RoundToInt(GUILayout.HorizontalSlider((float)Hydra.notifications.corner, 0, 3));
+
+			GUILayout.Label($"Max Notifications: {Hydra.notifications.maxNotifications}");
+			Hydra.notifications.maxNotifications = Mathf.RoundToInt(GUILayout.HorizontalSlider(Hydra.notifications.maxNotifications, 1, 10));
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label($"Menu Key: {Hydra.mainUI.menuKey}");
@@ -73,6 +80,19 @@ namespace HydraMenu.ui.sections
 				Hydra.config.DeleteConfig(Hydra.config.configList[configIndex]);
 				// The list may have shrunk, so keep the selection in bounds
 				configIndex = (byte)Math.Clamp((int)configIndex, 0, Hydra.config.configList.Count - 1);
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Rename to:", GUILayout.ExpandWidth(false));
+			renameBuffer = GUILayout.TextField(renameBuffer);
+			if(GUILayout.Button("Rename", GUILayout.ExpandWidth(false)))
+			{
+				if(Hydra.config.RenameConfig(Hydra.config.configList[configIndex], renameBuffer))
+				{
+					renameBuffer = "";
+					configIndex = (byte)Math.Clamp((int)configIndex, 0, Hydra.config.configList.Count - 1);
+				}
 			}
 			GUILayout.EndHorizontal();
 

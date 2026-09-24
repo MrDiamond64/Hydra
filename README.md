@@ -44,6 +44,14 @@ To download Hydra, you simply need to go to the [Releases](https://github.com/Mr
 ## Using Hydra
 You can access the Hydra UI by pressing `Insert` on your keyboard. Depending on your keyboard, you may have to toggle Num Lock or press the function key alongside the Insert key to get the menu to show up. After pressing Insert, you should see the Hydra UI. The Hydra UI has multiple parts: the sections pane, and the features panes. The sections pane will have a list of tabs such as `Self`, `Host`, and `Anticheat`. Pressing any of these tabs will show the features for this section in the Features Pane. The Features Pane will have sliders, buttons, and checkboxes which can be used to configure Hydra.
 
+The current toggle key is always shown in the menu's title bar. A few quality-of-life controls live in the `Menu` tab:
+- **Search box** at the top of the sections pane to quickly filter the tab list by name.
+- **Rebind** button to change the key that opens the menu without editing any files.
+- **Show FPS Counter** for an optional on-screen framerate readout.
+- **Notification corner** and **max notifications** to control where notifications appear and how many stack at once.
+- **Reset Menu Position** to recover the window if it is ever dragged off-screen.
+- Config management: save, load, create, **rename**, and **delete** named configs (the default `Hydra` config is protected).
+
 # TODO
 - [x] Improve anticheat with more checks (such as sabotaging as crewmate)
 - [ ] Explore the modded vanilla protocol which seems to have a much more lenient anticheat
