@@ -1,4 +1,5 @@
-﻿using BepInEx.Unity.IL2CPP.Utils.Collections;
+﻿using AmongUs.GameOptions;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HydraMenu.modules;
 using HydraMenu.network;
 using InnerNet;
@@ -17,6 +18,7 @@ namespace HydraMenu.ui.sections
 
 		private byte selectedMap = 0;
 		private Controls.PlayerColors selectedColor = 0;
+		private RoleTypes selectedRole = RoleTypes.Shapeshifter;
 
 		public static readonly Queue<InnerNetObject> lobbyList = new Queue<InnerNetObject>();
 		public static readonly Queue<InnerNetObject> shipList = new Queue<InnerNetObject>();
@@ -118,6 +120,15 @@ namespace HydraMenu.ui.sections
 			ModuleManager.assignRoles.AssignedRole = Controls.HorizontalRoleSlider(ModuleManager.assignRoles.AssignedRole);
 
 			GUILayout.Space(5);
+			GUILayout.Label("Role Controls (custom rounds):");
+			GUILayout.Label($"Role: {selectedRole}");
+			selectedRole = Controls.HorizontalRoleSlider(selectedRole);
+			if(GUILayout.Button("Set Everyone's Role"))
+			{
+				SetEveryoneRole();
+			}
+
+			GUILayout.Space(5);
 			GUILayout.Label("Meeting Controls:");
 			ModuleManager.disableMeetings.Enabled = GUILayout.Toggle(ModuleManager.disableMeetings.Enabled, "Disable Meetings");
 			Hydra.routines.reportBodySpam.Enabled = GUILayout.Toggle(Hydra.routines.reportBodySpam.Enabled, "Spam Report Bodies");
@@ -153,6 +164,7 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label($"Change everyone's color to: {selectedColor}");
 			selectedColor = Controls.HorizontalColorSlider(selectedColor);
 
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Change Colors"))
 			{
 				BatchedMessage batch = new BatchedMessage();
@@ -165,10 +177,94 @@ namespace HydraMenu.ui.sections
 				batch.FinishBatch();
 			}
 
+			if(GUILayout.Button("Randomize Colors"))
+			{
+				RandomizeColors();
+			}
+			GUILayout.EndHorizontal();
+
 			Hydra.routines.discoHost.Enabled = Controls.GlobalPlayerSpecificToggle("Disco Party", Hydra.routines.discoHost.targets);
 
 			GUILayout.Label($"Color randomization delay: {Hydra.routines.discoHost.RandomizationDelay:F2}s");
 			Hydra.routines.discoHost.RandomizationDelay = GUILayout.HorizontalSlider(Hydra.routines.discoHost.RandomizationDelay, 0.1f, 2.0f);
+		}
+
+		// Shared host-action guard, mirroring the checks used elsewhere in this section.
+		private static bool CanRunHostAction(string feature, bool requireStarted)
+		{
+			bool hasAnticheat = Utilities.IsAnticheatPresent();
+
+			if(hasAnticheat && !AmongUsClient.Instance.AmHost)
+			{
+				Hydra.notifications.Send(feature, "This feature can only be used if you are the host of the lobby.");
+				return false;
+			}
+
+			if(requireStarted && hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
+			{
+				Hydra.notifications.Send(feature, "This feature can only be used once the game has started.");
+				return false;
+			}
+
+			return true;
+		}
+
+		// Runs an action for every player, splitting the work across batches to respect the message packing limit.
+		private static void ForEachPlayerBatched(Action<BatchedMessage, PlayerControl> queue)
+		{
+			int packingLimit = AmongUsClient.Instance.GetMaxMessagePackingLimit();
+			BatchedMessage batch = new BatchedMessage();
+
+			foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+			{
+				if(batch.msgCount >= packingLimit)
+				{
+					batch.FinishBatch();
+					batch = new BatchedMessage();
+				}
+
+				queue(batch, player);
+			}
+
+			batch.FinishBatch();
+		}
+
+		// Gives every player a random color at once. Great for a chaotic "who is who" round in a private lobby.
+		private static void RandomizeColors()
+		{
+			if(!CanRunHostAction("Color Controls", false)) return;
+
+			// Hand out unique colors first (mirroring the disco routine) and only repeat once the 18 colors run out.
+			List<int> colors = Enumerable.Range(0, 18).ToList();
+			System.Random rnd = new System.Random();
+
+			ForEachPlayerBatched((batch, player) =>
+			{
+				int color;
+				if(colors.Count != 0)
+				{
+					color = colors[rnd.Next(0, colors.Count)];
+					colors.Remove(color);
+				}
+				else
+				{
+					color = rnd.Next(0, 18);
+				}
+
+				batch.QueueSetColor(player, (byte)color);
+			});
+
+			Hydra.notifications.Send("Color Controls", "Randomized everyone's colors.", 5);
+		}
+
+		// Assigns the chosen role to every player, for custom rounds like "everyone is a Shapeshifter".
+		private void SetEveryoneRole()
+		{
+			if(!CanRunHostAction("Role Controls", true)) return;
+
+			ForEachPlayerBatched((batch, player) => batch.QueueSetRole(player, selectedRole, true));
+
+			Hydra.notifications.Send("Role Controls", $"Set everyone's role to {selectedRole}.", 5);
 		}
 
 		private static void KillAllPlayers()
