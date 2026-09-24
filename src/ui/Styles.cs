@@ -60,6 +60,8 @@ namespace HydraMenu.ui
 				GUIStyle style = new GUIStyle();
 
 				style.normal.textColor = ColorValues[UIColors.White];
+				// Highlight an inactive tab in the primary color when hovered so it is clear tabs are clickable.
+				style.hover.textColor = ColorValues[primaryColor];
 				style.alignment = TextAnchor.MiddleLeft;
 				style.padding.bottom = 1;
 				style.padding.left = (int)(8 * MainUI.scale);

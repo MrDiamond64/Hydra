@@ -142,5 +142,36 @@ namespace HydraMenu.modules
 			SaveConfig(configName);
 			currentConfig = configName;
 		}
+
+		// The default config is always named "Hydra" and is recreated on startup if missing, so it cannot be deleted.
+		public const string DEFAULT_CONFIG = "Hydra";
+
+		public bool DeleteConfig(string configName)
+		{
+			// There should always be a default config to fall back on, so refuse to delete it
+			if(configName == DEFAULT_CONFIG)
+			{
+				Hydra.notifications.Send("Config", "The default config cannot be deleted.");
+				return false;
+			}
+
+			string configLocation = GetConfigPath(configName);
+			if(File.Exists(configLocation))
+			{
+				File.Delete(configLocation);
+			}
+
+			configList.Remove(configName);
+
+			// If we just deleted the config we currently have loaded, fall back to the default config
+			if(currentConfig == configName)
+			{
+				LoadConfig(DEFAULT_CONFIG);
+			}
+
+			Hydra.Log.LogInfo($"Deleted config {configName}");
+			Hydra.notifications.Send("Config", $"Deleted config {configName}.");
+			return true;
+		}
 	}
 }

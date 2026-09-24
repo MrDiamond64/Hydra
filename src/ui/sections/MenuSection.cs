@@ -14,7 +14,17 @@ namespace HydraMenu.ui.sections
 		{
 			// GUILayout.Label($"Texture 2D memory usage: {Texture2D.currentTextureMemory}");
 			Hydra.notifications.disableNotifications = GUILayout.Toggle(Hydra.notifications.disableNotifications, "Disable Notifications");
+			MainUI.showFps = GUILayout.Toggle(MainUI.showFps, "Show FPS Counter");
 
+			GUILayout.BeginHorizontal();
+			GUILayout.Label($"Menu Key: {Hydra.mainUI.menuKey}");
+			if(GUILayout.Button(Hydra.mainUI.isRebinding ? "Press any key... (Esc to cancel)" : "Rebind"))
+			{
+				Hydra.mainUI.isRebinding = !Hydra.mainUI.isRebinding;
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.Space(5);
 			GUILayout.Label($"Primary Color: {Styles.primaryColor}");
 			Styles.primaryColor = (Styles.UIColors)GUILayout.HorizontalSlider((float)Styles.primaryColor, 0, Styles.ColorValues.Count - 1);
 
@@ -24,10 +34,17 @@ namespace HydraMenu.ui.sections
 			GUILayout.Label($"UI Scale: {MainUI.scale:F2}x");
 			MainUI.scale = (float)Math.Round(GUILayout.HorizontalSlider(MainUI.scale, 0.5f, 2.0f), 2);
 
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Apply Changes"))
 			{
 				Styles.ClearCache();
 			}
+
+			if(GUILayout.Button("Reset Menu Position"))
+			{
+				MainUI.windowPosition = MainUI.DefaultWindowPosition;
+			}
+			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Eject"))
 			{
@@ -49,6 +66,13 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Load"))
 			{
 				Hydra.config.LoadConfig(Hydra.config.configList[configIndex]);
+			}
+
+			if(GUILayout.Button("Delete"))
+			{
+				Hydra.config.DeleteConfig(Hydra.config.configList[configIndex]);
+				// The list may have shrunk, so keep the selection in bounds
+				configIndex = (byte)Math.Clamp((int)configIndex, 0, Hydra.config.configList.Count - 1);
 			}
 			GUILayout.EndHorizontal();
 
