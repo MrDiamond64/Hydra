@@ -78,6 +78,7 @@ namespace HydraMenu.modules
 
 				HostSection.lobbyList.Clear();
 				HostSection.shipList.Clear();
+				Utilities.ClearVotekicks();
 
 				PublishEvent(OnDisconnect);
 			}
@@ -363,7 +364,11 @@ namespace HydraMenu.modules
 
 				if(clientId == AmongUsClient.Instance.ClientId)
 				{
-					Hydra.notifications.Send("Votekick Logger", $"{source.PlayerName} has voted to kick you out.");
+					Utilities.RecordVotekick(srcClient);
+
+					byte voteCount = Utilities.GetVotekickCount();
+
+					Hydra.notifications.Send("Votekick Logger", $"{source.PlayerName} has voted to kick you out. ({voteCount}/{Utilities.VOTEKICK_THRESHOLD})");
 				}
 
 				PublishEvent(OnPlayerVotekick, source, target);
