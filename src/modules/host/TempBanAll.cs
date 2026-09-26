@@ -66,7 +66,7 @@ namespace HydraMenu.modules.host
 
 			if(LobbyBehaviour.Instance != null)
 			{
-				batch.QueueDespawn(LobbyBehaviour.Instance.NetId);
+				batch.QueueDespawn(LobbyBehaviour.Instance);
 			}
 
 			if(ShipStatus.Instance == null)

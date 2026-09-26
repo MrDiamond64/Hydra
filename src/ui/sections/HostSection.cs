@@ -254,7 +254,7 @@ namespace HydraMenu.ui.sections
 			Hydra.notifications.Send("Despawn Lobby", "The lobby map has been despawned.", 5);
 		}
 
-		private static IEnumerator SpawnMap(byte mapId)
+		public static IEnumerator SpawnMap(byte mapId)
 		{
 			Hydra.Log.LogInfo($"Attempting to spawn in map id {mapId}");
 
