@@ -27,7 +27,9 @@ namespace HydraMenu.ui
 			RoleTypes.Viper,
 			RoleTypes.CrewmateGhost,
 			RoleTypes.GuardianAngel,
-			RoleTypes.ImpostorGhost
+			RoleTypes.ImpostorGhost,
+			RoleTypes.SpiritGuide
+			// what typa name is SpiritGuide??? goofy ahhhh...
 		};
 
 		public enum PlayerColors
