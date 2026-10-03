@@ -27,6 +27,7 @@ namespace HydraMenu.ui
 			RoleTypes.Viper,
 			RoleTypes.CrewmateGhost,
 			RoleTypes.GuardianAngel,
+			RoleTypes.SpiritGuide,
 			RoleTypes.ImpostorGhost
 		};
 
