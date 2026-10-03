@@ -9,6 +9,7 @@ namespace HydraMenu.ui
 		// Current window
 		public KeyCode menuKey = KeyCode.Insert;
 		public bool visible = false;
+		public bool blockClickThrough = true;
 		public static float scale = 1.0f;
 
 		private bool isDragging = false;
@@ -160,7 +161,7 @@ namespace HydraMenu.ui
 			}
 		}
 
-		private bool IsInBox(Vector2 mousePos)
+		public static bool IsInBox(Vector2 mousePos)
 		{
 			return
 				mousePos.x >= windowPosition.x &&
@@ -192,6 +193,7 @@ namespace HydraMenu.ui
 			public float MenuOpacity { get; set; }
 			public float UiScale { get; set; }
 			public bool DisableNotifications { get; set; }
+			public bool BlockClickThrough { get; set; }
 		}
 
 		public MainUIConfig GetConfigData()
@@ -202,7 +204,8 @@ namespace HydraMenu.ui
 				PrimaryColor = Styles.primaryColor,
 				MenuOpacity = Styles.menuOpacity,
 				UiScale = scale,
-				DisableNotifications = Hydra.notifications.disableNotifications
+				DisableNotifications = Hydra.notifications.disableNotifications,
+				BlockClickThrough = blockClickThrough
 			};
 		}
 
@@ -219,6 +222,7 @@ namespace HydraMenu.ui
 			Styles.menuOpacity = Mathf.Clamp(configData.MenuOpacity, 0.0f, 1.0f);
 			scale = Mathf.Clamp(configData.UiScale, 0.5f, 2.0f);
 			Hydra.notifications.disableNotifications = configData.DisableNotifications;
+			blockClickThrough = configData.BlockClickThrough;
 		}
 	}
 }
