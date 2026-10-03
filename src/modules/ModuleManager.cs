@@ -44,6 +44,7 @@ namespace HydraMenu.modules
 		// Roles
 		public static MoveInVents moveInVents = new MoveInVents();
 		public static NoKillChecks noKillChecks = new NoKillChecks();
+		public static NoInfluencerRefreshCooldown noInfluencerRefreshCooldown = new NoInfluencerRefreshCooldown();
 		public static NoSabotageCooldown noSabotageCooldown = new NoSabotageCooldown();
 		public static NoShapeshiftAnimation noShapeshiftAnimation = new NoShapeshiftAnimation();
 		public static UnlockSabotageButton unlockSabotageButton = new UnlockSabotageButton();
@@ -113,6 +114,7 @@ namespace HydraMenu.modules
 
 				moveInVents,
 				noKillChecks,
+				noInfluencerRefreshCooldown,
 				noSabotageCooldown,
 				noShapeshiftAnimation,
 				unlockSabotageButton,
