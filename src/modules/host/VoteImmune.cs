@@ -13,7 +13,7 @@ namespace HydraMenu.modules.host
 
 		private void OnPlayerCastVote(NetworkedPlayerInfo voter, NetworkedPlayerInfo votee)
 		{
-			if(!targets.Contains(votee.Object.GetHashCode())) return;
+			if(votee == null || !targets.Contains(votee.Object.GetHashCode())) return;
 
 			Hydra.Log.LogMessage($"{voter.PlayerName} voted for a vote immune player, changing their vote to Skip");
 

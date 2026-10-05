@@ -77,6 +77,7 @@ namespace HydraMenu.modules
 		public static AlwaysVisibleChat alwaysVisibleChat = new AlwaysVisibleChat();
 		public static Fullbright fullbright = new Fullbright();
 		public static NoSeekerAnimation noSeekerAnimation = new NoSeekerAnimation();
+		public static ShowAnonymousVotes showAnonymousVotes = new ShowAnonymousVotes();
 		public static ShowGhostMessages showGhostMessages = new ShowGhostMessages();
 		public static ShowGhosts showGhosts = new ShowGhosts();
 		public static ShowProtections showProtections = new ShowProtections();
@@ -142,6 +143,7 @@ namespace HydraMenu.modules
 				alwaysVisibleChat,
 				fullbright,
 				noSeekerAnimation,
+				showAnonymousVotes,
 				showGhostMessages,
 				showGhosts,
 				showProtections,

@@ -378,7 +378,7 @@ namespace HydraMenu.modules
 			{
 				NetworkedPlayerInfo voter = GameData.Instance.GetPlayerById(srcPlayerId);
 				NetworkedPlayerInfo votee = GameData.Instance.GetPlayerById(suspectPlayerId);
-				if(voter == null || votee == null) return;
+				if(voter == null) return;
 
 				PublishEvent(OnPlayerCastVote, voter, votee);
 			}
@@ -419,8 +419,6 @@ namespace HydraMenu.modules
 					if(!inOld && inNew)
 					{
 						NetworkedPlayerInfo votee = GameData.Instance.GetPlayerById(voteeId);
-						if(votee == null) continue;
-
 						PublishEvent(OnPlayerCastVote, player.Data, votee);
 					}
 				}
