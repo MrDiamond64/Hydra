@@ -156,23 +156,32 @@ namespace HydraMenu.ui.sections
 				yield break;
 			}
 
-			PlayerTask task = PlayerControl.LocalPlayer.myTasks[0];
-			if(task == null)
-			{
-				Hydra.notifications.Send("Deplete HnS Timer", "This feature requires you to have at least one task.");
-				yield break;
-			}
-
-			// If the HnS hide timer is up, all our tasks are replaced with a task of ImportantTextTask
-			NormalPlayerTask normalTask = task.TryCast<NormalPlayerTask>();
-			if(normalTask == null)
+			if(gameFlow.IsFinalCountdown)
 			{
 				Hydra.notifications.Send("Deplete HnS Timer", "This feature cannot be used during the final hide time.");
 				yield break;
 			}
 
+			NormalPlayerTask applicableTask = null;
+			foreach(PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+			{
+				NormalPlayerTask normalTask = task.TryCast<NormalPlayerTask>();
+				if(normalTask == null) continue;
+
+				Hydra.Log.LogMessage($"Found applicable task {normalTask.TaskType}, task length of {normalTask.Length}");
+				applicableTask = normalTask;
+
+				if(normalTask.Length == NormalPlayerTask.TaskLength.Long) break;
+			}
+
+			if(applicableTask == null)
+			{
+				Hydra.notifications.Send("Deplete HnS Timer", "This feature requires you to have at least one task.");
+				yield break;
+			}
+
 			float completeDeduction;
-			switch(normalTask.Length)
+			switch(applicableTask.Length)
 			{
 				case NormalPlayerTask.TaskLength.None:
 				case NormalPlayerTask.TaskLength.Common:
@@ -189,28 +198,27 @@ namespace HydraMenu.ui.sections
 					break;
 			}
 
-			int totalCompletions = 0;
 			int requiredCompletions = (int)Math.Ceiling(gameFlow.currentHideTime / completeDeduction);
 
 			Hydra.Log.LogInfo($"Current escape time is {gameFlow.currentHideTime} and each task completion reduces the timer by {completeDeduction}s. We need to send the CompleteTask RPC {requiredCompletions} times to deplete the HnS timer.");
 
-			while(totalCompletions < requiredCompletions)
-			{
-				BatchedMessage batch = new BatchedMessage();
+			BatchedMessage batch = new BatchedMessage();
 
+			for(int i = 0; i <= requiredCompletions; i++)
+			{
 				// The message packing limit for non-hosts should be ten, but the Among Us anticheat disconnects us if we have more than six CompleteTask RPCs in a single batch
-				for(byte i = 0; i < 6; i++)
+				if(batch.msgCount >= 6)
 				{
-					batch.QueueCompleteTask(PlayerControl.LocalPlayer, (uint)task.Index);
+					batch.FinishBatch();
+					batch = new BatchedMessage();
+
+					yield return Effects.Wait(0.05f);
 				}
 
-				batch.FinishBatch();
-
-				// Each batch will contain exactly six CompleteTask RPCs, which may be more than the required task completions, but that is fine
-				totalCompletions += 6;
-
-				yield return Effects.Wait(0.05f);
+				batch.QueueCompleteTask(PlayerControl.LocalPlayer, applicableTask.Id);
 			}
+
+			batch.FinishBatch();
 		}
 	}
 }
