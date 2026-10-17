@@ -1,4 +1,4 @@
-﻿using AmongUs.InnerNet.GameDataMessages;
+using AmongUs.InnerNet.GameDataMessages;
 using HarmonyLib;
 using Hazel;
 using HydraMenu.anticheat.gamedata;
@@ -18,6 +18,8 @@ namespace HydraMenu.anticheat
 			{ GameDataTypes.ReadyFlag, new ClientReady() }
 		};
 
+		public static event Action<PlayerControl, string, Punishments> OnAnticheatViolation;
+
 		public static readonly Dictionary<RpcCalls, RpcCheck> RpcHandlers = new Dictionary<RpcCalls, RpcCheck>()
 		{
 			// RPC handlers in this dictionary should be sorted by their RPC ID
@@ -28,6 +30,7 @@ namespace HydraMenu.anticheat
 			{ RpcCalls.SetName, new SetName() },
 			{ RpcCalls.SetColor, new SetColor() },
 			{ RpcCalls.ReportDeadBody, new ReportDeadBody() },
+			{ RpcCalls.MurderPlayer, new MurderPlayer() },
 			{ RpcCalls.SetScanner, new SetScanner() },
 			{ RpcCalls.SetStartCounter, new SetStartCounter() },
 			{ RpcCalls.EnterVent, new EnterVent() },
@@ -38,7 +41,9 @@ namespace HydraMenu.anticheat
 			{ RpcCalls.ClimbLadder, new ClimbLadder() },
 			{ RpcCalls.UsePlatform, new UsePlatform() },
 			{ RpcCalls.UpdateSystem, new UpdateSystem() },
-			{ RpcCalls.SetLevel, new SetLevel() }
+			{ RpcCalls.SetRole, new SetRole() },
+			{ RpcCalls.SetLevel, new SetLevel() },
+			{ RpcCalls.Shapeshift, new Shapeshift() }
 		};
 
 		public static bool CheckSpoofedPlatforms { get; set; } = true;
@@ -147,6 +152,8 @@ namespace HydraMenu.anticheat
 			{
 				Hydra.notifications.Send("Anticheat", reason, NotificationDuration);
 			}
+
+			OnAnticheatViolation?.Invoke(player, reason, punishment);
 
 			if(AmongUsClient.Instance.AmHost && shouldPunish)
 			{

@@ -1,8 +1,9 @@
-﻿using AmongUs.Data;
+using AmongUs.Data;
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HydraMenu.assets;
 using HydraMenu.modules;
+using HydraMenu.modules.host;
 using HydraMenu.network;
 using InnerNet;
 using System;
@@ -51,6 +52,7 @@ namespace HydraMenu.ui.sections
 
 		private Controls.PlayerColors selectedColor = Controls.PlayerColors.Red;
 		private int selectedVent = 0;
+		private RoleTypes targetSelectedRole = RoleTypes.Impostor;
 
 		public override void HandleSubsectionMove(int offset)
 		{
@@ -237,6 +239,51 @@ namespace HydraMenu.ui.sections
 			if(GUILayout.Button("Eject"))
 			{
 				EjectPlayer(target);
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.Space(5);
+			GUILayout.Label($"Set Player Role: {targetSelectedRole}");
+			RoleTypes[] playerQuickRoles = new RoleTypes[]
+			{
+				RoleTypes.Crewmate, RoleTypes.Impostor, RoleTypes.Shapeshifter, RoleTypes.Engineer,
+				RoleTypes.Scientist, RoleTypes.Phantom, RoleTypes.Tracker, RoleTypes.Noisemaker
+			};
+
+			for(int r = 0; r < playerQuickRoles.Length; r += 4)
+			{
+				GUILayout.BeginHorizontal();
+				for(int c = 0; c < 4 && (r + c) < playerQuickRoles.Length; c++)
+				{
+					RoleTypes role = playerQuickRoles[r + c];
+					bool isChosen = (targetSelectedRole == role);
+					GUI.color = isChosen ? Color.green : Color.white;
+					if(GUILayout.Button(role.ToString()))
+					{
+						targetSelectedRole = role;
+					}
+				}
+				GUILayout.EndHorizontal();
+			}
+			GUI.color = Color.white;
+
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Queue for Next Round"))
+			{
+				ModuleManager.assignRoles.SetPlayerRole(target.PlayerId, targetSelectedRole);
+				Hydra.notifications.Send("Role Queued", $"Queued {targetSelectedRole} for {target.Data.PlayerName} next round.", 4);
+			}
+
+			if(GUILayout.Button("Apply Live Now (In-Game)"))
+			{
+				AssignRoles.ApplyRole(target, targetSelectedRole);
+				Hydra.notifications.Send("Role Applied", $"Changed {target.Data.PlayerName}'s role to {targetSelectedRole}.", 4);
+			}
+
+			if(GUILayout.Button("Clear Queue"))
+			{
+				ModuleManager.assignRoles.RemovePlayerRole(target.PlayerId);
+				Hydra.notifications.Send("Cleared", $"Reset custom role for {target.Data.PlayerName}.", 3);
 			}
 			GUILayout.EndHorizontal();
 

@@ -1,4 +1,4 @@
-﻿using HydraMenu.modules.host;
+using HydraMenu.modules.host;
 using HydraMenu.modules.misc;
 using HydraMenu.modules.protections;
 using HydraMenu.modules.roles;
@@ -28,10 +28,12 @@ namespace HydraMenu.modules
 		public static VoteImmune voteImmune = new VoteImmune();
 
 		// Misc
+		public static AnticheatAuditLogger anticheatAuditLogger = new AnticheatAuditLogger();
 		public static ChatLogger chatLogger = new ChatLogger();
 		public static Whisper whisper = new Whisper();
 
 		// Protections
+		public static AntiChatSpam antiChatSpam = new AntiChatSpam();
 		public static AntiCrash antiCrash = new AntiCrash();
 		public static AntiKick antiKick = new AntiKick();
 		public static AntiOverload antiOverload = new AntiOverload();
@@ -101,9 +103,11 @@ namespace HydraMenu.modules
 				tempBanAll,
 				voteImmune,
 
+				anticheatAuditLogger,
 				chatLogger,
 				whisper,
 
+				antiChatSpam,
 				antiCrash,
 				antiKick,
 				antiOverload,

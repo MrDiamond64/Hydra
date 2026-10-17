@@ -1,4 +1,4 @@
-﻿using HydraMenu.modules;
+using HydraMenu.modules;
 using UnityEngine;
 
 namespace HydraMenu.ui.sections
@@ -18,6 +18,7 @@ namespace HydraMenu.ui.sections
 			ModuleManager.bypassShapeshiftRatelimits.Enabled = GUILayout.Toggle(ModuleManager.bypassShapeshiftRatelimits.Enabled, "Bypass ratelimits for Shapeshift RPC");
 
 			ModuleManager.antiCrash.Enabled = GUILayout.Toggle(ModuleManager.antiCrash.Enabled, "Protect against ReportDeadBody lobby crash exploit");
+			ModuleManager.antiChatSpam.Enabled = GUILayout.Toggle(ModuleManager.antiChatSpam.Enabled, "Protect against chat spam and flood exploits");
 
 			// Overloads
 			GUILayout.Space(5);

@@ -1,5 +1,7 @@
-﻿using BepInEx.Unity.IL2CPP.Utils.Collections;
+using AmongUs.GameOptions;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HydraMenu.modules;
+using HydraMenu.modules.host;
 using HydraMenu.network;
 using InnerNet;
 using System;
@@ -17,6 +19,8 @@ namespace HydraMenu.ui.sections
 
 		private byte selectedMap = 0;
 		private Controls.PlayerColors selectedColor = 0;
+		private int selectedRolePlayerIndex = 0;
+		private RoleTypes selectedPlayerRole = RoleTypes.Impostor;
 
 		public static readonly Queue<InnerNetObject> lobbyList = new Queue<InnerNetObject>();
 		public static readonly Queue<InnerNetObject> shipList = new Queue<InnerNetObject>();
@@ -112,10 +116,152 @@ namespace HydraMenu.ui.sections
 			GUILayout.EndHorizontal();
 
 			GUILayout.Space(5);
-			GUILayout.Label("Assign roles for next round:");
-			ModuleManager.assignRoles.Enabled = GUILayout.Toggle(ModuleManager.assignRoles.Enabled, "Enabled");
-			GUILayout.Label($"Role to assign: {ModuleManager.assignRoles.AssignedRole}");
-			ModuleManager.assignRoles.AssignedRole = Controls.HorizontalRoleSlider(ModuleManager.assignRoles.AssignedRole);
+			GUILayout.Label("Host Role Manager & Live Assignment:");
+			ModuleManager.assignRoles.Enabled = GUILayout.Toggle(ModuleManager.assignRoles.Enabled, "Enable Custom Role Enforcer (Auto-applies at round start)");
+
+			if(PlayerControl.AllPlayerControls != null && PlayerControl.AllPlayerControls.Count > 0)
+			{
+				if(selectedRolePlayerIndex < 0 || selectedRolePlayerIndex >= PlayerControl.AllPlayerControls.Count)
+				{
+					selectedRolePlayerIndex = 0;
+				}
+
+				PlayerControl currentTarget = PlayerControl.AllPlayerControls[selectedRolePlayerIndex];
+
+				GUILayout.Label("Lobby Players (Click to select target):");
+				// Draw player selection buttons in rows of 2
+				for(int i = 0; i < PlayerControl.AllPlayerControls.Count; i += 2)
+				{
+					GUILayout.BeginHorizontal();
+					for(int c = 0; c < 2 && (i + c) < PlayerControl.AllPlayerControls.Count; c++)
+					{
+						int idx = i + c;
+						PlayerControl p = PlayerControl.AllPlayerControls[idx];
+						if(p == null || p.Data == null) continue;
+
+						bool isSelected = (selectedRolePlayerIndex == idx);
+						string queuedTag = "";
+						if(ModuleManager.assignRoles.CustomPlayerRoles.TryGetValue(p.PlayerId, out RoleTypes qr))
+						{
+							queuedTag = $" -> [{qr}]";
+						}
+
+						string btnLabel = $"{(isSelected ? "[*] " : "")}{p.Data.PlayerName} ({(p == PlayerControl.LocalPlayer ? "Self" : p.Data.RoleType.ToString())}){queuedTag}";
+						
+						GUI.color = isSelected ? Color.cyan : (queuedTag != "" ? Color.yellow : Color.white);
+						if(GUILayout.Button(btnLabel, GUILayout.ExpandWidth(true)))
+						{
+							selectedRolePlayerIndex = idx;
+						}
+					}
+					GUILayout.EndHorizontal();
+				}
+				GUI.color = Color.white;
+
+				string targetDisplayName = (currentTarget == PlayerControl.LocalPlayer)
+					? $"{currentTarget.Data?.PlayerName ?? "Host"} (Self)"
+					: $"{currentTarget.Data?.PlayerName ?? "Player"}";
+
+				GUILayout.Space(4);
+				GUILayout.Label($"Selected Target: {targetDisplayName} | Role to Assign: {selectedPlayerRole}");
+
+				// Quick Role Grid (No clumsy slider!)
+				RoleTypes[] quickRoles = new RoleTypes[]
+				{
+					RoleTypes.Crewmate, RoleTypes.Impostor, RoleTypes.Shapeshifter, RoleTypes.Engineer,
+					RoleTypes.Scientist, RoleTypes.Phantom, RoleTypes.Tracker, RoleTypes.Noisemaker,
+					RoleTypes.Detective, RoleTypes.Viper, RoleTypes.Judge, RoleTypes.GuardianAngel
+				};
+
+				for(int r = 0; r < quickRoles.Length; r += 4)
+				{
+					GUILayout.BeginHorizontal();
+					for(int c = 0; c < 4 && (r + c) < quickRoles.Length; c++)
+					{
+						RoleTypes role = quickRoles[r + c];
+						bool isChosen = (selectedPlayerRole == role);
+						GUI.color = isChosen ? Color.green : Color.white;
+						if(GUILayout.Button(role.ToString()))
+						{
+							selectedPlayerRole = role;
+						}
+					}
+					GUILayout.EndHorizontal();
+				}
+				GUI.color = Color.white;
+
+				GUILayout.BeginHorizontal();
+				if(GUILayout.Button("Queue for Next Round"))
+				{
+					if(currentTarget == PlayerControl.LocalPlayer)
+					{
+						ModuleManager.assignRoles.AssignedRole = selectedPlayerRole;
+					}
+					ModuleManager.assignRoles.SetPlayerRole(currentTarget.PlayerId, selectedPlayerRole);
+					Hydra.notifications.Send("Role Queued", $"Queued {selectedPlayerRole} for {currentTarget.Data?.PlayerName ?? "player"} next round.", 4);
+				}
+
+				if(GUILayout.Button("Apply Live Now (In-Game)"))
+				{
+					AssignRoles.ApplyRole(currentTarget, selectedPlayerRole);
+					Hydra.notifications.Send("Role Applied", $"Changed {currentTarget.Data?.PlayerName ?? "player"}'s role to {selectedPlayerRole}.", 4);
+				}
+
+				if(GUILayout.Button("Clear for Target"))
+				{
+					ModuleManager.assignRoles.RemovePlayerRole(currentTarget.PlayerId);
+					Hydra.notifications.Send("Cleared", $"Reset custom role for {currentTarget.Data?.PlayerName ?? "player"}.", 3);
+				}
+				GUILayout.EndHorizontal();
+
+				GUILayout.Space(3);
+				GUILayout.Label("Lobby Presets & Batch Controls:");
+				GUILayout.BeginHorizontal();
+				if(GUILayout.Button("Everyone Crewmate"))
+				{
+					foreach(PlayerControl pc in PlayerControl.AllPlayerControls)
+					{
+						if(pc != null && pc.Data != null)
+						{
+							ModuleManager.assignRoles.SetPlayerRole(pc.PlayerId, RoleTypes.Crewmate);
+							if(AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
+							{
+								AssignRoles.ApplyRole(pc, RoleTypes.Crewmate);
+							}
+						}
+					}
+					Hydra.notifications.Send("Preset Applied", "All players set to Crewmate.", 3);
+				}
+
+				if(GUILayout.Button("Host Impostor / Others Crew"))
+				{
+					foreach(PlayerControl pc in PlayerControl.AllPlayerControls)
+					{
+						if(pc != null && pc.Data != null)
+						{
+							RoleTypes r = (pc == PlayerControl.LocalPlayer) ? RoleTypes.Impostor : RoleTypes.Crewmate;
+							ModuleManager.assignRoles.SetPlayerRole(pc.PlayerId, r);
+							if(AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
+							{
+								AssignRoles.ApplyRole(pc, r);
+							}
+						}
+					}
+					Hydra.notifications.Send("Preset Applied", "Host is Impostor, all other players Crewmates.", 3);
+				}
+
+				if(GUILayout.Button("Clear All Queues"))
+				{
+					ModuleManager.assignRoles.ClearCustomRoles();
+					Hydra.notifications.Send("Roles Cleared", "Cleared all custom role assignments.", 3);
+				}
+				GUILayout.EndHorizontal();
+			}
+			else
+			{
+				GUILayout.Label($"Role to assign (Self): {ModuleManager.assignRoles.AssignedRole}");
+				ModuleManager.assignRoles.AssignedRole = Controls.HorizontalRoleSlider(ModuleManager.assignRoles.AssignedRole);
+			}
 
 			GUILayout.Space(5);
 			GUILayout.Label("Meeting Controls:");
