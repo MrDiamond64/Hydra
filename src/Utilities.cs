@@ -18,6 +18,9 @@ namespace HydraMenu
 
 		private static readonly System.Random rnd = new System.Random();
 
+		// The amount of votes the server needs before it kicks a player out of the lobby
+		public const byte VOTEKICK_THRESHOLD = 3;
+
 		public static int GetRandomUnusedColor()
 		{
 			List<int> colors = Enumerable.Range(0, 18).ToList();
@@ -277,6 +280,31 @@ namespace HydraMenu
 			}
 
 			return player.GetPlayerColorString();
+		}
+
+		// The client ids of everyone who has voted to kick us out of the lobby
+		// Reading the votes back out of VoteBanSystem::Votes does not work, as that dictionary reports no votes at all by the time the AddVote RPC is handled
+		// and when we are the host, the AntiKick module replaces our entry in it with an empty array to block votekicks
+		// which leaves the game with no slots to record any further votes in
+		// Every client receives the AddVote RPC though, so we keep our own tally of it instead
+		private static readonly HashSet<int> votekicks = new HashSet<int>();
+
+		// The game ignores repeat votes from the same client, so each voter is only ever counted once
+		public static void RecordVotekick(int srcClient)
+		{
+			votekicks.Add(srcClient);
+		}
+
+		// Votes are tied to the lobby we are in, so this should be called whenever we leave one
+		public static void ClearVotekicks()
+		{
+			votekicks.Clear();
+		}
+
+		// Keep in mind that we will not actually be kicked out once this reaches VOTEKICK_THRESHOLD while we are blocking votekicks
+		public static byte GetVotekickCount()
+		{
+			return (byte)votekicks.Count;
 		}
 
 		// This kick method allows a player who is not the host of the lobby to kick someone out of the lobby by making them trigger the Among Us Anticheat
