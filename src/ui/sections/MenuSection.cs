@@ -17,6 +17,13 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Label($"Primary Color: {Styles.primaryColor}");
 			Styles.primaryColor = (Styles.UIColors)GUILayout.HorizontalSlider((float)Styles.primaryColor, 0, Styles.ColorValues.Count - 1);
+                        GUILayout.Label($"Text Color: {Styles.textColor}");
+                        int textColorIndex = Array.IndexOf(Styles.textcoloroptions, Styles.textColor);
+                        if (textColorIndex < 0)
+                        textColorIndex = Array.IndexOf(Styles.textcoloroptions, Styles.UIColors.White);
+
+                        textColorIndex = (int)GUILayout.HorizontalSlider(textColorIndex, 0, Styles.textcoloroptions.Length - 1);
+                        Styles.textColor = Styles.textcoloroptions[textColorIndex];
 
 			GUILayout.Label($"Menu Opacity: {Styles.menuOpacity * 100:F0}%");
 			Styles.menuOpacity = (float)Math.Round(GUILayout.HorizontalSlider(Styles.menuOpacity, 0, 1), 4);
