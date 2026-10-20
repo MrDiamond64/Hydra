@@ -106,6 +106,7 @@ namespace HydraMenu.ui
 			if(!visible) return;
 
 			GUI.skin.label.fontSize = (int)(13 * scale);
+                        GUI.skin.label.normal.textColor = Styles.ColorValues[Styles.textColor];
 
 			// Render UI box
 			GUI.Box(new Rect(windowPosition.x, windowPosition.y, WindowSize.x, WindowSize.y), $"{MyPluginInfo.PLUGIN_NAME} - {MyPluginInfo.PLUGIN_VERSION}", Styles.MainBox);
@@ -189,6 +190,7 @@ namespace HydraMenu.ui
 		{
 			public KeyCode MenuKey { get; set; }
 			public Styles.UIColors PrimaryColor { get; set; }
+                        public Styles.UIColors? TextColor { get; set; }
 			public float MenuOpacity { get; set; }
 			public float UiScale { get; set; }
 			public bool DisableNotifications { get; set; }
@@ -200,6 +202,7 @@ namespace HydraMenu.ui
 			{
 				MenuKey = menuKey,
 				PrimaryColor = Styles.primaryColor,
+                                TextColor = Styles.textColor,
 				MenuOpacity = Styles.menuOpacity,
 				UiScale = scale,
 				DisableNotifications = Hydra.notifications.disableNotifications
@@ -216,6 +219,14 @@ namespace HydraMenu.ui
 			}
 
 			Styles.primaryColor = (Styles.UIColors)Math.Clamp((int)configData.PrimaryColor, 0, Styles.ColorValues.Count - 1);
+                        if (configData.TextColor.HasValue)
+{
+    Styles.textColor = (Styles.UIColors)Math.Clamp((int)configData.TextColor.Value, 0, Styles.ColorValues.Count - 1);
+}
+else
+{
+    Styles.textColor = Styles.UIColors.White;
+}
 			Styles.menuOpacity = Mathf.Clamp(configData.MenuOpacity, 0.0f, 1.0f);
 			scale = Mathf.Clamp(configData.UiScale, 0.5f, 2.0f);
 			Hydra.notifications.disableNotifications = configData.DisableNotifications;
