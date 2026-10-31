@@ -5,7 +5,7 @@ namespace HydraMenu.modules.roles
 {
 	internal class FakeShapeshiftBubble : Module
 	{
-		public FakeShapeshiftBubble() : base("FakeShapeshiftBubble") { }
+		public FakeShapeshiftBubble() : base("FakeShapeshiftBubble", [ typeof(NoShapeshiftAnimation) ]) { }
 
 		private bool awaitingResponse = false;
 		private PlayerControl _shapeshiftTarget;
@@ -75,15 +75,6 @@ namespace HydraMenu.modules.roles
 
 				PlayerControl.LocalPlayer.RpcShapeshift(Instance._shapeshiftTarget, true);
 				PlayerControl.LocalPlayer.CmdCheckColor(Instance._originalColor);
-			}
-		}
-
-		protected override void OnEnable()
-		{
-			if(ModuleManager.noShapeshiftAnimation.Enabled)
-			{
-				Hydra.notifications.Send("Fake Shapeshift Bubble", "The No Shapeshift Animation module is incompatible with this module, so it has been disabled.", 5);
-				ModuleManager.noShapeshiftAnimation.Enabled = false;
 			}
 		}
 	}

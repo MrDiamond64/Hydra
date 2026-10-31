@@ -4,7 +4,7 @@ namespace HydraMenu.modules.roles
 {
 	internal class NoShapeshiftAnimation : Module
 	{
-		public NoShapeshiftAnimation() : base("NoShapeshiftAnimation") { }
+		public NoShapeshiftAnimation() : base("NoShapeshiftAnimation", [ typeof(FakeShapeshiftBubble) ]) { }
 
 		private static NoShapeshiftAnimation Instance
 		{

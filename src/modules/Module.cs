@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 
@@ -8,6 +9,7 @@ namespace HydraMenu.modules
 	internal abstract class Module
 	{
 		public readonly string name;
+		public readonly Type[] incompatibilities;
 
 		protected bool _enabled = false;
 		public virtual bool Enabled
@@ -29,12 +31,27 @@ namespace HydraMenu.modules
 			}
 		}
 
-		protected Module(string name)
+		protected Module(string name, Type[] incompatibilities = null)
 		{
 			this.name = name;
+			this.incompatibilities = incompatibilities ?? Array.Empty<Type>();
 		}
 
-		protected virtual void OnEnable() { }
+		protected virtual void OnEnable()
+		{
+			// Handle module incompatibilities
+			if(Hydra.modules != null)
+			{
+				foreach(Module module in Hydra.modules.moduleList)
+				{
+					if(!incompatibilities.Contains(module.GetType()) || !module.Enabled) continue;
+
+					Hydra.notifications.Send(name, $"The module {module.name} is incompatible with this module, so it has been disabled.", 5);
+					module.Enabled = false;
+				}
+			}
+		}
+
 		protected virtual void OnDisable() { }
 
 		public Dictionary<string, JsonElement> GetConfigData()
