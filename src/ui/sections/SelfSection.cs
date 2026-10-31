@@ -93,6 +93,12 @@ namespace HydraMenu.ui.sections
 
 		private IEnumerator CompleteAllTasks()
 		{
+			if(PlayerControl.LocalPlayer == null)
+			{
+				Hydra.notifications.Send("Task Finisher", "This option can only be used inside of a game.");
+				yield break;
+			}
+
 			Il2CppSystem.Collections.Generic.List<PlayerTask> allTasks = PlayerControl.LocalPlayer.myTasks;
 
 			Hydra.Log.LogInfo("Completing all tasks...");

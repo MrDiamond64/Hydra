@@ -100,7 +100,6 @@ namespace HydraMenu.modules
 				disableSporeTriggers,
 				disableVentClean,
 				disableZipline,
-				fakeShapeshiftBubble,
 				flipSkeld,
 				tempBanAll,
 				voteImmune,
@@ -117,6 +116,7 @@ namespace HydraMenu.modules
 				bypassShapeshiftRatelimits,
 				forceDtls,
 
+				fakeShapeshiftBubble,
 				moveInVents,
 				noKillChecks,
 				noSabotageCooldown,

@@ -34,5 +34,14 @@ namespace HydraMenu.modules.roles
 				shouldAnimate = false;
 			}
 		}
+
+		protected override void OnEnable()
+		{
+			if(ModuleManager.fakeShapeshiftBubble.Enabled)
+			{
+				Hydra.notifications.Send("No Shapeshift Animation", "The Fake Shapeshift Bubble module is incompatible with this module, so it has been disabled.", 5);
+				ModuleManager.fakeShapeshiftBubble.Enabled = false;
+			}
+		}
 	}
 }

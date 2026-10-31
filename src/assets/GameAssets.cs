@@ -31,17 +31,19 @@ namespace HydraMenu.assets
 		public static readonly SortedList<int, string> BroadcastVersions = new SortedList<int, string>()
 		{
 			{ 50632950, "16.1.0" },
-			{ 50643450, "17.1" },
+			{ 50643450, "17.1.0" },
 			{ 50647000, "17.1.2" },
-			{ 50645050, "17.2" },
-			{ 50652900, "17.2.1" },
-			{ 50653700, "17.2.2" },
-			{ 50652400, "17.3" },
-			{ 50656300, "17.4" },
-			{ 50663350, "18.0" },
-			{ 50663400, "18.0 (build 7348)" },
-			{ 50663650, "19.0 (build 7488)" }, // iOS
-			{ 50663600, "19.0 (build 7489)" } // PC
+			{ 50645050, "17.2.0" },
+			{ 50652900, "17.2.1 (build 6714)" }, // iOS
+			{ 50653700, "17.2.2 (build 6768)" }, // iOS
+			{ 50652400, "17.3.0 (build 6803)" }, // iOS and PC
+			{ 50656250, "17.3.1 (build 6841)"}, // iOS
+			{ 50656300, "17.4.0 (build 7044)" }, // PC
+			{ 50658350, "17.4.0 (build 7045)"}, // iOS
+			{ 50663350, "18.0.0" }, // PC
+			{ 50663400, "18.0.0 (build 7348)" }, // iOS
+			{ 50663650, "19.0.0 (build 7488)" }, // iOS
+			{ 50663600, "19.0.0 (build 7489)" } // PC
 		};
 
 		public static readonly SortedList<int, string> PlayerPlatforms = new SortedList<int, string>()

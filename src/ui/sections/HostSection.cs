@@ -32,6 +32,8 @@ namespace HydraMenu.ui.sections
 				GUILayout.Label("You are not the host of the current lobby. Using these options will either do nothing or get you banned by the anticheat");
 			}
 
+			bool hasAnticheat = Utilities.IsAnticheatPresent();
+
 			ModuleManager.banMidGame.Enabled = GUILayout.Toggle(ModuleManager.banMidGame.Enabled, "Be able to ban players mid-game");
 
 			ModuleManager.flipSkeld.Enabled = GUILayout.Toggle(ModuleManager.flipSkeld.Enabled, "Use Flipped Skeld Map");
@@ -40,7 +42,10 @@ namespace HydraMenu.ui.sections
 			ModuleManager.disableSporeTriggers.Enabled = GUILayout.Toggle(ModuleManager.disableSporeTriggers.Enabled, "Disable Spore Triggers");
 			ModuleManager.disableVentClean.Enabled = GUILayout.Toggle(ModuleManager.disableVentClean.Enabled, "Disable Vent Clean");
 
-			ModuleManager.fakeShapeshiftBubble.Enabled = GUILayout.Toggle(ModuleManager.fakeShapeshiftBubble.Enabled, "Fake Shapeshift Bubble");
+			if(!hasAnticheat)
+			{
+				ModuleManager.disableZipline.Enabled = GUILayout.Toggle(ModuleManager.disableZipline.Enabled, "Disable Ziplines");
+			}
 
 			GUILayout.BeginHorizontal();
 			ModuleManager.blockLowLevels.Enabled = GUILayout.Toggle(ModuleManager.blockLowLevels.Enabled, $"Kick players with less than {ModuleManager.blockLowLevels.MinLevel} levels");
@@ -201,6 +206,12 @@ namespace HydraMenu.ui.sections
 
 		private static void KillAllPlayers()
 		{
+			if(PlayerControl.LocalPlayer == null)
+			{
+				Hydra.notifications.Send("Murder Player", "This option can only be used inside of a game.");
+				return;
+			}
+
 			bool hasAnticheat = Utilities.IsAnticheatPresent();
 
 			if(hasAnticheat && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
@@ -236,7 +247,7 @@ namespace HydraMenu.ui.sections
 
 		private static void SpawnLobby()
 		{
-			Hydra.Log.LogInfo($"Attempting to spawn in lobby");
+			Hydra.Log.LogInfo($"Attempting to spawn lobby");
 
 			if(Utilities.IsAnticheatPresent() && !AmongUsClient.Instance.AmHost)
 			{

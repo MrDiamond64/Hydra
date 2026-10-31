@@ -13,9 +13,9 @@
 
 		protected override void OnEnable()
 		{
-			Hydra.notifications.Send("Lobby Crasher", "Crash Lobby has been enabled. This will crash the lobby as soon as the game starts.");
-
 			EventCoordinator.OnGameStart += OnGameStart;
+
+			Hydra.notifications.Send("Lobby Crasher", "Crash Lobby has been enabled. This will crash the lobby as soon as the game starts.");
 		}
 
 		protected override void OnDisable()

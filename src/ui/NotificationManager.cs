@@ -7,7 +7,7 @@ namespace HydraMenu.ui
 	internal class NotificationManager : MonoBehaviour
 	{
 		private readonly List<Notification> notifications = new List<Notification>();
-		public bool disableNotifications = false;
+		public bool DisableNotifications { get; set; } = false;
 
 		public static Vector2 BoxSize
 		{
@@ -58,7 +58,7 @@ namespace HydraMenu.ui
 
 		public void OnGUI()
 		{
-			if(disableNotifications) return;
+			if(DisableNotifications) return;
 
 			int notificationCount = Math.Min(GetMaxNotifications(), notifications.Count);
 
@@ -90,7 +90,7 @@ namespace HydraMenu.ui
 		{
 			Hydra.Log.LogMessage($"[Notification] [{title}] {message}");
 
-			if(disableNotifications) return;
+			if(DisableNotifications) return;
 
 			Notification notification = new Notification(title, message, ttl);
 			notifications.Add(notification);

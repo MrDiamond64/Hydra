@@ -202,7 +202,7 @@ namespace HydraMenu.ui
 				PrimaryColor = Styles.primaryColor,
 				MenuOpacity = Styles.menuOpacity,
 				UiScale = scale,
-				DisableNotifications = Hydra.notifications.disableNotifications
+				DisableNotifications = Hydra.notifications.DisableNotifications
 			};
 		}
 
@@ -218,7 +218,7 @@ namespace HydraMenu.ui
 			Styles.primaryColor = (Styles.UIColors)Math.Clamp((int)configData.PrimaryColor, 0, Styles.ColorValues.Count - 1);
 			Styles.menuOpacity = Mathf.Clamp(configData.MenuOpacity, 0.0f, 1.0f);
 			scale = Mathf.Clamp(configData.UiScale, 0.5f, 2.0f);
-			Hydra.notifications.disableNotifications = configData.DisableNotifications;
+			Hydra.notifications.DisableNotifications = configData.DisableNotifications;
 		}
 	}
 }
