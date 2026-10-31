@@ -610,6 +610,27 @@ namespace HydraMenu.network
 			msgCount++;
 		}
 
+		public void QueueSpiritGuideMessage(byte[] sprites)
+		{
+			if(IsGlobal || AmTarget)
+			{
+				MessageWriter spritesWriter = MessageWriter.Get(SendOption.None);
+				spritesWriter.WriteBytesAndSize(sprites);
+
+				ShipStatus.Instance.socialMediumFeedSystem.HandleSpiritGuideMessage(MessageReader.Get(spritesWriter.ToByteArray(false)));
+
+				if(AmTarget) return;
+			}
+
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(ShipStatus.Instance.NetId);
+			writer.Write((byte)RpcCalls.SpiritGuideMessage);
+			writer.WriteBytesAndSize(sprites);
+			writer.EndMessage();
+
+			msgCount++;
+		}
+
 		public void FinishBatch()
 		{
 			writer.EndMessage();

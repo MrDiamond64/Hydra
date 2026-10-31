@@ -37,6 +37,7 @@ namespace HydraMenu.ui.sections
 
 			if(!hasAnticheat)
 			{
+				Hydra.routines.spamInfluencerCues.Enabled = GUILayout.Toggle(Hydra.routines.spamInfluencerCues.Enabled, "Spam Influencer Cues");
 				Hydra.routines.ziplineSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Zipline Spammer", Hydra.routines.ziplineSpammer.targets);
 			}
 
