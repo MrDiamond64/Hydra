@@ -314,6 +314,14 @@ namespace HydraMenu.ui.sections
 			}
 			GUILayout.EndHorizontal();
 
+			if(GUILayout.Button("Freeze"))
+			{
+				IGameOptions gameOptions = GameOptions.CreateCloneOptions(GameManager.Instance.LogicOptions.currentGameOptions);
+				gameOptions.SetFloat(FloatOptionNames.PlayerSpeedMod, 0.1e-10f);
+
+				GameOptions.SendGameOptionsToClient(gameOptions, target.OwnerId);
+			}
+
 			/*
 			// The problem with changing the TaskBarMode is that if we remove the task bar, we are not able to bring it back
 			GUILayout.BeginHorizontal();
