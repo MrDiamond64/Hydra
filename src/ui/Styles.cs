@@ -26,9 +26,19 @@ namespace HydraMenu.ui
 			{ UIColors.White, new Color(0.95f, 0.95f, 0.97f) }, // #F0EFDF
 			{ UIColors.Violet, new Color(0.5f, 0f, 1f) } // #7F00FF
 		};
+                        public static readonly UIColors[] textcoloroptions =
+{
+                            UIColors.Azure,
+                            UIColors.Cardinal,
+                            UIColors.Pesto,
+                            UIColors.Pumpkin,
+                            UIColors.White,
+                            UIColors.Violet
+};
 
 		public static float menuOpacity = 0.85f;
 		public static UIColors primaryColor = UIColors.Azure;
+                public static UIColors textColor = UIColors.White;
 
 		private static readonly Dictionary<string, Texture2D> CachedTextures = new Dictionary<string, Texture2D>();
 
@@ -41,7 +51,7 @@ namespace HydraMenu.ui
 				Texture2D background = CreateColoredTexture("MainBox", ColorValues[UIColors.Carbon], menuOpacity);
 				style.normal.background = background;
 
-				style.normal.textColor = Color.white;
+	                        style.normal.textColor = ColorValues[textColor];
 				style.alignment = TextAnchor.UpperCenter;
 				style.padding.top = 5;
 				// The product of the font size and the UI scale will result in a float value with decimal values
@@ -59,7 +69,7 @@ namespace HydraMenu.ui
 			{
 				GUIStyle style = new GUIStyle();
 
-				style.normal.textColor = ColorValues[UIColors.White];
+				style.normal.textColor = ColorValues[textColor];
 				style.alignment = TextAnchor.MiddleLeft;
 				style.padding.bottom = 1;
 				style.padding.left = (int)(8 * MainUI.scale);
@@ -78,7 +88,7 @@ namespace HydraMenu.ui
 				Texture2D background = CreateColoredTexture("SectionBoxActive", ColorValues[primaryColor]);
 				style.normal.background = background;
 
-				style.normal.textColor = ColorValues[UIColors.White];
+				style.normal.textColor = ColorValues[textColor];
 				style.alignment = TextAnchor.MiddleLeft;
 				style.padding.bottom = 1;
 				style.padding.left = (int)(13 * MainUI.scale);
@@ -94,7 +104,7 @@ namespace HydraMenu.ui
 			{
 				GUIStyle style = new GUIStyle();
 
-				style.normal.textColor = ColorValues[UIColors.White];
+				style.normal.textColor = ColorValues[textColor];
 				style.alignment = TextAnchor.MiddleLeft;
 				style.clipping = TextClipping.Clip;
 				style.padding.left = (int)(10 * MainUI.scale);
@@ -114,7 +124,7 @@ namespace HydraMenu.ui
 				Texture2D background = CreateColoredTexture("SectionBoxActive", ColorValues[primaryColor]);
 				style.normal.background = background;
 
-				style.normal.textColor = ColorValues[UIColors.White];
+				style.normal.textColor = ColorValues[textColor];
 				style.alignment = TextAnchor.MiddleLeft;
 				style.clipping = TextClipping.Clip;
 				style.padding.left = (int)(10 * MainUI.scale);
