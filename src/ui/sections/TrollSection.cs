@@ -45,6 +45,8 @@ namespace HydraMenu.ui.sections
 			{
 				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
 				{
+					if(player == PlayerControl.LocalPlayer || player.OwnerId == AmongUsClient.Instance.HostId) continue;
+
 					Utilities.KickPlayer(player);
 				}
 			}
