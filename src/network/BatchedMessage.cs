@@ -604,6 +604,24 @@ namespace HydraMenu.network
 			msgCount++;
 		}
 
+		public void QueueLobbyTimeExpiring(int timer)
+		{
+			if(IsGlobal || AmTarget)
+			{
+				LobbyBehaviour.Instance.HandleLobbyTimerExtensionRequest(timer, false, 255, 0, 0);
+				if(AmTarget) return;
+			}
+
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(LobbyBehaviour.Instance.NetId);
+			writer.Write((byte)RpcCalls.LobbyTimeExpiring);
+			writer.WritePacked(timer);
+			writer.Write(false);
+			writer.EndMessage();
+
+			msgCount++;
+		}
+
 		public void QueueVanish(PlayerControl source)
 		{
 			if(IsGlobal || AmTarget)

@@ -41,7 +41,8 @@ namespace HydraMenu.ui.sections
 				Hydra.routines.ziplineSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Zipline Spammer", Hydra.routines.ziplineSpammer.targets);
 			}
 
-			if(!hasAnticheat && GUILayout.Button("Randomize Start Timer"))
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Randomize Start Timer"))
 			{
 				sbyte timer = (sbyte)rnd.Next(sbyte.MinValue, sbyte.MaxValue);
 
@@ -49,6 +50,16 @@ namespace HydraMenu.ui.sections
 				batch.QueueSetStartCounter(PlayerControl.LocalPlayer, timer);
 				batch.FinishBatch();
 			}
+
+			if(!hasAnticheat && GUILayout.Button("Randomize Expiration Timer"))
+			{
+				int timer = rnd.Next(0, int.MaxValue);
+
+				BatchedMessage batch = new BatchedMessage();
+				batch.QueueLobbyTimeExpiring(timer);
+				batch.FinishBatch();
+			}
+			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Kick All Players"))
 			{
