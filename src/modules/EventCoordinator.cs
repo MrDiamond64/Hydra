@@ -4,7 +4,6 @@ using HydraMenu.assets;
 using HydraMenu.network;
 using HydraMenu.ui.sections;
 using Il2CppInterop.Runtime;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using System;
 using System.Collections.Generic;

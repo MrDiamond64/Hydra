@@ -1,5 +1,5 @@
-﻿using Hazel;
-using HydraMenu.modules;
+﻿using HydraMenu.modules;
+using HydraMenu.network;
 using InnerNet;
 using UnityEngine;
 
@@ -33,17 +33,11 @@ namespace HydraMenu.routines
 			PlayerControl.LocalPlayer.cosmetics.CurrentPet.SetGettingPet(true, petPosition);
 			PlayerControl.LocalPlayer.cosmetics.PettingHand.StartPet(PlayerControl.LocalPlayer.cosmetics.currentPet);
 
-			MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(
-				PlayerControl.LocalPlayer.MyPhysics.NetId,
-				(byte)RpcCalls.Pet,
-				SendOption.Reliable,
-				-1
-			);
+			BatchedMessage batch = new BatchedMessage();
+			batch.skipLocalHandling = true;
 
-			NetHelpers.WriteVector2(PlayerControl.LocalPlayer.GetTruePosition(), writer);
-			NetHelpers.WriteVector2(petPosition, writer);
-
-			AmongUsClient.Instance.FinishRpcImmediately(writer);
+			batch.QueuePet(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.GetTruePosition(), petPosition);
+			batch.FinishBatch();
 		}
 
 		private void OnDisconnect()

@@ -10,6 +10,7 @@ namespace HydraMenu.network
 	{
 		public readonly MessageWriter writer;
 		public readonly int targetClientId;
+		public bool skipLocalHandling = false;
 		public int msgCount = 0;
 
 		public BatchedMessage(int targetClientId = (int)OwnerIds.Everyone)
@@ -32,12 +33,12 @@ namespace HydraMenu.network
 
 		private bool IsGlobal
 		{
-			get { return targetClientId == (int)OwnerIds.Everyone; }
+			get { return !skipLocalHandling && targetClientId == (int)OwnerIds.Everyone; }
 		}
 
 		private bool AmTarget
 		{
-			get { return targetClientId == AmongUsClient.Instance.ClientId; }
+			get { return !skipLocalHandling && targetClientId == AmongUsClient.Instance.ClientId; }
 		}
 
 		public void QueueDataFlag(uint netId, MessageWriter msg)
@@ -565,6 +566,24 @@ namespace HydraMenu.network
 			writer.Write((byte)RpcCalls.Shapeshift);
 			writer.WriteNetObject(target);
 			writer.Write(shouldAnimate);
+			writer.EndMessage();
+
+			msgCount++;
+		}
+
+		public void QueuePet(PlayerControl source, Vector2 playerPos, Vector2 petPos)
+		{
+			if(IsGlobal || AmTarget)
+			{
+				source.MyPhysics.PetPet(playerPos, petPos);
+				if(AmTarget) return;
+			}
+
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(source.MyPhysics.NetId);
+			writer.Write((byte)RpcCalls.Pet);
+			NetHelpers.WriteVector2(playerPos, writer);
+			NetHelpers.WriteVector2(petPos, writer);
 			writer.EndMessage();
 
 			msgCount++;

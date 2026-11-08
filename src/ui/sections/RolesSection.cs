@@ -19,9 +19,9 @@ namespace HydraMenu.ui.sections
 			ModuleManager.unlockSabotageButton.SabotageInVents = GUILayout.Toggle(ModuleManager.unlockSabotageButton.SabotageInVents, "Allow Sabotaging In Vents As Imposter");
 			ModuleManager.noSabotageCooldown.Enabled = GUILayout.Toggle(ModuleManager.noSabotageCooldown.Enabled, "No Sabotage Cooldown");
 
+			ModuleManager.noPhantomAnimation.Enabled = GUILayout.Toggle(ModuleManager.noPhantomAnimation.Enabled, "No Phantom Animation");
 			ModuleManager.noShapeshiftAnimation.Enabled = GUILayout.Toggle(ModuleManager.noShapeshiftAnimation.Enabled, "No Shapeshift Animation");
 			ModuleManager.fakeShapeshiftBubble.Enabled = GUILayout.Toggle(ModuleManager.fakeShapeshiftBubble.Enabled, "Fake Shapeshift Bubble");
-			// Roles.DisablePhantomEndAnimation = GUILayout.Toggle(Roles.DisablePhantomEndAnimation, "Disable Phantom End Animation");
 
 			GUILayout.Space(5);
 			GUILayout.Label($"No Kill Checks:");
