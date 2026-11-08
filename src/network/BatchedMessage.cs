@@ -215,6 +215,34 @@ namespace HydraMenu.network
 			msgCount++;
 		}
 
+		public void QueueSetStartCounter(PlayerControl source, sbyte counter)
+		{
+			QueueSetStartCounter(source, counter, source.LastStartCounter + 1);
+		}
+
+		public void QueueSetStartCounter(PlayerControl source, sbyte counter, int seqId)
+		{
+			if(IsGlobal || AmTarget)
+			{
+				if(GameStartManager.InstanceExists)
+				{
+					source.LastStartCounter = seqId;
+					GameStartManager.Instance.SetStartCounter(counter);
+				}
+
+				if(AmTarget) return;
+			}
+
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(source.NetId);
+			writer.Write((byte)RpcCalls.SetStartCounter);
+			writer.WritePacked(seqId);
+			writer.Write(counter);
+			writer.EndMessage();
+
+			msgCount++;
+		}
+
 		public void QueueSendChatNote(PlayerControl source, byte playerId, ChatNoteTypes chatNote)
 		{
 			if(IsGlobal || AmTarget)
