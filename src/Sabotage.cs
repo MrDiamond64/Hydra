@@ -361,7 +361,7 @@ namespace HydraMenu
 
 		public static void UnlockAll()
 		{
-			for(byte i = 0; i < ShipStatus.Instance.AllDoors.Count; i++)
+			for(int i = 0; i < ShipStatus.Instance.AllDoors.Count; i++)
 			{
 				UnlockDoor(ShipStatus.Instance.AllDoors[i], i);
 			}

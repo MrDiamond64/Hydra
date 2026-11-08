@@ -41,6 +41,8 @@ namespace HydraMenu
 			BatchedMessage batch = new BatchedMessage(targetClientId);
 			batch.QueueDataFlag(GameManager.Instance.NetId, writer);
 			batch.FinishBatch();
+
+			writer.Recycle();
 		}
 
 		private static int FindLogicOptionsIndex()

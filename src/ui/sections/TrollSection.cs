@@ -43,24 +43,9 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Kick All Players"))
 			{
-				Hydra.Log.LogInfo($"Sending Enter ventilation system update to all players");
-
-				MessageWriter writer = MessageWriter.Get(SendOption.Reliable);
-				writer.Write((ushort)0);
-				writer.Write((byte)VentilationSystem.Operation.Enter);
-				writer.Write((byte)0);
-
-				BatchedMessage batch = new BatchedMessage();
-				batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, writer);
-				batch.FinishBatch();
-
-				writer.Recycle();
-
 				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
 				{
-					if(player == PlayerControl.LocalPlayer || player.OwnerId == AmongUsClient.Instance.HostId) continue;
-
-					Utilities.KickPlayer(player, true);
+					Utilities.KickPlayer(player);
 				}
 			}
 
@@ -72,25 +57,7 @@ namespace HydraMenu.ui.sections
 
 			if(GUILayout.Button("Trigger All Spores"))
 			{
-				if(Utilities.GetCurrentMap() != MapNames.Fungle)
-				{
-					Hydra.notifications.Send("Trigger Spores", "This option only works on the Fungle map.");
-				}
-				else
-				{
-					FungleShipStatus shipStatus = ShipStatus.Instance.Cast<FungleShipStatus>();
-
-					BatchedMessage batch = new BatchedMessage();
-
-					foreach(Mushroom mushroom in shipStatus.sporeMushrooms.Values)
-					{
-						batch.QueueTriggerSpore(PlayerControl.LocalPlayer, mushroom);
-					}
-
-					batch.FinishBatch();
-
-					Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
-				}
+				TriggerAllSpores();
 			}
 
 			if(GUILayout.Button("Deplete HnS Timer"))
@@ -141,6 +108,28 @@ namespace HydraMenu.ui.sections
 			ModuleManager.autoExposeImpostors.ExposeOnMurder = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnMurder, "Expose On Murder");
 			ModuleManager.autoExposeImpostors.ExposeOnShapeshift = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnShapeshift, "Expose On Shapeshift");
 			ModuleManager.autoExposeImpostors.ExposeOnPhantom = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnPhantom, "Expose On Phantom");
+		}
+
+		private void TriggerAllSpores()
+		{
+			if(Utilities.GetCurrentMap() != MapNames.Fungle)
+			{
+				Hydra.notifications.Send("Trigger Spores", "This option only works on the Fungle map.");
+				return;
+			}
+
+			FungleShipStatus shipStatus = ShipStatus.Instance.Cast<FungleShipStatus>();
+
+			BatchedMessage batch = new BatchedMessage();
+
+			foreach(Mushroom mushroom in shipStatus.sporeMushrooms.Values)
+			{
+				batch.QueueTriggerSpore(PlayerControl.LocalPlayer, mushroom);
+			}
+
+			batch.FinishBatch();
+
+			Hydra.notifications.Send("Trigger Spores", "All spores have been triggered.", 5);
 		}
 
 		// In Hide and Seek, completing a task will reduce the HnS hide timer depending on the length of the task (short, common, or long)

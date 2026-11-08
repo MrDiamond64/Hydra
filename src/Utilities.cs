@@ -289,7 +289,7 @@ namespace HydraMenu
 		// however nowhere in the callstack from ShipStatus::UpdateSystem to PlayerPhysics::RpcBootFromVent is there a check to ensure that the current client is the host of the lobby
 		// If you were to send this system update to someone other than the host, they will send the BootFromVent RPC and get kicked by the Among Us anticheat
 		// In my experience this has been incredibly useful to kick out players who are blatantly hacking, calling useless meetings, or causing other mischief even if I am not the host if the lobby
-		public static void KickPlayer(PlayerControl player, bool skipFirstStage = false)
+		public static void KickPlayer(PlayerControl player)
 		{
 			if(AmongUsClient.Instance.AmHost)
 			{
@@ -316,32 +316,23 @@ namespace HydraMenu
 				return;
 			}
 
+			MessageWriter enterVent = MessageWriter.Get(SendOption.None);
+			enterVent.Write((ushort)0);
+			enterVent.Write((byte)VentilationSystem.Operation.Enter);
+			enterVent.Write((byte)0);
+
+			MessageWriter bootFromVent = MessageWriter.Get(SendOption.None);
+			bootFromVent.Write((ushort)1);
+			bootFromVent.Write((byte)VentilationSystem.Operation.BootImpostors);
+			bootFromVent.Write((byte)0);
+
 			BatchedMessage batch = new BatchedMessage(player.OwnerId);
-
-			if(!skipFirstStage)
-			{
-				Hydra.Log.LogInfo($"Sending Enter ventilation system update to {player.OwnerId}");
-
-				MessageWriter writer = MessageWriter.Get(SendOption.None);
-				writer.Write((ushort)0);
-				writer.Write((byte)VentilationSystem.Operation.Enter);
-				writer.Write((byte)0);
-
-				batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, writer);
-				writer.Recycle();
-			}
-
-			Hydra.Log.LogInfo($"Sending BootImposters ventilation system update to {player.OwnerId}");
-
-			MessageWriter writer2 = MessageWriter.Get(SendOption.None);
-			writer2.Write((ushort)1);
-			writer2.Write((byte)VentilationSystem.Operation.BootImpostors);
-			writer2.Write((byte)0);
-
-			batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, writer2);
-			writer2.Recycle();
-
+			batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, enterVent);
+			batch.QueueUpdateSystem(PlayerControl.LocalPlayer, SystemTypes.Ventilation, bootFromVent);
 			batch.FinishBatch();
+
+			enterVent.Recycle();
+			bootFromVent.Recycle();
 
 			Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.", 5);
 		}
