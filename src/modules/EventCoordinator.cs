@@ -367,7 +367,7 @@ namespace HydraMenu.modules
 
 				if(clientId == AmongUsClient.Instance.ClientId)
 				{
-					byte voteCount = GetVotekickCount(__instance, clientId);
+					int voteCount = Utilities.GetVotekickCount(__instance, clientId);
 
 					Hydra.notifications.Send("Votekick Logger", $"{source.PlayerName} has voted to kick you out. ({voteCount}/{VotekickThreshold})");
 				}
@@ -453,19 +453,6 @@ namespace HydraMenu.modules
 
 				PublishEvent(OnNetObjectSpawn, obj);
 			}
-		}
-
-		private static byte GetVotekickCount(VoteBanSystem system, int clientId)
-		{
-			if(!system.Votes.TryGetValue(clientId, out Il2CppStructArray<int> votes)) return 0;
-
-			byte voteCount = 0;
-			foreach(int voter in votes)
-			{
-				if(voter != 0) voteCount++;
-			}
-
-			return voteCount;
 		}
 
 		// These functions are to simplify having null-checks everywhere

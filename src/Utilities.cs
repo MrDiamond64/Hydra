@@ -1,6 +1,7 @@
 ﻿using AmongUs.GameOptions;
 using Hazel;
 using HydraMenu.network;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using System.Collections.Generic;
 using System.Linq;
@@ -344,6 +345,19 @@ namespace HydraMenu
 			batch.FinishBatch();
 
 			Hydra.notifications.Send("Kick Player", $"{player.Data.PlayerName} has been kicked from the game.", 5);
+		}
+
+		public static int GetVotekickCount(VoteBanSystem system, int clientId)
+		{
+			if(!system.Votes.TryGetValue(clientId, out Il2CppStructArray<int> votes)) return 0;
+
+			int voteCount = 0;
+			foreach(int voter in votes)
+			{
+				if(voter != 0) voteCount++;
+			}
+
+			return voteCount;
 		}
 	}
 }
