@@ -201,10 +201,19 @@ namespace HydraMenu.ui.sections
 				Utilities.AttemptStartMeeting(PlayerControl.LocalPlayer, target.Data);
 			}
 
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("Votekick"))
+			{
+				VoteBanSystem.Instance.CmdAddVote(target.OwnerId);
+
+				Hydra.notifications.Send("Votekick Player", $"{target.Data.PlayerName} has been votekicked. ({Utilities.GetVotekickCount(VoteBanSystem.Instance, target.OwnerId)}/3)");
+			}
+
 			if(GUILayout.Button("Kick Player"))
 			{
 				Utilities.KickPlayer(target);
 			}
+			GUILayout.EndHorizontal();
 
 			SortedDictionary<int, string> vents = MapAssets.GetVents();
 

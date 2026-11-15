@@ -60,6 +60,29 @@ namespace HydraMenu.ui.sections
 			}
 			GUILayout.EndHorizontal();
 
+			if(GUILayout.Button("Votekick all"))
+			{
+				BatchedMessage batch = new BatchedMessage(AmongUsClient.Instance.HostId);
+				int packingLimit = AmongUsClient.Instance.GetMaxMessagePackingLimit();
+
+				// Ensure that the host is the last player to be kicked, as if the host gets kicked too early then some votekicks may not go through
+				PlayerControl[] allPlayers = PlayerControl.AllPlayerControls.ToArray();
+				allPlayers.Reverse();
+
+				foreach(PlayerControl player in allPlayers)
+				{
+					if(batch.msgCount >= packingLimit)
+					{
+						batch.FinishBatch();
+						batch = new BatchedMessage(AmongUsClient.Instance.HostId);
+					}
+
+					batch.QueueAddVote(AmongUsClient.Instance.ClientId, player.OwnerId);
+				}
+
+				batch.FinishBatch();
+			}
+
 			if(GUILayout.Button("Kick All Players"))
 			{
 				foreach(PlayerControl player in PlayerControl.AllPlayerControls)
