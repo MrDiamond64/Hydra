@@ -23,6 +23,18 @@ namespace HydraMenu.modules.visuals
 			}
 		}
 
+		[HarmonyPatch(typeof(MatchInfoHudButton), nameof(MatchInfoHudButton.Update))]
+		class FixMatchInfoOverlap
+		{
+			static bool Prefix(MatchInfoHudButton __instance)
+			{
+				if(!Instance.Enabled) return true;
+
+				__instance.aspectPosition.DistanceFromEdge = MatchInfoHudButton.adjustedDistanceFromEdge;
+				return false;
+			}
+		}
+
 		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;

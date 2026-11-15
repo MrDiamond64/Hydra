@@ -1,5 +1,4 @@
 ﻿using BepInEx.Unity.IL2CPP.Utils.Collections;
-using Hazel;
 using HydraMenu.assets;
 using HydraMenu.modules;
 using HydraMenu.network;
@@ -90,7 +89,7 @@ namespace HydraMenu.ui.sections
 			SortedDictionary<int, string> vents = MapAssets.GetVents();
 
 			GUILayout.Space(5);
-			GUILayout.Label($"Vent Teleport:");
+			GUILayout.Label("Vent Teleport:");
 			Hydra.routines.teleportSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Teleport Flooder", Hydra.routines.teleportSpammer.targets);
 
 			GUILayout.Label($"Teleport everyone to vent: {vents.GetValueOrDefault(selectedVent, "N/A")}");
