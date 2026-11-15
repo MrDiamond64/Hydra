@@ -263,19 +263,19 @@ namespace HydraMenu.ui.sections
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Flood Player with Tasks"))
 			{
-				byte[] taskIds = new byte[255];
+				byte[] tasks = new byte[255];
 
 				for(byte i = 0; i < 255; i++)
 				{
-					taskIds[i] = i;
+					tasks[i] = i;
 				}
 
-				target.Data.RpcSetTasks(taskIds);
+				AssignTasks(target, tasks);
 			}
 
 			if(GUILayout.Button("Clear Tasks"))
 			{
-				target.Data.RpcSetTasks(Array.Empty<byte>());
+				AssignTasks(target, Array.Empty<byte>());
 			}
 			GUILayout.EndHorizontal();
 
@@ -368,7 +368,21 @@ namespace HydraMenu.ui.sections
 			}
 		}
 
-		private static void AttemptMurder(PlayerControl target)
+		private void AssignTasks(PlayerControl target, byte[] tasks)
+		{
+			bool hasAnticheat = Utilities.IsAnticheatPresent();
+			if(hasAnticheat && !AmongUsClient.Instance.AmHost)
+			{
+				Hydra.notifications.Send("Assign Tasks", "You must be the host of the lobby in order to use this feature.");
+				return;
+			}
+
+			target.Data.RpcSetTasks(tasks);
+
+			Hydra.notifications.Send("Assign Tasks", $"Assigned {target.Data.PlayerName} {tasks.Length} tasks.", 5f);
+		}
+
+		private void AttemptMurder(PlayerControl target)
 		{
 			bool hasAnticheat = Utilities.IsAnticheatPresent();
 
@@ -469,7 +483,7 @@ namespace HydraMenu.ui.sections
 			batch.FinishBatch();
 		}
 
-		private static IEnumerator AttemptFrameForKillingAll(PlayerControl target)
+		private IEnumerator AttemptFrameForKillingAll(PlayerControl target)
 		{
 			Hydra.Log.LogInfo($"Attempting to frame {target.Data.PlayerName} for killing all players...");
 
