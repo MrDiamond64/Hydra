@@ -69,6 +69,7 @@ namespace HydraMenu.modules
 		// Troll
 		public static AutoExposeImpostors autoExposeImpostors = new AutoExposeImpostors();
 		public static AutoReportBodies autoReportBodies = new AutoReportBodies();
+		public static Blackout blackout = new Blackout();
 		public static CrashLobby crashLobby = new CrashLobby();
 		public static DisableCameras disableCameras = new DisableCameras();
 		public static DisableCloseDoors disableCloseDoors = new DisableCloseDoors();
@@ -140,6 +141,7 @@ namespace HydraMenu.modules
 
 				autoExposeImpostors,
 				autoReportBodies,
+				blackout,
 				crashLobby,
 				disableCameras,
 				disableCloseDoors,
