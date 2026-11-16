@@ -60,6 +60,8 @@ namespace HydraMenu.ui.sections
 
 			GUILayout.Space(5);
 			GUILayout.Label("Avatar Controls:");
+			ModuleManager.unlockAllCosmetics.Enabled = GUILayout.Toggle(ModuleManager.unlockAllCosmetics.Enabled, "Unlock All Cosmetics");
+
 			if(GUILayout.Button("Randomize Avatar"))
 			{
 				if(AmongUsClient.Instance.AmConnected)
