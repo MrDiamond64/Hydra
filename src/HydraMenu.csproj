@@ -24,5 +24,6 @@
     </PackageReference>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.735" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="Il2CppInterop.Runtime" Version="1.5.3" />
   </ItemGroup>
 </Project>
