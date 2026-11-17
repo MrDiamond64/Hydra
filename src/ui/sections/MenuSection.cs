@@ -8,7 +8,13 @@ namespace HydraMenu.ui.sections
 	{
 		public MenuSection() : base("Menu") { }
 
-		private byte configIndex = 0;
+		private const float DROPDOWN_ITEM_HEIGHT = 25f;
+		private const float DROPDOWN_MAX_HEIGHT = 150f;
+
+		private Vector2 dropdownScroll = Vector2.zero;
+		private bool showConfigDropdown = false;
+		private int configIndex = 0;
+		private string[] configNamesCache = null;
 
 		public override void Render()
 		{
@@ -37,18 +43,50 @@ namespace HydraMenu.ui.sections
 			GUILayout.Space(5);
 			GUILayout.Label($"Config:\nCurrent Config: {Hydra.config.currentConfig}");
 
-			GUILayout.Label($"Selected Config: {Hydra.config.configList[configIndex]}");
-			configIndex = (byte)GUILayout.HorizontalSlider(configIndex, 0, Hydra.config.configList.Count - 1);
+			if(configNamesCache == null || configNamesCache.Length != Hydra.config.configList.Count)
+			{
+				configNamesCache = Hydra.config.configList.ToArray();
+			}
+
+			string selectedConfig = configNamesCache[configIndex];
+
+			if(GUILayout.Button(selectedConfig))
+			{
+				showConfigDropdown = !showConfigDropdown;
+			}
+
+			if(showConfigDropdown)
+			{
+				float boxHeight = Mathf.Min(configNamesCache.Length * DROPDOWN_ITEM_HEIGHT, DROPDOWN_MAX_HEIGHT);
+
+				dropdownScroll = GUILayout.BeginScrollView(dropdownScroll, GUILayout.Height(boxHeight));
+				GUILayout.BeginVertical("box");
+				for(int i = 0; i < configNamesCache.Length; i++)
+				{
+					if(GUILayout.Button(configNamesCache[i]))
+					{
+						configIndex = i;
+						showConfigDropdown = false;
+						dropdownScroll = Vector2.zero;
+					}
+				}
+				GUILayout.EndVertical();
+				GUILayout.EndScrollView();
+			}
+			else
+			{
+				dropdownScroll = Vector2.zero;
+			}
 
 			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Save"))
 			{
-				Hydra.config.SaveConfig(Hydra.config.configList[configIndex]);
+				Hydra.config.SaveConfig(selectedConfig);
 			}
 
 			if(GUILayout.Button("Load"))
 			{
-				Hydra.config.LoadConfig(Hydra.config.configList[configIndex]);
+				Hydra.config.LoadConfig(selectedConfig);
 			}
 			GUILayout.EndHorizontal();
 
