@@ -16,6 +16,7 @@ namespace HydraMenu.modules
 		// Game Events
 		public static event Action OnGameStart;
 		public static event Action OnGameLoad;
+		public static event Action<EndGameResult> OnGameEnd;
 		public static event Action OnDisconnect;
 
 		public static event Action<MeetingHud.VoterState[], NetworkedPlayerInfo, bool, bool> OnVotingComplete;
@@ -72,6 +73,18 @@ namespace HydraMenu.modules
 			static void Prefix()
 			{
 				PublishEvent(OnGameLoad);
+			}
+		}
+
+		[HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
+		class GameEnd
+		{
+			static void Postfix(EndGameResult endGameResult)
+			{
+				HostSection.lobbyList.Clear();
+				HostSection.shipList.Clear();
+
+				PublishEvent(OnGameEnd, endGameResult);
 			}
 		}
 
