@@ -65,7 +65,7 @@ namespace HydraMenu.modules.troll
 
 			BatchedMessage batch = new BatchedMessage(player.OwnerId);
 
-			MessageWriter systemUpdate = MessageWriter.Get(SendOption.Reliable);
+			MessageWriter systemUpdate = MessageWriter.Get(SendOption.None);
 			systemUpdate.StartMessage((byte)SystemTypes.Comms);
 			// 1 = Comms sabotage is active, 0 = Comms sabotage is inactive
 			systemUpdate.Write(1);
@@ -86,7 +86,7 @@ namespace HydraMenu.modules.troll
 
 			BatchedMessage batch = new BatchedMessage(player.OwnerId);
 
-			MessageWriter systemUpdate = MessageWriter.Get(SendOption.Reliable);
+			MessageWriter systemUpdate = MessageWriter.Get(SendOption.None);
 			systemUpdate.StartMessage((byte)SystemTypes.Comms);
 			// 1 = Comms sabotage is active, 0 = Comms sabotage is inactive
 			systemUpdate.Write(0);

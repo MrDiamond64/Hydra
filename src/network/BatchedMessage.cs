@@ -553,6 +553,29 @@ namespace HydraMenu.network
 			msgCount++;
 		}
 
+		public void QueueProtectPlayer(PlayerControl source, PlayerControl target)
+		{
+			QueueProtectPlayer(source, target, source.Data.DefaultOutfit.ColorId);
+		}
+
+		public void QueueProtectPlayer(PlayerControl source, PlayerControl target, int colorId)
+		{
+			if(IsGlobal || AmTarget)
+			{
+				source.ProtectPlayer(target, colorId);
+				if(AmTarget) return;
+			}
+
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(source.NetId);
+			writer.Write((byte)RpcCalls.ProtectPlayer);
+			writer.WriteNetObject(target);
+			writer.Write(colorId);
+			writer.EndMessage();
+
+			msgCount++;
+		}
+
 		public void QueueShapeshift(PlayerControl source, PlayerControl target, bool shouldAnimate)
 		{
 			if(IsGlobal || AmTarget)

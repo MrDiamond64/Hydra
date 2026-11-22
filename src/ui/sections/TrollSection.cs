@@ -39,49 +39,31 @@ namespace HydraMenu.ui.sections
 			{
 				Hydra.routines.spamInfluencerCues.Enabled = GUILayout.Toggle(Hydra.routines.spamInfluencerCues.Enabled, "Spam Influencer Cues");
 				Hydra.routines.ziplineSpammer.Enabled = Controls.GlobalPlayerSpecificToggle("Zipline Spammer", Hydra.routines.ziplineSpammer.targets);
+
+				GUILayout.BeginHorizontal();
+				if(GUILayout.Button("Randomize Start Timer"))
+				{
+				    sbyte timer = (sbyte)rnd.Next(sbyte.MinValue, sbyte.MaxValue);
+
+				    BatchedMessage batch = new BatchedMessage();
+				    batch.QueueSetStartCounter(PlayerControl.LocalPlayer, timer);
+				    batch.FinishBatch();
+				}
+
+				if(GUILayout.Button("Randomize Expiration Timer"))
+				{
+				    int timer = rnd.Next(0, int.MaxValue);
+
+				    BatchedMessage batch = new BatchedMessage();
+				    batch.QueueLobbyTimeExpiring(timer);
+				    batch.FinishBatch();
+				}
+				GUILayout.EndHorizontal();
 			}
-
-			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Randomize Start Timer"))
-			{
-				sbyte timer = (sbyte)rnd.Next(sbyte.MinValue, sbyte.MaxValue);
-
-				BatchedMessage batch = new BatchedMessage();
-				batch.QueueSetStartCounter(PlayerControl.LocalPlayer, timer);
-				batch.FinishBatch();
-			}
-
-			if(!hasAnticheat && GUILayout.Button("Randomize Expiration Timer"))
-			{
-				int timer = rnd.Next(0, int.MaxValue);
-
-				BatchedMessage batch = new BatchedMessage();
-				batch.QueueLobbyTimeExpiring(timer);
-				batch.FinishBatch();
-			}
-			GUILayout.EndHorizontal();
 
 			if(GUILayout.Button("Votekick all"))
 			{
-				BatchedMessage batch = new BatchedMessage(AmongUsClient.Instance.HostId);
-				int packingLimit = AmongUsClient.Instance.GetMaxMessagePackingLimit();
-
-				// Ensure that the host is the last player to be kicked, as if the host gets kicked too early then some votekicks may not go through
-				PlayerControl[] allPlayers = PlayerControl.AllPlayerControls.ToArray();
-				allPlayers.Reverse();
-
-				foreach(PlayerControl player in allPlayers)
-				{
-					if(batch.msgCount >= packingLimit)
-					{
-						batch.FinishBatch();
-						batch = new BatchedMessage(AmongUsClient.Instance.HostId);
-					}
-
-					batch.QueueAddVote(AmongUsClient.Instance.ClientId, player.OwnerId);
-				}
-
-				batch.FinishBatch();
+				VotekickAll();
 			}
 
 			if(GUILayout.Button("Kick All Players"))
@@ -110,7 +92,7 @@ namespace HydraMenu.ui.sections
 				AmongUsClient.Instance.StartCoroutine(DepleteSeekTimer().WrapToIl2Cpp());
 			}
 
-			SortedDictionary<int, string> vents = MapAssets.GetVents();
+			SortedList<int, string> vents = MapAssets.GetVents();
 
 			GUILayout.Space(5);
 			GUILayout.Label("Vent Teleport:");
@@ -153,6 +135,29 @@ namespace HydraMenu.ui.sections
 			ModuleManager.autoExposeImpostors.ExposeOnMurder = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnMurder, "Expose On Murder");
 			ModuleManager.autoExposeImpostors.ExposeOnShapeshift = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnShapeshift, "Expose On Shapeshift");
 			ModuleManager.autoExposeImpostors.ExposeOnPhantom = GUILayout.Toggle(ModuleManager.autoExposeImpostors.ExposeOnPhantom, "Expose On Phantom");
+		}
+
+		private void VotekickAll()
+		{
+			BatchedMessage batch = new BatchedMessage(AmongUsClient.Instance.HostId);
+			int packingLimit = AmongUsClient.Instance.GetMaxMessagePackingLimit();
+
+			// Ensure that the host is the last player to be kicked, as if the host gets kicked too early then some votekicks may not go through
+			PlayerControl[] allPlayers = PlayerControl.AllPlayerControls.ToArray();
+			allPlayers.Reverse();
+
+			foreach(PlayerControl player in allPlayers)
+			{
+				if(batch.msgCount >= packingLimit)
+				{
+					batch.FinishBatch();
+					batch = new BatchedMessage(AmongUsClient.Instance.HostId);
+				}
+
+				batch.QueueAddVote(AmongUsClient.Instance.ClientId, player.OwnerId);
+			}
+
+			batch.FinishBatch();
 		}
 
 		private void TriggerAllSpores()

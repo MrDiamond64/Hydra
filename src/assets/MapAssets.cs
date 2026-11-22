@@ -16,7 +16,7 @@ namespace HydraMenu.assets
 			{ "Clear Asteroids", TaskTypes.ClearAsteroids }
 		};
 
-		public static readonly SortedDictionary<int, string> skeldVents = new SortedDictionary<int, string>()
+		public static readonly SortedList<int, string> skeldVents = new SortedList<int, string>()
 		{
 			{ 0, "Admin" },
 			{ 1, "Hallway" },
@@ -34,7 +34,7 @@ namespace HydraMenu.assets
 			{ 13, "Lower Navigation" }
 		};
 
-		public static readonly SortedDictionary<int, string> miraVents = new SortedDictionary<int, string>()
+		public static readonly SortedList<int, string> miraVents = new SortedList<int, string>()
 		{
 			// Mira HQ has no vent with the ID of 0
 			// Fortebass' explanation on why this is the case can be found at https://github.com/roobscoob/among-us-protocol/blob/master/images/mirahq_vents_quote.png
@@ -52,7 +52,7 @@ namespace HydraMenu.assets
 			{ 11, "Launchpad" }
 		};
 
-		public static readonly SortedDictionary<int, string> polusVents = new SortedDictionary<int, string>()
+		public static readonly SortedList<int, string> polusVents = new SortedList<int, string>()
 		{
 			{ 0, "Electrical" },
 			{ 1, "Outside Electrical" },
@@ -68,7 +68,7 @@ namespace HydraMenu.assets
 			{ 11, "Outside Office" }
 		};
 
-		public static readonly SortedDictionary<int, string> airshipVents = new SortedDictionary<int, string>()
+		public static readonly SortedList<int, string> airshipVents = new SortedList<int, string>()
 		{
 			{ 0, "Vault" },
 			{ 1, "Cockpit" },
@@ -84,7 +84,7 @@ namespace HydraMenu.assets
 			{ 11, "Cargo Bay" }
 		};
 
-		public static readonly SortedDictionary<int, string> fungleVents = new SortedDictionary<int, string>()
+		public static readonly SortedList<int, string> fungleVents = new SortedList<int, string>()
 		{
 			{ 0, "Comms" },
 			{ 1, "Kitchen" },
@@ -113,7 +113,7 @@ namespace HydraMenu.assets
 			};
 		}
 
-		public static SortedDictionary<int, string> GetVents()
+		public static SortedList<int, string> GetVents()
 		{
 			MapNames currentMap = Utilities.GetCurrentMap();
 

@@ -215,7 +215,7 @@ namespace HydraMenu.ui.sections
 			}
 			GUILayout.EndHorizontal();
 
-			SortedDictionary<int, string> vents = MapAssets.GetVents();
+			SortedList<int, string> vents = MapAssets.GetVents();
 
 			GUILayout.Label($"Teleport player to vent: {vents.GetValueOrDefault(selectedVent, "N/A")}");
 			selectedVent = Controls.HorizontalVentSlider(vents, selectedVent);
@@ -229,6 +229,7 @@ namespace HydraMenu.ui.sections
 
 			ModuleManager.autoReportBodies.Enabled = Controls.PlayerSpecificToggle("Auto Report Bodies As", target, ref ModuleManager.autoReportBodies.target);
 			Hydra.routines.discoHost.Enabled = Controls.PlayerSpecificToggle("Disco Mode", target, Hydra.routines.discoHost.targets);
+			Hydra.routines.infiniteRoleCooldown.Enabled = Controls.PlayerSpecificToggle("Infinite Role Cooldown", target, Hydra.routines.infiniteRoleCooldown.targets);
 			ModuleManager.voteImmune.Enabled = Controls.PlayerSpecificToggle("Vote Immune", target, ModuleManager.voteImmune.targets);
 			Hydra.routines.voteSpammer.Enabled = Controls.PlayerSpecificToggle("Spam Votes As", target, Hydra.routines.voteSpammer.targets);
 

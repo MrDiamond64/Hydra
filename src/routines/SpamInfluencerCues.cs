@@ -8,7 +8,7 @@ namespace HydraMenu.routines
 	{
 		// This is only useful on host-authoritative lobbies
 		// The vanilla anticheat has strict anticheat checks such as cooldown and role checks, which we can get around,
-		// but they also check if the RPC is being sent globally, which means we would have to send a SpiritGuideMessage for each individual player
+		// however they also check if the RPC is being sent globally, which means we would have to send a SpiritGuideMessage for each individual player
 		// The SpiritGuideMessage cooldown has a lower bound of three seconds on the server, so with 14 players, each player would only see an influencer cue every 42 seconds
 		public SpamInfluencerCues() : base("SpamInfluencerCues") { }
 

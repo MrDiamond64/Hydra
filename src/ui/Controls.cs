@@ -32,6 +32,15 @@ namespace HydraMenu.ui
 			Fortegreen
 		}
 
+		public static T HorizontalArraySlider<T>(T[] array, T currentValue)
+		{
+			int index = Array.IndexOf(array, currentValue);
+
+			int newValue = (int)GUILayout.HorizontalSlider(index, 0, array.Length - 1);
+
+			return array[newValue];
+		}
+
 		public static T HorizontalListSlider<T>(List<T> list, T currentValue)
 		{
 			int index = list.IndexOf(currentValue);
@@ -60,9 +69,11 @@ namespace HydraMenu.ui
 			return (PlayerColors)GUILayout.HorizontalSlider((int)currentColor, 0, Palette.ColorNames.Length);
 		}
 
-		public static int HorizontalVentSlider(SortedDictionary<int, string> vents, int currentVent)
+		public static int HorizontalVentSlider(SortedList<int, string> vents, int currentVent)
 		{
 			// Reset current vent if it is out ouf bounds
+			// SortedList::Contains is a O(log n) operation
+			// Since all vent IDs are (currently) contiguous, we can just check the id of the first key and the total number of vents to check if an item exists with O(1) time complexity
 			int firstKey = vents.Keys.First();
 			if(currentVent < firstKey || currentVent >= vents.Count) currentVent = firstKey;
 
