@@ -25,12 +25,6 @@ namespace HydraMenu.routines
 			batch.FinishBatch();
 		}
 
-		private void OnDisconnect()
-		{
-			Hydra.notifications.Send("Glitter Bomb", "Glitter Bomb was disabled as you left the game.", 10);
-			Enabled = false;
-		}
-
 		private void OnPlayerMurder(PlayerControl murder, PlayerControl target, MurderResultFlags result)
 		{
 			if(target != PlayerControl.LocalPlayer) return;
@@ -55,13 +49,11 @@ namespace HydraMenu.routines
 				return;
 			}
 
-			EventCoordinator.OnDisconnect += OnDisconnect;
 			EventCoordinator.OnPlayerMurder += OnPlayerMurder;
 		}
 
 		protected override void OnDisable()
 		{
-			EventCoordinator.OnDisconnect -= OnDisconnect;
 			EventCoordinator.OnPlayerMurder -= OnPlayerMurder;
 		}
 	}

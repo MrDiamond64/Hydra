@@ -1,5 +1,4 @@
-﻿using HydraMenu.modules;
-using HydraMenu.network;
+﻿using HydraMenu.network;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -38,12 +37,6 @@ namespace HydraMenu.routines
 			batch.FinishBatch();
 		}
 
-		private void OnDisconnect()
-		{
-			Hydra.notifications.Send("Spam Influencer Cues", "Spam Influencer Cues was disabled as you left the game.", 10);
-			Enabled = false;
-		}
-
 		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
@@ -52,13 +45,6 @@ namespace HydraMenu.routines
 				Enabled = false;
 				return;
 			}
-
-			EventCoordinator.OnDisconnect += OnDisconnect;
-		}
-
-		protected override void OnDisable()
-		{
-			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }

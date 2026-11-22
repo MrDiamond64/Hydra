@@ -1,5 +1,4 @@
-﻿using HydraMenu.modules;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -37,11 +36,6 @@ namespace HydraMenu.routines
 			get { return targets.Count == 1 && targets.Contains(int.MaxValue); }
 		}
 
-		private void OnDisconnect()
-		{
-			Hydra.notifications.Send("Teleport Spammer", "Teleport Spammer was disabled as you left the game.", 10);
-			Enabled = false;
-		}
 
 		protected override void OnEnable()
 		{
@@ -51,15 +45,11 @@ namespace HydraMenu.routines
 				Enabled = false;
 				return;
 			}
-
-			EventCoordinator.OnDisconnect += OnDisconnect;
 		}
 
 		protected override void OnDisable()
 		{
 			targets.Clear();
-
-			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }

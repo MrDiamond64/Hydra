@@ -1,5 +1,4 @@
-﻿using HydraMenu.modules;
-using HydraMenu.network;
+﻿using HydraMenu.network;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace HydraMenu.routines
 	{
 		public InfiniteRoleCooldown() : base("InfiniteRoleCooldown") { }
 
-		public HashSet<int> targets = new HashSet<int>();
+		public readonly HashSet<int> targets = new HashSet<int>();
 
 		private readonly float CHECK_DELAY = 4.0f;
 		private float timeElapsed = 0f;
@@ -59,12 +58,6 @@ namespace HydraMenu.routines
 			return PlayerControl.LocalPlayer;
 		}
 
-		private void OnDisconnect()
-		{
-			Hydra.notifications.Send("Infinite Role Cooldown", "Infinite Role Cooldown was disabled as you left the game.", 10);
-			Enabled = false;
-		}
-
 		protected override void OnEnable()
 		{
 			bool hasAnticheat = Utilities.IsAnticheatPresent();
@@ -81,15 +74,11 @@ namespace HydraMenu.routines
 				Enabled = false;
 				return;
 			}
-
-			EventCoordinator.OnDisconnect += OnDisconnect;
 		}
 
 		protected override void OnDisable()
 		{
 			targets.Clear();
-
-			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }

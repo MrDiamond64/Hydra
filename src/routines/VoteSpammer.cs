@@ -50,12 +50,6 @@ namespace HydraMenu.routines
 			Enabled = false;
 		}
 
-		private void OnDisconnect()
-		{
-			Hydra.notifications.Send("Vote Spammer", "Vote Spammer was disabled as you left the game.");
-			Enabled = false;
-		}
-
 		protected override void OnEnable()
 		{
 			if(MeetingHud.Instance == null)
@@ -73,7 +67,6 @@ namespace HydraMenu.routines
 			}
 
 			EventCoordinator.OnMeetingEnd += OnMeetingEnd;
-			EventCoordinator.OnDisconnect += OnDisconnect;
 		}
 
 		protected override void OnDisable()
@@ -81,7 +74,6 @@ namespace HydraMenu.routines
 			targets.Clear();
 
 			EventCoordinator.OnMeetingEnd -= OnMeetingEnd;
-			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }

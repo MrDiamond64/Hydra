@@ -27,12 +27,6 @@ namespace HydraMenu.routines
 			PlayerControl.LocalPlayer.transform.position = target.transform.position;
 		}
 
-		private void OnDisconnect()
-		{
-			Hydra.notifications.Send("Player Follower", "Player Follower was disabled as you left the game.", 10);
-			Enabled = false;
-		}
-
 		private void OnPlayerDisconnect(ClientData client, DisconnectReasons reason)
 		{
 			if(client.Character != target) return;
@@ -52,7 +46,6 @@ namespace HydraMenu.routines
 			PlayerControl.LocalPlayer.moveable = false;
 			PlayerControl.LocalPlayer.NetTransform.body.velocity = Vector2.zero;
 
-			EventCoordinator.OnDisconnect += OnDisconnect;
 			EventCoordinator.OnPlayerDisconnect += OnPlayerDisconnect;
 		}
 
@@ -65,7 +58,6 @@ namespace HydraMenu.routines
 				PlayerControl.LocalPlayer.moveable = true;
 			}
 
-			EventCoordinator.OnDisconnect -= OnDisconnect;
 			EventCoordinator.OnPlayerDisconnect -= OnPlayerDisconnect;
 		}
 	}

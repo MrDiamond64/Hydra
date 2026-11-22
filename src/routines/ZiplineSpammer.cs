@@ -1,5 +1,4 @@
-﻿using HydraMenu.modules;
-using HydraMenu.network;
+﻿using HydraMenu.network;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,12 +51,6 @@ namespace HydraMenu.routines
 			get { return targets.Count == 1 && targets.Contains(int.MaxValue); }
 		}
 
-		private void OnDisconnect()
-		{
-			Hydra.notifications.Send("Zipline Spammer", "Zipline Spammer was disabled as you left the game.", 10);
-			Enabled = false;
-		}
-
 		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
@@ -75,15 +68,11 @@ namespace HydraMenu.routines
 			}
 
 			shipStatus = ShipStatus.Instance.Cast<FungleShipStatus>();
-
-			EventCoordinator.OnDisconnect += OnDisconnect;
 		}
 
 		protected override void OnDisable()
 		{
 			targets.Clear();
-
-			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }

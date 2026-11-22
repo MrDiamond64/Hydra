@@ -1,5 +1,4 @@
-﻿using HydraMenu.modules;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace HydraMenu.routines
@@ -94,12 +93,6 @@ namespace HydraMenu.routines
 			}
 		}
 
-		private void OnDisconnect()
-		{
-			Hydra.notifications.Send("Jail Player", "Jail Player has been disabled as you left the game.", 10);
-			Enabled = false;
-		}
-
 		protected override void OnEnable()
 		{
 			if(PlayerControl.LocalPlayer == null || ShipStatus.Instance == null)
@@ -108,15 +101,11 @@ namespace HydraMenu.routines
 				Enabled = false;
 				return;
 			}
-
-			EventCoordinator.OnDisconnect += OnDisconnect;
 		}
 
 		protected override void OnDisable()
 		{
 			targets.Clear();
-
-			EventCoordinator.OnDisconnect -= OnDisconnect;
 		}
 	}
 }
