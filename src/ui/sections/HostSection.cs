@@ -35,6 +35,7 @@ namespace HydraMenu.ui.sections
 			bool hasAnticheat = Utilities.IsAnticheatPresent();
 
 			ModuleManager.banMidGame.Enabled = GUILayout.Toggle(ModuleManager.banMidGame.Enabled, "Be able to ban players mid-game");
+			ModuleManager.extendLobbyTimer.Enabled = GUILayout.Toggle(ModuleManager.extendLobbyTimer.Enabled, "Extend Lobby Timer");
 
 			ModuleManager.flipSkeld.Enabled = GUILayout.Toggle(ModuleManager.flipSkeld.Enabled, "Use Flipped Skeld Map");
 

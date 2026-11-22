@@ -1,5 +1,6 @@
 ﻿using AmongUs.GameOptions;
 using AmongUs.InnerNet.GameDataMessages;
+using AmongUsServer;
 using Hazel;
 using InnerNet;
 using UnityEngine;
@@ -659,6 +660,23 @@ namespace HydraMenu.network
 			writer.Write((byte)RpcCalls.LobbyTimeExpiring);
 			writer.WritePacked(timer);
 			writer.Write(false);
+			writer.EndMessage();
+
+			msgCount++;
+		}
+
+		public void QueueExtendLobbyTimer(int extensionId, bool successful = true, ExtensionFailureReasons failureReason = ExtensionFailureReasons.Invalid)
+		{
+			// This RPC is not handled by the client, it should instead wait for a response by the server
+			writer.StartMessage((byte)GameDataTypes.RpcFlag);
+			writer.WritePacked(LobbyBehaviour.Instance.NetId);
+			writer.Write((byte)RpcCalls.ExtendLobbyTimer);
+			writer.WritePacked(extensionId);
+			writer.Write(successful);
+			if(!successful)
+			{
+				writer.Write((byte)failureReason);
+			}
 			writer.EndMessage();
 
 			msgCount++;

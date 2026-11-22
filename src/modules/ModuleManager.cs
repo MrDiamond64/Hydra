@@ -24,7 +24,7 @@ namespace HydraMenu.modules
 		public static DisableSporeTriggers disableSporeTriggers = new DisableSporeTriggers();
 		public static DisableVentClean disableVentClean = new DisableVentClean();
 		public static DisableZipline disableZipline = new DisableZipline();
-		public static FakeShapeshiftBubble fakeShapeshiftBubble = new FakeShapeshiftBubble();
+		public static ExtendLobbyTimer extendLobbyTimer = new ExtendLobbyTimer();
 		public static FlipSkeld flipSkeld = new FlipSkeld();
 		public static TempBanAll tempBanAll = new TempBanAll();
 		public static VoteImmune voteImmune = new VoteImmune();
@@ -44,6 +44,7 @@ namespace HydraMenu.modules
 		public static ForceDTLS forceDtls = new ForceDTLS();
 
 		// Roles
+		public static FakeShapeshiftBubble fakeShapeshiftBubble = new FakeShapeshiftBubble();
 		public static MoveInVents moveInVents = new MoveInVents();
 		public static NoKillChecks noKillChecks = new NoKillChecks();
 		public static NoPhantomAnimation noPhantomAnimation = new NoPhantomAnimation();
@@ -102,6 +103,7 @@ namespace HydraMenu.modules
 				disableSporeTriggers,
 				disableVentClean,
 				disableZipline,
+				extendLobbyTimer,
 				flipSkeld,
 				tempBanAll,
 				voteImmune,
