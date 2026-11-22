@@ -73,6 +73,12 @@ namespace HydraMenu.modules.misc
 			Enabled = false;
 		}
 
+		private void OnGameEnd(EndGameResult result)
+		{
+			Hydra.notifications.Send("Whisper", "Whisper was disabled as the game has ended.", 10);
+			Enabled = false;
+		}
+
 		private void OnDisconnect()
 		{
 			Hydra.notifications.Send("Whisper", "Whisper was disabled as you left the game.");
@@ -89,6 +95,7 @@ namespace HydraMenu.modules.misc
 
 			EventCoordinator.OnPlayerDisconnect += OnPlayerDisconnect;
 			EventCoordinator.OnDisconnect += OnDisconnect;
+			EventCoordinator.OnGameEnd += OnGameEnd;
 		}
 
 		protected override void OnDisable()
@@ -97,6 +104,7 @@ namespace HydraMenu.modules.misc
 
 			EventCoordinator.OnPlayerDisconnect -= OnPlayerDisconnect;
 			EventCoordinator.OnDisconnect -= OnDisconnect;
+			EventCoordinator.OnGameEnd += OnGameEnd;
 		}
 	}
 }
