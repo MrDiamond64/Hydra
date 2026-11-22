@@ -200,5 +200,13 @@ namespace HydraMenu.modules
 			if(unlockSabotageButton.SabotageAsCrewmate) HudManager.Instance.SabotageButton.gameObject.SetActive(true);
 			if(ventAsCrewmate.Enabled) HudManager.Instance.ImpostorVentButton.gameObject.SetActive(true);
 		}
+
+		public void OnDestroy()
+		{
+			foreach(Module module in moduleList)
+			{
+				module.Enabled = false;
+			}
+		}
 	}
 }

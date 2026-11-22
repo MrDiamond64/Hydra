@@ -38,6 +38,14 @@ namespace HydraMenu.routines
 			}
 		}
 
+		public void OnDestroy()
+		{
+			foreach(Routine routine in routineList)
+			{
+				routine.Enabled = false;
+			}
+		}
+
 		// Return a dictionary of each routine with its name, and another dictionary with names and values of each property
 		public Dictionary<string, Dictionary<string, JsonElement>> GetConfigData()
 		{

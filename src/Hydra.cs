@@ -52,19 +52,6 @@ internal class Hydra : BasePlugin
 	{
 		harmony.UnpatchSelf();
 
-		notifications.ClearNotifications();
-
-		// Some modules and routines include cleanup in the OnDisable method, which we need to trigger
-		foreach(Module module in modules.moduleList)
-		{
-			module.Enabled = false;
-		}
-
-		foreach(Routine routine in routines.routineList)
-		{
-			routine.Enabled = false;
-		}
-
 		Object.Destroy(mainUI);
 		Object.Destroy(notifications);
 		Object.Destroy(modules);
