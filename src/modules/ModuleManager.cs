@@ -60,6 +60,7 @@ namespace HydraMenu.modules
 		public static NoZiplineCooldown noZiplineCooldown = new NoZiplineCooldown();
 		public static SpeedModifier speedModifier = new SpeedModifier();
 		public static UnlimitedMeetings unlimitedMeetings = new UnlimitedMeetings();
+		public static UnlockAllCosmetics unlockAllCosmetics = new UnlockAllCosmetics();
 		public static UpdateStatsFreeplay updateStatsFreeplay = new UpdateStatsFreeplay();
 
 		// Spoofer
@@ -135,6 +136,7 @@ namespace HydraMenu.modules
 				noZiplineCooldown,
 				speedModifier,
 				unlimitedMeetings,
+				unlockAllCosmetics,
 				updateStatsFreeplay,
 
 				spoofDevice,
